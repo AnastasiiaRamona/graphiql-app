@@ -13,6 +13,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { useForm } from 'react-hook-form';
 import schema, { User } from '@/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { registerUser } from '@/firebase/firebase';
 
 function RegistrationForm() {
   const {
@@ -24,8 +25,13 @@ function RegistrationForm() {
     mode: 'all',
   });
 
-  const onSubmit = (data: User) => {
-    console.log(data);
+  const onSubmit = async (data: User) => {
+    const user = await registerUser(data.email, data.password);
+    try {
+      console.log(user);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
