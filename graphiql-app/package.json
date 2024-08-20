@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "format:fix": "prettier --write .",
     "format": "prettier --check .",
-    "prepare": "cd .. && husky final/.husky",
+    "prepare": "cd .. && husky graphiql-app/.husky",
     "test": "vitest run --coverage",
     "dev": "next dev --turbo"
   },
