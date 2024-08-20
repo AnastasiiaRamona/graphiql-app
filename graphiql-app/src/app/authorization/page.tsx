@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import schema, { User } from '@/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerUser } from '@/firebase/firebase';
+import { useRouter } from 'next/navigation';
 
 function RegistrationForm() {
   const {
@@ -24,11 +25,13 @@ function RegistrationForm() {
     resolver: yupResolver(schema),
     mode: 'all',
   });
+  const router = useRouter();
 
   const onSubmit = async (data: User) => {
     const user = await registerUser(data.email, data.password);
     try {
       console.log(user);
+      router.push('/RESTfull');
     } catch (error) {
       console.error(error);
     }
