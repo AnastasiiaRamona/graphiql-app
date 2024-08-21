@@ -1,6 +1,6 @@
 'use client';
 import './registration.module.css';
-import React from 'react';
+import { useState } from 'react';
 import {
   TextField,
   Button,
@@ -8,15 +8,20 @@ import {
   Container,
   Typography,
   Tooltip,
+  IconButton,
+  InputAdornment,
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import schema, { User } from '@/validation/shema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerUser } from '@/firebase/firebase';
 import { useRouter } from 'next/navigation';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 function RegistrationForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     handleSubmit,
     register,
@@ -35,6 +40,12 @@ function RegistrationForm() {
     } catch (error) {
       console.error(error);
     }
+  };
+  const handleTogglePasswordVisibility = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -57,6 +68,14 @@ function RegistrationForm() {
               variant="outlined"
               helperText={errors.email?.message}
               error={!!errors.email?.message}
+              autoComplete="email"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end" sx={{ mr: -0.5 }}>
+                    <AccountCircle />
+                  </InputAdornment>
+                ),
+              }}
               {...register('email')}
             />
           </Grid>
@@ -67,22 +86,39 @@ function RegistrationForm() {
               id="password"
               label="Password"
               variant="outlined"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               helperText={errors.password?.message}
               error={!!errors.password?.message}
+              autoComplete="current-password"
               {...register('password')}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleTogglePasswordVisibility}
+                      onMouseDown={handleTogglePasswordVisibility}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
             <Tooltip title="Register" arrow>
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                disabled={!isValid}
-              >
-                Register
-              </Button>
+              <span>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  disabled={!isValid}
+                >
+                  Register
+                </Button>
+              </span>
             </Tooltip>
           </Grid>
         </Grid>
