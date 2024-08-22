@@ -1,5 +1,5 @@
 'use client';
-import './registration.module.css';
+
 import { useState } from 'react';
 import {
   TextField,
