@@ -1,24 +1,15 @@
 'use client';
 
-import BottomNavigation from '@mui/material/BottomNavigation';
 import IconButton from '@mui/material/IconButton';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Typography from '@mui/material/Typography';
 import rssLogo from '../../assets/RSS.svg';
 import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
 import Image from 'next/image';
-import Link from '@mui/material/Link';
-
-const CustomBottomNavigation = styled(BottomNavigation)(({ theme }) => ({
-  width: '100%',
-  backgroundColor: theme.palette.secondary.main,
-  padding: theme.spacing(2),
-}));
 
 const Footer = () => {
   return (
-    <CustomBottomNavigation>
+    <footer>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -34,7 +25,9 @@ const Footer = () => {
           <GitHubIcon />
         </IconButton>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="body2">2024</Typography>
+          <Typography variant="body2" fontWeight={600}>
+            2024
+          </Typography>
           <IconButton
             href="https://rs.school/"
             target="_blank"
@@ -44,7 +37,7 @@ const Footer = () => {
           </IconButton>
         </Box>
       </Box>
-    </CustomBottomNavigation>
+    </footer>
   );
 };
 

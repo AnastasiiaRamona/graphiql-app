@@ -8,6 +8,7 @@
   font-style: normal;
 
   --primary-font-family: 'Red Hat Display', sans-serif;
+  --primary-color: #0c234b;
   --background-color: linear-gradient(
     135deg,
     rgb(204, 226, 246),
@@ -24,4 +25,5 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  color: var(--primary-color);
 }

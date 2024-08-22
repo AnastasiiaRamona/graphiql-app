@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,13 +17,14 @@ import Button from '@mui/material/Button';
 import Props from './types';
 import iconSrc from '../../app/icon.ico';
 import Image from 'next/image';
+import { useState } from 'react';
 
 const drawerWidth = 240;
-const navItems = ['Contact', 'EN', 'Sing in'];
+const navItems = ['Contact', 'EN', 'Sign in'];
 
 export default function DrawerAppBar(props: Props) {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
