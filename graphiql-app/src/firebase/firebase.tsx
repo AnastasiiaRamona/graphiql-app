@@ -32,7 +32,6 @@ async function registerUser(email: string, password: string) {
 async function logoutUser() {
   try {
     await signOut(auth);
-    console.log('User logged out');
   } catch (error) {
     console.error('Error logging out user:', error);
   }
@@ -45,12 +44,11 @@ async function loginUser(email: string, password: string) {
       email,
       password
     );
-    console.log('User logged in:', userCredential.user);
   } catch (error) {
     console.error('Error logging in user:', error);
   }
 }
-// onAuthStateChanged - он вызывается, когда пользователь входит или выходит из системы, может пригдодится потом.
+// onAuthStateChanged - он вызывается, когда пользователь входит или выходит из системы, может пригдодиться потом.
 export { registerUser, logoutUser, loginUser };
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

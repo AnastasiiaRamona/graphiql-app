@@ -33,9 +33,8 @@ function RegistrationForm() {
   const router = useRouter();
 
   const onSubmit = async (data: User) => {
-    const user = await registerUser(data.email, data.password);
+    await registerUser(data.email, data.password);
     try {
-      console.log(user);
       router.push('/RESTfull');
     } catch (error) {
       console.error(error);
@@ -49,7 +48,11 @@ function RegistrationForm() {
   };
 
   return (
-    <Container maxWidth="sm" component="main" sx={{ mt: 8 }}>
+    <Container
+      maxWidth="sm"
+      component="main"
+      sx={{ mt: 8, backgroundColor: 'white', padding: '2rem' }}
+    >
       <LockIcon
         sx={{ fontSize: 40, display: 'block', mx: 'auto' }}
         color="primary"

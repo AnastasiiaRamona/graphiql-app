@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
+import Link from 'next/link';
 
 const WelcomePage = () => {
   return (
@@ -20,8 +21,12 @@ const WelcomePage = () => {
         }}
       >
         <p>Not signed in yet?</p>
-        <Button variant="contained">Sing in</Button>
-        <Button variant="contained">Sing up</Button>
+        <Link href="/authorization">
+          <Button variant="contained">Sing in</Button>
+        </Link>
+        <Link href="/authorization">
+          <Button variant="contained">Sing up</Button>
+        </Link>
       </Box>
     </main>
   );
