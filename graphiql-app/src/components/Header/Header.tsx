@@ -18,6 +18,8 @@ import Props from './types';
 import iconSrc from '../../app/icon.ico';
 import Image from 'next/image';
 import { useState } from 'react';
+import { FormControlLabel } from '@mui/material';
+import MaterialUISwitch from '../SwitchTheme/MaterialUiSwitch';
 
 const drawerWidth = 240;
 const navItems = ['Contact', 'EN', 'Sign in'];
@@ -44,6 +46,11 @@ export default function DrawerAppBar(props: Props) {
             </ListItemButton>
           </ListItem>
         ))}
+        <FormControlLabel
+          onChange={props.toggleTheme}
+          control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
+          label="SWITCH THEME"
+        />
       </List>
     </Box>
   );
@@ -80,6 +87,12 @@ export default function DrawerAppBar(props: Props) {
                   {item}
                 </Button>
               ))}
+
+              <FormControlLabel
+                onChange={props.toggleTheme}
+                control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
+                label="SWITCH THEME"
+              />
             </Box>
           </Toolbar>
         </AppBar>
