@@ -2,13 +2,17 @@
 
 :root {
   overflow-x: hidden;
-  font-family: "Red Hat Display", sans-serif;
+  font-family: 'Red Hat Display', sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
 
-  --primary-font-family: "Red Hat Display", sans-serif;
-  --background-color: linear-gradient(135deg, rgb(204, 226, 246), rgb(146, 189, 215));
+  --primary-font-family: 'Red Hat Display', sans-serif;
+  --background-color: linear-gradient(
+    135deg,
+    rgb(204, 226, 246),
+    rgb(146, 189, 215)
+  );
 }
 
 body {
