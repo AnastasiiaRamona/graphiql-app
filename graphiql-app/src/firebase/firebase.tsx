@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   signInWithEmailAndPassword,
+  updateProfile,
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -16,13 +17,20 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-async function registerUser(email: string, password: string) {
+async function registerUser(
+  email: string,
+  password: string,
+  displayName: string
+) {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
+    await updateProfile(userCredential.user, { displayName });
+    await loginUser(email, password);
+
     return userCredential.user;
   } catch (error) {
     console.error('Error registering user:', error);
@@ -49,7 +57,7 @@ async function loginUser(email: string, password: string) {
     console.error('Error logging in user:', error);
   }
 }
-// onAuthStateChanged - он вызывается, когда пользователь входит или выходит из системы, может пригдодиться потом.
+
 export { registerUser, logoutUser, loginUser };
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

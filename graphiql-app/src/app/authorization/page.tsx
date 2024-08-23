@@ -21,9 +21,9 @@ import { useRouter } from 'next/navigation';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import useAuthStore from '@/store/store';
 
-function RegistrationForm() {
+function AuthorizationForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const { isLoginForm, toggleForm, setAuthenticated } = useAuthStore();
+  const { isLoginForm, toggleForm } = useAuthStore();
   const {
     handleSubmit,
     register,
@@ -36,21 +36,19 @@ function RegistrationForm() {
 
   const onSubmit = async (data: User) => {
     if (isLoginForm) {
-      await loginUser(data.email, data.password);
       try {
-        setAuthenticated(true);
-        localStorage.setItem('isAuthenticated', 'true');
-        router.push('/RESTfull');
+        await loginUser(data.email, data.password);
+        router.push('/welcome');
       } catch (error) {
         console.error(error);
       }
     } else {
-      await registerUser(data.email, data.password);
       try {
-        setAuthenticated(true);
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userName', data.username);
-        router.push('/RESTfull');
+        if (!data.username) {
+          return;
+        }
+        await registerUser(data.email, data.password, data.username);
+        router.push('/welcome');
       } catch (error) {
         console.error(error);
       }
@@ -174,4 +172,4 @@ function RegistrationForm() {
   );
 }
 
-export default RegistrationForm;
+export default AuthorizationForm;

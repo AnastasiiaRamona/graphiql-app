@@ -9,6 +9,10 @@ const MenuButtons = () => {
         gap: '0.5rem',
         alignItems: 'center',
         fontSize: '1rem',
+        '@media (max-width: 510px)': {
+          flexDirection: 'column',
+          textAlign: 'center',
+        },
       }}
     >
       <p>Choose One</p>
