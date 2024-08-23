@@ -20,7 +20,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 const drawerWidth = 240;
-const navItems = ['Contact', 'EN', 'Sign in'];
+const navItems = ['Sign in', 'Sign up'];
 
 export default function DrawerAppBar(props: Props) {
   const { window } = props;

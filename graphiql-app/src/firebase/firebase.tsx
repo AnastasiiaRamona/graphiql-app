@@ -7,13 +7,13 @@ import {
 } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyD2juZJAlgcLjPNB7XijhH9e5ueIbnnukE',
-  authDomain: 'graphiql-app-e0837.firebaseapp.com',
-  projectId: 'graphiql-app-e0837',
-  storageBucket: 'graphiql-app-e0837.appspot.com',
-  messagingSenderId: '843573515901',
-  appId: '1:843573515901:web:f4219e18e26acd1ec60314',
-  measurementId: 'G-CBJZFH0Y66',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 async function registerUser(email: string, password: string) {
@@ -44,6 +44,7 @@ async function loginUser(email: string, password: string) {
       email,
       password
     );
+    return userCredential.user;
   } catch (error) {
     console.error('Error logging in user:', error);
   }
