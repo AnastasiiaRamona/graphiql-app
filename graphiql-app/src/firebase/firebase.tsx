@@ -22,40 +22,28 @@ async function registerUser(
   password: string,
   displayName: string
 ) {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    await updateProfile(userCredential.user, { displayName });
-    await loginUser(email, password);
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  await updateProfile(userCredential.user, { displayName });
+  await loginUser(email, password);
 
-    return userCredential.user;
-  } catch (error) {
-    console.error('Error registering user:', error);
-  }
+  return userCredential.user;
 }
 
 async function logoutUser() {
-  try {
-    await signOut(auth);
-  } catch (error) {
-    console.error('Error logging out user:', error);
-  }
+  await signOut(auth);
 }
 
 async function loginUser(email: string, password: string) {
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    return userCredential.user;
-  } catch (error) {
-    console.error('Error logging in user:', error);
-  }
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  return userCredential.user;
 }
 
 export { registerUser, logoutUser, loginUser };

@@ -10,6 +10,7 @@ import {
   Tooltip,
   IconButton,
   InputAdornment,
+  Alert,
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -24,6 +25,7 @@ import useAuthStore from '@/store/store';
 function AuthorizationForm() {
   const [showPassword, setShowPassword] = useState(false);
   const { isLoginForm, toggleForm } = useAuthStore();
+  const [error, setError] = useState<string | null>(null);
   const {
     handleSubmit,
     register,
@@ -35,23 +37,24 @@ function AuthorizationForm() {
   const router = useRouter();
 
   const onSubmit = async (data: User) => {
-    if (isLoginForm) {
-      try {
+    try {
+      if (isLoginForm) {
         await loginUser(data.email, data.password);
         router.push('/welcome');
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      try {
+      } else {
         if (!data.username) {
+          setError('Username is required.');
           return;
         }
         await registerUser(data.email, data.password, data.username);
         router.push('/welcome');
-      } catch (error) {
-        console.error(error);
       }
+    } catch (error) {
+      setError(
+        isLoginForm
+          ? 'Failed to sign in. Please check your credentials.'
+          : 'Failed to sign up. Please try again.'
+      );
     }
   };
 
@@ -75,6 +78,11 @@ function AuthorizationForm() {
       <Typography variant="h4" component="h1" gutterBottom textAlign={'center'}>
         {isLoginForm ? 'Sign in' : 'Sign up'}
       </Typography>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
       <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
         <Grid container spacing={3}>
           {!isLoginForm && (
