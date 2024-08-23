@@ -1,0 +1,9 @@
+{
+  "WelcomePage": {
+    "welcomeMessage": "Welcome to the GraphiQL App!",
+    "happyQuerying": "Happy querying!",
+    "notSignedIn": "Not signed in yet?",
+    "signIn": "Sign in",
+    "signUp": "Sign up"
+  }
+}

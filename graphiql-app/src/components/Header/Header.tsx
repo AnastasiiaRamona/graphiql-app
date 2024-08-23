@@ -20,9 +20,10 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { FormControlLabel } from '@mui/material';
 import MaterialUISwitch from '../SwitchTheme/MaterialUiSwitch';
+import { useLocale } from 'next-intl';
 
 const drawerWidth = 240;
-const navItems = ['Contact', 'EN', 'Sign in'];
+const navItems = ['Contact', 'Sign in'];
 
 export default function DrawerAppBar(props: Props) {
   const { window } = props;
@@ -87,6 +88,8 @@ export default function DrawerAppBar(props: Props) {
                   {item}
                 </Button>
               ))}
+
+              <Button sx={{ color: '#fff' }}>{useLocale()}</Button>
 
               <FormControlLabel
                 onChange={props.toggleTheme}
