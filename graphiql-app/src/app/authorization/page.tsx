@@ -10,18 +10,22 @@ import {
   Tooltip,
   IconButton,
   InputAdornment,
+  Alert,
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
-import schema, { User } from '@/validation/shema';
+import schema, { User } from '@/validation/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerUser } from '@/firebase/firebase';
+import { loginUser, registerUser } from '@/firebase/firebase';
 import { useRouter } from 'next/navigation';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import useAuthStore from '@/store/store';
 
-function RegistrationForm() {
+function AuthorizationForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const { isLoginForm, toggleForm } = useAuthStore();
+  const [error, setError] = useState<string | null>(null);
   const {
     handleSubmit,
     register,
@@ -33,13 +37,27 @@ function RegistrationForm() {
   const router = useRouter();
 
   const onSubmit = async (data: User) => {
-    await registerUser(data.email, data.password);
     try {
-      router.push('/RESTfull');
+      if (isLoginForm) {
+        await loginUser(data.email, data.password);
+        router.push('/welcome');
+      } else {
+        if (!data.username) {
+          setError('Username is required.');
+          return;
+        }
+        await registerUser(data.email, data.password, data.username);
+        router.push('/welcome');
+      }
     } catch (error) {
-      console.error(error);
+      setError(
+        isLoginForm
+          ? 'Failed to sign in. Please check your credentials.'
+          : 'Failed to sign up. Please try again.'
+      );
     }
   };
+
   const handleTogglePasswordVisibility = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -58,10 +76,35 @@ function RegistrationForm() {
         color="primary"
       />
       <Typography variant="h4" component="h1" gutterBottom textAlign={'center'}>
-        Sign up
+        {isLoginForm ? 'Sign in' : 'Sign up'}
       </Typography>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
       <form onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
         <Grid container spacing={3}>
+          {!isLoginForm && (
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                variant="outlined"
+                autoComplete="username"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end" sx={{ mr: -0.5 }}>
+                      <AccountCircle />
+                    </InputAdornment>
+                  ),
+                }}
+                {...register('username')}
+              />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <TextField
               required
@@ -111,7 +154,7 @@ function RegistrationForm() {
             />
           </Grid>
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Tooltip title="Register" arrow>
+            <Tooltip title={isLoginForm ? 'Sign in' : 'Sign up'} arrow>
               <span>
                 <Button
                   variant="contained"
@@ -119,10 +162,17 @@ function RegistrationForm() {
                   type="submit"
                   disabled={!isValid}
                 >
-                  Register
+                  {isLoginForm ? 'Sign in' : 'Sign up'}
                 </Button>
               </span>
             </Tooltip>
+          </Grid>
+          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button onClick={toggleForm}>
+              {isLoginForm
+                ? 'No account? Sign up'
+                : 'Have a current account? Sign in'}
+            </Button>
           </Grid>
         </Grid>
       </form>
@@ -130,4 +180,4 @@ function RegistrationForm() {
   );
 }
 
-export default RegistrationForm;
+export default AuthorizationForm;
