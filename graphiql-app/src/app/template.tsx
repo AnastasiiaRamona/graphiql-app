@@ -15,18 +15,26 @@ export default function Template({
 
   useEffect(() => {
     const savedMode = localStorage.getItem('isDarkMode');
-    setIsDarkMode(savedMode === 'true');
+    if (savedMode !== null) {
+      setIsDarkMode(savedMode === 'true');
+    } else {
+      setIsDarkMode(false);
+    }
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && isDarkMode !== null) {
-      localStorage.setItem('isDarkMode', isDarkMode?.toString());
+    if (isDarkMode !== null) {
+      localStorage.setItem('isDarkMode', isDarkMode.toString());
     }
   }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode((prevMode) => !prevMode);
   };
+
+  if (isDarkMode === null) {
+    return null;
+  }
 
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>

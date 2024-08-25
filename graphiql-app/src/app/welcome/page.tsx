@@ -46,7 +46,7 @@ const WelcomePage = () => {
         <Typography variant="h1" component="h2" sx={{ fontSize: '3rem' }}>
           {isAuthenticated
             ? `Welcome back, ${userName}!`
-            : 'Welcome to the GraphiQL App!'}
+            : 'Welcome to the QueryHub!'}
         </Typography>
         <Typography variant="h2" component="h2" sx={{ fontSize: '2rem' }}>
           Happy querying!
