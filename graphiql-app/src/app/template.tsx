@@ -41,7 +41,7 @@ export default function Template({
           justifyContent: 'space-between',
         }}
       >
-        <Header toggleTheme={toggleTheme} />
+        <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
         {children}
         <Footer />
       </Box>

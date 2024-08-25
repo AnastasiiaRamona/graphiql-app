@@ -28,12 +28,11 @@ import { auth } from '@/firebase/firebase';
 
 const drawerWidth = 240;
 
-export default function DrawerAppBar(props: Props) {
-  const { window } = props;
+export default function Header(props: Props) {
+  const { window, toggleTheme, isDarkMode } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [navItems, setNavItems] = useState<string[]>([]);
   const { handleNavigation } = useHeaderNavigation();
-
   const { setAuthenticated } = useAuthStore();
 
   useEffect(() => {
@@ -70,8 +69,13 @@ export default function DrawerAppBar(props: Props) {
           </ListItem>
         ))}
         <FormControlLabel
-          onChange={props.toggleTheme}
-          control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
+          control={
+            <MaterialUISwitch
+              sx={{ m: 1 }}
+              checked={isDarkMode} // Передаем текущее состояние темы
+              onChange={toggleTheme} // Передаем функцию для переключения темы
+            />
+          }
           label="Theme"
         />
       </List>
@@ -118,8 +122,13 @@ export default function DrawerAppBar(props: Props) {
               ))}
 
               <FormControlLabel
-                onChange={props.toggleTheme}
-                control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
+                control={
+                  <MaterialUISwitch
+                    sx={{ m: 1 }}
+                    checked={isDarkMode} // Передаем текущее состояние темы
+                    onChange={toggleTheme} // Передаем функцию для переключения темы
+                  />
+                }
                 label=""
               />
             </Box>

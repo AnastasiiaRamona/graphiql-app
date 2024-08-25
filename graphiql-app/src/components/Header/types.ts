@@ -6,6 +6,7 @@ interface Props {
     checked: boolean
   ) => void;
   window?: () => Window;
+  isDarkMode?: boolean;
 }
 
 export default Props;
