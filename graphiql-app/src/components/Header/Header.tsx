@@ -17,16 +17,36 @@ import Button from '@mui/material/Button';
 import Props from './types';
 import iconSrc from '../../app/icon.ico';
 import Image from 'next/image';
-import { useState } from 'react';
 import { FormControlLabel } from '@mui/material';
 import MaterialUISwitch from '../SwitchTheme/MaterialUiSwitch';
+import { useEffect, useState } from 'react';
+import useHeaderNavigation from '@/hooks/useHeaderNavigation';
+import useAuthStore from '@/store/store';
+import Link from 'next/link';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/firebase/firebase';
 
 const drawerWidth = 240;
-const navItems = ['Contact', 'EN', 'Sign in'];
 
 export default function DrawerAppBar(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [navItems, setNavItems] = useState<string[]>([]);
+  const { handleNavigation } = useHeaderNavigation();
+
+  const { setAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthenticated(true);
+        setNavItems(['Sign out']);
+      } else {
+        setAuthenticated(false);
+        setNavItems(['Sign in', 'Sign up']);
+      }
+    });
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -41,7 +61,10 @@ export default function DrawerAppBar(props: Props) {
       <List>
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
+            <ListItemButton
+              sx={{ textAlign: 'center' }}
+              onClick={() => handleNavigation(item)}
+            >
               <ListItemText primary={item} />
             </ListItemButton>
           </ListItem>
@@ -73,7 +96,9 @@ export default function DrawerAppBar(props: Props) {
             >
               <MenuIcon />
             </IconButton>
-            <Image src={iconSrc} alt="icon" width={50} height={50} />
+            <Link href="/welcome">
+              <Image src={iconSrc} alt="icon" width={50} height={50} />
+            </Link>
             <Typography
               variant="h6"
               component="div"
@@ -83,7 +108,11 @@ export default function DrawerAppBar(props: Props) {
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
-                <Button key={item} sx={{ color: '#fff' }}>
+                <Button
+                  key={item}
+                  sx={{ color: '#fff' }}
+                  onClick={() => handleNavigation(item)}
+                >
                   {item}
                 </Button>
               ))}
@@ -91,7 +120,7 @@ export default function DrawerAppBar(props: Props) {
               <FormControlLabel
                 onChange={props.toggleTheme}
                 control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
-                label="SWITCH THEME"
+                label=""
               />
             </Box>
           </Toolbar>
