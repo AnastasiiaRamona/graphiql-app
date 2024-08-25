@@ -12,6 +12,10 @@ const AuthorizationButtons = () => {
         gap: '0.5rem',
         alignItems: 'center',
         fontSize: '1rem',
+        '@media (max-width: 510px)': {
+          flexDirection: 'column',
+          textAlign: 'center',
+        },
       }}
     >
       <p>Not signed in/on yet?</p>

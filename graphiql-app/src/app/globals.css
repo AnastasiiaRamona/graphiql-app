@@ -11,6 +11,11 @@
   --primary-color: #0c234b;
 }
 
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
 body {
   width: 100vw;
   height: 100vh;
@@ -29,19 +34,10 @@ main {
   gap: 10vh;
 }
 
-html {
-  box-sizing: border-box;
-  scroll-behavior: smooth;
-}
-
 *,
 *::before,
 *::after {
   box-sizing: inherit;
-}
-
-body {
-  margin: 0;
 }
 
 ul,

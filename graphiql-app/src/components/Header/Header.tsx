@@ -68,16 +68,6 @@ export default function Header(props: Props) {
             </ListItemButton>
           </ListItem>
         ))}
-        <FormControlLabel
-          control={
-            <MaterialUISwitch
-              sx={{ m: 1 }}
-              checked={isDarkMode ?? false}
-              onChange={toggleTheme}
-            />
-          }
-          label="Theme"
-        />
       </List>
     </Box>
   );
@@ -90,7 +80,7 @@ export default function Header(props: Props) {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar component="nav">
-          <Toolbar>
+          <Toolbar sx={{ paddingRight: 0 }}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -100,31 +90,46 @@ export default function Header(props: Props) {
             >
               <MenuIcon />
             </IconButton>
-            <Link href="/welcome">
-              <Image src={iconSrc} alt="icon" width={50} height={50} />
-            </Link>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
             >
-              QueryHub
-            </Typography>
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-              {navItems.map((item) => (
-                <Button
-                  key={item}
-                  sx={{ color: '#fff' }}
-                  onClick={() => handleNavigation(item)}
-                >
-                  {item}
-                </Button>
-              ))}
-
+              <Link href="/welcome">
+                <Image
+                  src={iconSrc}
+                  alt="icon"
+                  width={50}
+                  height={50}
+                  style={{ marginRight: '10px' }}
+                />
+              </Link>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+              >
+                QueryHub
+              </Typography>
+              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                {navItems.map((item) => (
+                  <Button
+                    key={item}
+                    sx={{ color: '#fff' }}
+                    onClick={() => handleNavigation(item)}
+                  >
+                    {item}
+                  </Button>
+                ))}
+              </Box>
               <FormControlLabel
+                sx={{ marginRight: 0 }}
                 control={
                   <MaterialUISwitch
-                    sx={{ m: 1 }}
+                    sx={{ m: 1, marginLeft: 2 }}
                     checked={isDarkMode ?? false}
                     onChange={toggleTheme}
                   />
