@@ -17,6 +17,8 @@ import Button from '@mui/material/Button';
 import Props from './types';
 import iconSrc from '../../app/icon.ico';
 import Image from 'next/image';
+import { FormControlLabel } from '@mui/material';
+import MaterialUISwitch from '../SwitchTheme/MaterialUiSwitch';
 import { useEffect, useState } from 'react';
 import useHeaderNavigation from '@/hooks/useHeaderNavigation';
 import useAuthStore from '@/store/store';
@@ -67,6 +69,11 @@ export default function DrawerAppBar(props: Props) {
             </ListItemButton>
           </ListItem>
         ))}
+        <FormControlLabel
+          onChange={props.toggleTheme}
+          control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
+          label="Theme"
+        />
       </List>
     </Box>
   );
@@ -97,7 +104,7 @@ export default function DrawerAppBar(props: Props) {
               component="div"
               sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
             >
-              Graphiql App
+              QueryHub
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
@@ -109,6 +116,12 @@ export default function DrawerAppBar(props: Props) {
                   {item}
                 </Button>
               ))}
+
+              <FormControlLabel
+                onChange={props.toggleTheme}
+                control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
+                label=""
+              />
             </Box>
           </Toolbar>
         </AppBar>

@@ -9,11 +9,6 @@
 
   --primary-font-family: 'Red Hat Display', sans-serif;
   --primary-color: #0c234b;
-  --background-color: linear-gradient(
-    135deg,
-    rgb(204, 226, 246),
-    rgb(146, 189, 215)
-  );
 }
 
 body {
@@ -21,11 +16,9 @@ body {
   height: 100vh;
   margin: 0;
   padding: 0;
-  background: var(--background-color);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: var(--primary-color);
 }
 
 main {
