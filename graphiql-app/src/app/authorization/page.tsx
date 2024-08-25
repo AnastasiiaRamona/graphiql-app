@@ -13,7 +13,7 @@ import {
   Alert,
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { TheaterComedy, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import schema, { User } from '@/validation/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -69,7 +69,11 @@ function AuthorizationForm() {
     <Container
       maxWidth="sm"
       component="main"
-      sx={{ mt: 8, backgroundColor: 'white', padding: '2rem' }}
+      sx={{
+        mt: 8,
+        padding: '2rem',
+        backgroundColor: (theme) => theme.palette.background.paper,
+      }}
     >
       <LockIcon
         sx={{ fontSize: 40, display: 'block', mx: 'auto' }}

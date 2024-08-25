@@ -18,6 +18,7 @@ const lightTheme = createTheme({
     background: {
       default:
         'linear-gradient(135deg, rgb(204, 226, 246), rgb(146, 189, 215))',
+      paper: 'white',
     },
   },
   typography: {
@@ -40,6 +41,7 @@ const darkTheme = createTheme({
     background: {
       default:
         'linear-gradient(135deg, rgba(66, 74, 81, 0.911), rgb(30, 54, 105))',
+      paper: '#313233',
     },
   },
   typography: {

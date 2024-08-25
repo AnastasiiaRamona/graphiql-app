@@ -72,7 +72,7 @@ export default function DrawerAppBar(props: Props) {
         <FormControlLabel
           onChange={props.toggleTheme}
           control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
-          label="SWITCH THEME"
+          label="Theme"
         />
       </List>
     </Box>
