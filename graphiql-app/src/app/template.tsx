@@ -3,7 +3,7 @@
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import { lightTheme, darkTheme } from '@/theme/theme';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { useState } from 'react';
 
 export default function Template({
@@ -19,9 +19,19 @@ export default function Template({
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <CssBaseline />
-      <Header toggleTheme={toggleTheme} />
-      {children}
-      <Footer />
+      <Box
+        sx={{
+          height: '100vh',
+          background: (theme) => theme.palette.background.default,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Header toggleTheme={toggleTheme} />
+        {children}
+        <Footer />
+      </Box>
     </ThemeProvider>
   );
 }

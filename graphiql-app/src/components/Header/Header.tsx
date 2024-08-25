@@ -79,7 +79,7 @@ export default function DrawerAppBar(props: Props) {
               component="div"
               sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
             >
-              Graphiql App
+              QueryHub
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               {navItems.map((item) => (
