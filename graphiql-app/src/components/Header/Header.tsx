@@ -72,8 +72,8 @@ export default function Header(props: Props) {
           control={
             <MaterialUISwitch
               sx={{ m: 1 }}
-              checked={isDarkMode} // Передаем текущее состояние темы
-              onChange={toggleTheme} // Передаем функцию для переключения темы
+              checked={isDarkMode ?? false}
+              onChange={toggleTheme}
             />
           }
           label="Theme"
@@ -125,8 +125,8 @@ export default function Header(props: Props) {
                 control={
                   <MaterialUISwitch
                     sx={{ m: 1 }}
-                    checked={isDarkMode} // Передаем текущее состояние темы
-                    onChange={toggleTheme} // Передаем функцию для переключения темы
+                    checked={isDarkMode ?? false}
+                    onChange={toggleTheme}
                   />
                 }
                 label=""

@@ -11,17 +11,16 @@ export default function Template({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedMode = localStorage.getItem('isDarkMode');
-      return savedMode === 'true';
-    }
-    return false;
-  });
+  const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('isDarkMode', isDarkMode.toString());
+    const savedMode = localStorage.getItem('isDarkMode');
+    setIsDarkMode(savedMode === 'true');
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isDarkMode !== null) {
+      localStorage.setItem('isDarkMode', isDarkMode?.toString());
     }
   }, [isDarkMode]);
 
