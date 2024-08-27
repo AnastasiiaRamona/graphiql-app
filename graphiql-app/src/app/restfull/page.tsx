@@ -14,62 +14,38 @@ import {
   FormControl,
   Box,
 } from '@mui/material';
+import useRestfullForm from './useRestfullForm';
+import {
+  containerStyles,
+  boxStyles,
+  gridItemHeaderStyles,
+  buttonStyles,
+  textFieldHeaderKeyStyles,
+  textFieldHeaderValueStyles,
+  preBoxStyles,
+} from './restfullFormStyles';
 
 function RestfullForm() {
-  const [method, setMethod] = React.useState('');
-  const [body, setBody] = React.useState('');
-  const [responseStatus, setResponseStatus] = React.useState('');
-  const [responseBody, setResponseBody] = React.useState('');
-
-  const handleMethodChange = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setMethod(event.target.value);
-  };
-
-  const handleBodyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setBody(event.target.value);
-  };
-
-  const getColor = (method: string) => {
-    switch (method) {
-      case 'GET':
-        return 'blue';
-      case 'POST':
-        return 'green';
-      case 'PUT':
-        return 'orange';
-      case 'PATCH':
-        return 'purple';
-      case 'DELETE':
-        return 'red';
-      case 'HEAD':
-        return 'brown';
-      case 'OPTIONS':
-        return 'teal';
-      default:
-        return 'black';
-    }
-  };
+  const {
+    method,
+    endpoint,
+    headers,
+    body,
+    responseStatus,
+    responseBody,
+    handleMethodChange,
+    handleEndpointChange,
+    handleBodyChange,
+    handleHeaderChange,
+    handleAddHeader,
+    handleSubmit,
+    getColor,
+    updateUrl,
+  } = useRestfullForm();
 
   return (
-    <Container
-      maxWidth="sm"
-      component="main"
-      sx={{
-        mt: 8,
-        marginLeft: '50vw',
-        transform: 'translateX(-50%)',
-      }}
-    >
-      <Box
-        sx={{
-          border: '2px solid #ccc',
-          padding: '16px',
-          borderRadius: '8px',
-          mb: 4,
-        }}
-      >
+    <Container maxWidth="sm" component="main" sx={containerStyles}>
+      <Box sx={boxStyles}>
         <Typography
           variant="h4"
           component="h1"
@@ -79,7 +55,7 @@ function RestfullForm() {
           REST Client
         </Typography>
 
-        <form noValidate autoComplete="off">
+        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={4}>
               <FormControl fullWidth>
@@ -90,6 +66,7 @@ function RestfullForm() {
                   value={method}
                   label="Method"
                   onChange={handleMethodChange}
+                  onBlur={() => updateUrl(method)}
                   variant="outlined"
                   renderValue={(selected) => (
                     <span style={{ color: getColor(selected) }}>
@@ -129,10 +106,13 @@ function RestfullForm() {
                 id="endpoint"
                 label="Endpoint URL"
                 variant="outlined"
+                value={endpoint}
+                onChange={handleEndpointChange}
+                onBlur={() => updateUrl(method)}
               />
             </Grid>
 
-            <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'start' }}>
+            <Grid item xs={3} sx={gridItemHeaderStyles}>
               <Typography
                 variant="h5"
                 component="h2"
@@ -142,103 +122,104 @@ function RestfullForm() {
                 Header:
               </Typography>
             </Grid>
-            <Grid
-              item
-              xs={9}
-              sx={{ display: 'flex', justifyContent: 'start', mb: 1 }}
-            >
+            <Grid item xs={9} sx={buttonStyles}>
               <Tooltip title="Add Header" arrow>
-                <Button variant="contained" color="primary" type="submit">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddHeader}
+                >
                   Add Header
                 </Button>
               </Tooltip>
             </Grid>
 
-            <Grid container spacing={0}>
-              <Grid item xs={6} sx={{ paddingLeft: '16px' }}>
-                <TextField
-                  fullWidth
-                  id="header_key"
-                  label="Header Key"
-                  variant="outlined"
-                  sx={{
-                    borderBottom: '1px solid #ccc',
-                    borderRadius: 0,
-                    borderBottomLeftRadius: '5px',
-                  }}
-                  InputProps={{
-                    sx: {
-                      borderRadius: 0,
-                      borderBottomLeftRadius: '5px',
-                      borderTopLeftRadius: '5px',
-                    },
-                  }}
-                />
+            {headers.map((header, index) => (
+              <Grid container spacing={0} key={index}>
+                <Grid item xs={6} sx={{ paddingLeft: '16px' }}>
+                  <TextField
+                    fullWidth
+                    id={`header_key_${index}`}
+                    label="Header Key"
+                    variant="outlined"
+                    value={header.key}
+                    onChange={(e) =>
+                      handleHeaderChange(index, 'key', e.target.value)
+                    }
+                    onBlur={() => updateUrl(method)}
+                    sx={textFieldHeaderKeyStyles}
+                    InputProps={{
+                      sx: {
+                        borderRadius: 0,
+                        borderBottomLeftRadius: '5px',
+                        borderTopLeftRadius: '5px',
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sx={{ paddingRight: '16px' }}>
+                  <TextField
+                    fullWidth
+                    id={`header_value_${index}`}
+                    label="Header Value"
+                    variant="outlined"
+                    value={header.value}
+                    onChange={(e) =>
+                      handleHeaderChange(index, 'value', e.target.value)
+                    }
+                    onBlur={() => updateUrl(method)}
+                    sx={textFieldHeaderValueStyles}
+                    InputProps={{
+                      sx: {
+                        borderRadius: 0,
+                        borderBottomRightRadius: '5px',
+                        borderTopRightRadius: '5px',
+                      },
+                    }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  id="header_value"
-                  label="Header Value"
-                  variant="outlined"
-                  sx={{
-                    borderBottom: '1px solid #ccc',
-                    borderRadius: 0,
-                    borderBottomRightRadius: '5px',
-                  }}
-                  InputProps={{
-                    sx: {
-                      borderRadius: 0,
-                      borderBottomRightRadius: '5px',
-                      borderTopRightRadius: '5px',
-                    },
-                  }}
-                />
-              </Grid>
-            </Grid>
+            ))}
 
-            <Grid item xs={12} sx={{ mt: 2 }}>
-              <Typography variant="h5" component="h2" gutterBottom>
-                Body:
-              </Typography>
+            <Grid item xs={12}>
               <TextField
                 fullWidth
                 id="body"
-                label="JSON/Text Body"
+                label="Request Body"
                 variant="outlined"
                 multiline
-                rows={6}
+                rows={4}
                 value={body}
                 onChange={handleBodyChange}
+                onBlur={() => updateUrl(method)}
               />
             </Grid>
 
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
-              <Button variant="contained" color="primary">
-                Send
-              </Button>
+              <Tooltip title="Submit Request" arrow>
+                <Button variant="contained" color="primary" type="submit">
+                  Send Request
+                </Button>
+              </Tooltip>
             </Grid>
           </Grid>
         </form>
       </Box>
 
-      <Box
-        sx={{
-          border: '2px solid #ccc',
-          padding: '16px',
-          borderRadius: '8px',
-        }}
-      >
+      <Box sx={boxStyles}>
         <Typography
-          variant="h4"
+          variant="h5"
           component="h2"
           gutterBottom
           textAlign={'center'}
         >
           Response
         </Typography>
-        <Typography variant="h5">Status: {responseStatus}</Typography>
-        <Typography variant="h5">Body: {responseBody}</Typography>
+        <Typography variant="h6">Status: {responseStatus}</Typography>
+        <Typography variant="h6">Body:</Typography>
+        <Box component="pre" sx={preBoxStyles}>
+          {responseBody}
+        </Box>
       </Box>
     </Container>
   );
