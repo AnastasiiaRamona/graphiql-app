@@ -131,6 +131,11 @@ const useRestfullForm = () => {
     }
   };
 
+  const handleRemoveHeader = (index: number) => {
+    const newHeaders = headers.filter((_, i) => i !== index);
+    setHeaders(newHeaders);
+  };
+
   return {
     method,
     endpoint,
@@ -147,6 +152,7 @@ const useRestfullForm = () => {
     getColor,
     constructUrl,
     updateUrl,
+    handleRemoveHeader,
   };
 };
 

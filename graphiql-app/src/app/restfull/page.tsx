@@ -13,7 +13,9 @@ import {
   InputLabel,
   FormControl,
   Box,
+  InputAdornment,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import useRestfullForm from './useRestfullForm';
 import {
   containerStyles,
@@ -23,6 +25,7 @@ import {
   textFieldHeaderKeyStyles,
   textFieldHeaderValueStyles,
   preBoxStyles,
+  deleteIconStyles,
 } from './restfullFormStyles';
 
 function RestfullForm() {
@@ -41,6 +44,7 @@ function RestfullForm() {
     handleSubmit,
     getColor,
     updateUrl,
+    handleRemoveHeader,
   } = useRestfullForm();
 
   return (
@@ -157,7 +161,7 @@ function RestfullForm() {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sx={{ paddingRight: '16px' }}>
+                <Grid item xs={6}>
                   <TextField
                     fullWidth
                     id={`header_value_${index}`}
@@ -175,6 +179,14 @@ function RestfullForm() {
                         borderBottomRightRadius: '5px',
                         borderTopRightRadius: '5px',
                       },
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <DeleteIcon
+                            sx={deleteIconStyles}
+                            onClick={() => handleRemoveHeader(index)}
+                          />
+                        </InputAdornment>
+                      ),
                     }}
                   />
                 </Grid>

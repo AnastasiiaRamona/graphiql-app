@@ -44,3 +44,11 @@ export const preBoxStyles: SxProps<Theme> = {
   padding: '10px',
   borderRadius: '4px',
 };
+
+export const deleteIconStyles: SxProps<Theme> = {
+  color: 'grey',
+  cursor: 'pointer',
+  '&:hover': {
+    color: 'black',
+  },
+};
