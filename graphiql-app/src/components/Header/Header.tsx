@@ -27,6 +27,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import SwitchLanguage from '../SwitchLanguage/SwitchLanguage';
 
 const drawerWidth = 240;
 
@@ -130,17 +131,20 @@ export default function Header(props: Props) {
                   </Button>
                 ))}
               </Box>
-              <FormControlLabel
-                sx={{ marginRight: 0 }}
-                control={
-                  <MaterialUISwitch
-                    sx={{ m: 1, marginLeft: 2 }}
-                    checked={isDarkMode ?? false}
-                    onChange={toggleTheme}
-                  />
-                }
-                label=""
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <SwitchLanguage />
+                <FormControlLabel
+                  sx={{ marginRight: 0 }}
+                  control={
+                    <MaterialUISwitch
+                      sx={{ m: 1, marginLeft: 2 }}
+                      checked={isDarkMode ?? false}
+                      onChange={toggleTheme}
+                    />
+                  }
+                  label=""
+                />
+              </Box>
             </Box>
           </Toolbar>
         </AppBar>

@@ -7,8 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const locale = urlParams.get('locale') || 'en';
+    const locale = localStorage.getItem('language') || 'en';
     router.push(`/${locale}/welcome`);
   }, [router]);
 

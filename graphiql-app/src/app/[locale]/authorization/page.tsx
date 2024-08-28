@@ -99,6 +99,7 @@ function AuthorizationForm() {
                 id="username"
                 label="Username"
                 variant="outlined"
+                helperText={errors.username?.message}
                 autoComplete="username"
                 InputProps={{
                   endAdornment: (
