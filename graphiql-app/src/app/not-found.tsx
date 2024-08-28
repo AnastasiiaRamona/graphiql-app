@@ -1,6 +1,5 @@
 import { Container, Typography, Box } from '@mui/material';
 import Link from 'next/link';
-import Image from 'next/image';
 
 function NotFound() {
   return (
