@@ -1,6 +1,6 @@
 # [RSS React.js Final Project 2024: QueryHub](https://github.com/rolling-scopes-school/tasks/blob/master/react/modules/tasks/final.md)
 
-![Icon](src/app/icon.ico)
+![Icon](graphiql-app/src/app/icon.ico)
 
 This application is a comprehensive tool designed for working with APIs. It provides a rich interface for making and managing API requests, both for REST and GraphQL APIs. Inspired by Postman and GraphiQL, this tool supports method selection, URL input, and headers management, while also offering advanced features for authorization, authentication, and request history.
 
