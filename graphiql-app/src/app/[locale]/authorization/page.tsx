@@ -13,19 +13,23 @@ import {
   Alert,
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
-import { TheaterComedy, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import schema, { User } from '@/validation/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginUser, registerUser } from '@/firebase/firebase';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import useAuthStore from '@/store/store';
+import { useTranslations } from 'next-intl';
 
 function AuthorizationForm() {
   const [showPassword, setShowPassword] = useState(false);
   const { isLoginForm, toggleForm } = useAuthStore();
   const [error, setError] = useState<string | null>(null);
+  const locale = useTranslations();
+  const params = useParams();
+  const localeUrl = params.locale || 'en';
   const {
     handleSubmit,
     register,
@@ -40,20 +44,18 @@ function AuthorizationForm() {
     try {
       if (isLoginForm) {
         await loginUser(data.email, data.password);
-        router.push('/welcome');
+        router.replace(`/${localeUrl}/welcome`);
       } else {
         if (!data.username) {
           setError('Username is required.');
           return;
         }
         await registerUser(data.email, data.password, data.username);
-        router.push('/welcome');
+        router.replace(`/${localeUrl}/welcome`);
       }
     } catch (error) {
       setError(
-        isLoginForm
-          ? 'Failed to sign in. Please check your credentials.'
-          : 'Failed to sign up. Please try again.'
+        isLoginForm ? `${locale('loginError')}` : `${locale('registerError')}`
       );
     }
   };
@@ -80,7 +82,7 @@ function AuthorizationForm() {
         color="primary"
       />
       <Typography variant="h4" component="h1" gutterBottom textAlign={'center'}>
-        {isLoginForm ? 'Sign in' : 'Sign up'}
+        {isLoginForm ? `${locale('signIn')}` : `${locale('signUp')}`}
       </Typography>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
@@ -97,6 +99,7 @@ function AuthorizationForm() {
                 id="username"
                 label="Username"
                 variant="outlined"
+                helperText={errors.username?.message}
                 autoComplete="username"
                 InputProps={{
                   endAdornment: (
@@ -158,7 +161,12 @@ function AuthorizationForm() {
             />
           </Grid>
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Tooltip title={isLoginForm ? 'Sign in' : 'Sign up'} arrow>
+            <Tooltip
+              title={
+                isLoginForm ? `${locale('signIn')}` : `${locale('signUp')}`
+              }
+              arrow
+            >
               <span>
                 <Button
                   variant="contained"
@@ -166,7 +174,7 @@ function AuthorizationForm() {
                   type="submit"
                   disabled={!isValid}
                 >
-                  {isLoginForm ? 'Sign in' : 'Sign up'}
+                  {isLoginForm ? `${locale('signIn')}` : `${locale('signUp')}`}
                 </Button>
               </span>
             </Tooltip>
@@ -174,8 +182,8 @@ function AuthorizationForm() {
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
             <Button onClick={toggleForm}>
               {isLoginForm
-                ? 'No account? Sign up'
-                : 'Have a current account? Sign in'}
+                ? `${locale('questionAboutSignUp')}`
+                : `${locale('questionAboutSignIn')}`}
             </Button>
           </Grid>
         </Grid>

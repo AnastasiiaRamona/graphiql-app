@@ -25,6 +25,9 @@ import useAuthStore from '@/store/store';
 import Link from 'next/link';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
+import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
+import SwitchLanguage from '../SwitchLanguage/SwitchLanguage';
 
 const drawerWidth = 240;
 
@@ -34,15 +37,18 @@ export default function Header(props: Props) {
   const [navItems, setNavItems] = useState<string[]>([]);
   const { handleNavigation } = useHeaderNavigation();
   const { setAuthenticated } = useAuthStore();
+  const locale = useTranslations();
+  const params = useParams();
+  const localeUrl = params.locale || 'en';
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthenticated(true);
-        setNavItems(['Sign out']);
+        setNavItems([locale('signOut'), locale('home')]);
       } else {
         setAuthenticated(false);
-        setNavItems(['Sign in', 'Sign up']);
+        setNavItems([locale('signIn'), locale('signUp')]);
       }
     });
   }, []);
@@ -98,7 +104,7 @@ export default function Header(props: Props) {
                 alignItems: 'center',
               }}
             >
-              <Link href="/welcome">
+              <Link href={`/${localeUrl}/welcome`}>
                 <Image
                   src={iconSrc}
                   alt="icon"
@@ -125,17 +131,20 @@ export default function Header(props: Props) {
                   </Button>
                 ))}
               </Box>
-              <FormControlLabel
-                sx={{ marginRight: 0 }}
-                control={
-                  <MaterialUISwitch
-                    sx={{ m: 1, marginLeft: 2 }}
-                    checked={isDarkMode ?? false}
-                    onChange={toggleTheme}
-                  />
-                }
-                label=""
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <SwitchLanguage />
+                <FormControlLabel
+                  sx={{ marginRight: 0 }}
+                  control={
+                    <MaterialUISwitch
+                      sx={{ m: 1, marginLeft: 2 }}
+                      checked={isDarkMode ?? false}
+                      onChange={toggleTheme}
+                    />
+                  }
+                  label=""
+                />
+              </Box>
             </Box>
           </Toolbar>
         </AppBar>

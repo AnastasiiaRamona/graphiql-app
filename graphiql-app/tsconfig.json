@@ -30,7 +30,8 @@
     ".next/types/**/*.ts",
     "src/**/*",
     "next.config.mjs",
-    "vitest.config.js"
+    "vitest.config.js",
+    "i18n.config.js"
   ],
   "exclude": ["node_modules"]
 }

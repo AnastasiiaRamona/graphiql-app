@@ -6,12 +6,14 @@ import { auth } from '@/firebase/firebase';
 import useAuthStore from '@/store/store';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { onAuthStateChanged } from 'firebase/auth';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 const WelcomePage = () => {
   const { setAuthenticated, isAuthenticated } = useAuthStore();
   const [userName, setUserName] = useState('');
   const [loading, setLoading] = useState(true);
+  const locale = useTranslations();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -43,13 +45,25 @@ const WelcomePage = () => {
   return (
     <main>
       <Box width={'70%'}>
-        <Typography variant="h1" component="h2" sx={{ fontSize: '3rem' }}>
+        <Typography
+          variant="h1"
+          component="h2"
+          sx={{
+            fontSize: 'clamp(2rem, 4vw, 3rem)',
+          }}
+        >
           {isAuthenticated
-            ? `Welcome back, ${userName}!`
-            : 'Welcome to the QueryHub!'}
+            ? `${locale('welcome-back')} ${userName}!`
+            : `${locale('welcome')}`}
         </Typography>
-        <Typography variant="h2" component="h2" sx={{ fontSize: '2rem' }}>
-          Happy querying!
+        <Typography
+          variant="h2"
+          component="h2"
+          sx={{
+            fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+          }}
+        >
+          {locale('wish')}
         </Typography>
       </Box>
       {isAuthenticated ? <MenuButtons /> : <AuthorizationButtons />}
