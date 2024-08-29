@@ -1,0 +1,18 @@
+{
+  "welcome": "Добро пожаловать в QueryHub!",
+  "welcome-back": "С возвращением,",
+  "signIn": "Войти",
+  "signUp": "Регистрация",
+  "signOut": "Выйти",
+  "home": "Главная",
+  "wish": "Удачных запросов!",
+  "questionAboutAuth": "Еще не вошли/зарегистрировались?",
+  "loginError": "Не удалось войти. Пожалуйста, проверьте свои учетные данные.",
+  "registerError": "Не удалось зарегистрироваться. Пожалуйста, попробуйте снова.",
+  "questionAboutSignUp": "Нет аккаунта? Зарегистрируйтесь",
+  "questionAboutSignIn": "Уже есть аккаунт? Войдите",
+  "restfullClient": "REST Клиент",
+  "graphiqlClient": "GraphiQL Клиент",
+  "history": "История",
+  "chooseOne": "Выбери"
+}
