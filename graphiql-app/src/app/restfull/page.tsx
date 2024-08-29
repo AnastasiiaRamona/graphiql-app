@@ -14,6 +14,7 @@ import {
   FormControl,
   Box,
   InputAdornment,
+  IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useRestfullForm from './useRestfullForm';
@@ -26,6 +27,8 @@ import {
   textFieldHeaderValueStyles,
   preBoxStyles,
   deleteIconStyles,
+  gridItemStyles,
+  gridContainerStyles,
 } from './restfullFormStyles';
 
 function RestfullForm() {
@@ -45,6 +48,12 @@ function RestfullForm() {
     getColor,
     updateUrl,
     handleRemoveHeader,
+    variables,
+    showVariables,
+    handleVariableChange,
+    handleAddVariable,
+    toggleVariablesSection,
+    setVariables,
   } = useRestfullForm();
 
   return (
@@ -60,8 +69,8 @@ function RestfullForm() {
         </Typography>
 
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={4}>
+          <Grid container spacing={2} sx={gridContainerStyles}>
+            <Grid item xs={4} sx={gridItemStyles}>
               <FormControl fullWidth>
                 <InputLabel id="method-label">Method</InputLabel>
                 <Select
@@ -104,7 +113,7 @@ function RestfullForm() {
               </FormControl>
             </Grid>
 
-            <Grid item xs={8}>
+            <Grid item xs={8} sm={8} sx={gridItemStyles}>
               <TextField
                 fullWidth
                 id="endpoint"
@@ -206,6 +215,81 @@ function RestfullForm() {
                 onBlur={() => updateUrl(method)}
               />
             </Grid>
+
+            <Grid item xs={12} sx={buttonStyles}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={toggleVariablesSection}
+              >
+                {showVariables ? 'Hide Variables' : 'Show Variables'}
+              </Button>
+            </Grid>
+
+            {showVariables && (
+              <>
+                <Grid item xs={7}>
+                  <Typography variant="h5">Variables:</Typography>
+                </Grid>
+
+                <Grid item xs={4} sx={buttonStyles}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleAddVariable}
+                  >
+                    Add Variable
+                  </Button>
+                </Grid>
+
+                {variables.map((variable, index) => (
+                  <Grid
+                    container
+                    spacing={2}
+                    key={index}
+                    sx={{ ...gridContainerStyles, paddingLeft: '16px' }}
+                  >
+                    <Grid item xs={5} sx={gridItemStyles}>
+                      <TextField
+                        fullWidth
+                        id={`variable_key_${index}`}
+                        label="Variable Key"
+                        variant="outlined"
+                        value={variable.key}
+                        onChange={(e) =>
+                          handleVariableChange(index, 'key', e.target.value)
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={5} sx={gridItemStyles}>
+                      <TextField
+                        fullWidth
+                        id={`variable_value_${index}`}
+                        label="Variable Value"
+                        variant="outlined"
+                        value={variable.value}
+                        onChange={(e) =>
+                          handleVariableChange(index, 'value', e.target.value)
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={2}>
+                      <IconButton
+                        color="secondary"
+                        onClick={() => {
+                          const newVariables = variables.filter(
+                            (_, i) => i !== index
+                          );
+                          setVariables(newVariables);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ))}
+              </>
+            )}
 
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
               <Tooltip title="Submit Request" arrow>

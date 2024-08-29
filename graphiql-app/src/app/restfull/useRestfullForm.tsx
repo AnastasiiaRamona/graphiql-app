@@ -7,6 +7,8 @@ const useRestfullForm = () => {
   const [body, setBody] = React.useState('');
   const [responseStatus, setResponseStatus] = React.useState('');
   const [responseBody, setResponseBody] = React.useState('');
+  const [variables, setVariables] = React.useState([{ key: '', value: '' }]);
+  const [showVariables, setShowVariables] = React.useState(false);
 
   const handleMethodChange = (event: {
     target: { value: React.SetStateAction<string> };
@@ -42,7 +44,11 @@ const useRestfullForm = () => {
   };
 
   const encodeToBase64 = (string: string) => {
-    return btoa(string);
+    return btoa(
+      encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (_, p1) =>
+        String.fromCharCode(parseInt(p1, 16))
+      )
+    );
   };
 
   const constructUrl = (methodOverride: string | undefined) => {
@@ -73,6 +79,41 @@ const useRestfullForm = () => {
     window.history.pushState({}, '', requestUrl);
   };
 
+  const handleVariableChange = (
+    index: number,
+    field: 'key' | 'value',
+    value: string
+  ) => {
+    const newVariables = [...variables];
+    newVariables[index][field] = value;
+    setVariables(newVariables);
+  };
+
+  const handleAddVariable = () => {
+    setVariables([...variables, { key: '', value: '' }]);
+  };
+
+  const toggleVariablesSection = () => {
+    setShowVariables(!showVariables);
+  };
+
+  const prepareRequestBody = () => {
+    let requestBody = body;
+    if (showVariables) {
+      const variablesObject = variables.reduce<Record<string, string>>(
+        (acc, variable) => {
+          if (variable.key) {
+            acc[variable.key] = variable.value;
+          }
+          return acc;
+        },
+        {}
+      );
+      requestBody = JSON.stringify({ ...JSON.parse(body), ...variablesObject });
+    }
+    return requestBody;
+  };
+
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
@@ -85,11 +126,14 @@ const useRestfullForm = () => {
       },
       {}
     );
+
     try {
       const response = await fetch(endpoint, {
         method,
         headers: requestHeaders,
-        body: ['GET', 'HEAD', 'OPTIONS'].includes(method) ? null : body,
+        body: ['GET', 'HEAD', 'OPTIONS'].includes(method)
+          ? null
+          : prepareRequestBody(),
       });
 
       setResponseStatus(response.status.toString());
@@ -153,6 +197,12 @@ const useRestfullForm = () => {
     constructUrl,
     updateUrl,
     handleRemoveHeader,
+    variables,
+    showVariables,
+    handleVariableChange,
+    handleAddVariable,
+    toggleVariablesSection,
+    setVariables,
   };
 };
 
