@@ -14,5 +14,8 @@
   "restfullClient": "REST Client",
   "graphiqlClient": "GraphiQL Client",
   "history": "History",
-  "chooseOne": "Choose One"
+  "chooseOne": "Choose One",
+  "error": "Error",
+  "pageNotFound": "Page not found",
+  "goHome": "Go Home"
 }

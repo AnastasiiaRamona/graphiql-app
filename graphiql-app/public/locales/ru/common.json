@@ -14,5 +14,8 @@
   "restfullClient": "REST Клиент",
   "graphiqlClient": "GraphiQL Клиент",
   "history": "История",
-  "chooseOne": "Выбери"
+  "chooseOne": "Выбери",
+  "error": "Ошибка",
+  "pageNotFound": "Страница не найдена",
+  "goHome": "На Главную"
 }
