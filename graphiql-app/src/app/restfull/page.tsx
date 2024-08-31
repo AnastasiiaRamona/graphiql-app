@@ -53,7 +53,7 @@ function RestfullForm() {
     handleVariableChange,
     handleAddVariable,
     toggleVariablesSection,
-    setVariables,
+    handleRemoveVariable,
   } = useRestfullForm();
 
   return (
@@ -192,7 +192,9 @@ function RestfullForm() {
                         <InputAdornment position="end">
                           <DeleteIcon
                             sx={deleteIconStyles}
-                            onClick={() => handleRemoveHeader(index)}
+                            onClick={() => {
+                              handleRemoveHeader(index);
+                            }}
                           />
                         </InputAdornment>
                       ),
@@ -259,6 +261,7 @@ function RestfullForm() {
                         onChange={(e) =>
                           handleVariableChange(index, 'key', e.target.value)
                         }
+                        onBlur={() => updateUrl(method)}
                       />
                     </Grid>
                     <Grid item xs={5} sx={gridItemStyles}>
@@ -271,16 +274,14 @@ function RestfullForm() {
                         onChange={(e) =>
                           handleVariableChange(index, 'value', e.target.value)
                         }
+                        onBlur={() => updateUrl(method)}
                       />
                     </Grid>
                     <Grid item xs={2}>
                       <IconButton
                         color="secondary"
                         onClick={() => {
-                          const newVariables = variables.filter(
-                            (_, i) => i !== index
-                          );
-                          setVariables(newVariables);
+                          handleRemoveVariable(index);
                         }}
                       >
                         <DeleteIcon />

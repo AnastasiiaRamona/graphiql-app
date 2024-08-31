@@ -10,6 +10,10 @@ const useRestfullForm = () => {
   const [variables, setVariables] = React.useState([{ key: '', value: '' }]);
   const [showVariables, setShowVariables] = React.useState(false);
 
+  React.useEffect(() => {
+    updateUrl(method);
+  }, [headers, variables]);
+
   const handleMethodChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
@@ -51,10 +55,23 @@ const useRestfullForm = () => {
     );
   };
 
+  const handleRemoveHeader = (index: number) => {
+    const newHeaders = headers.filter((_, i) => i !== index);
+    setHeaders(newHeaders);
+  };
+
+  const handleRemoveVariable = (index: number) => {
+    const newVariables = variables.filter((_, i) => i !== index);
+    setVariables(newVariables);
+  };
+
   const constructUrl = (methodOverride: string | undefined) => {
+    const requestBody = prepareRequestBody();
     const baseUrl = window.location.origin;
     const encodedEndpoint = encodeToBase64(endpoint);
-    const encodedBody = body ? encodeToBase64(JSON.stringify(body)) : null;
+    const encodedBody = requestBody
+      ? encodeToBase64(JSON.stringify(requestBody))
+      : null;
     const methodToUse = methodOverride || method;
     let queryParams = '';
     headers.forEach((header) => {
@@ -97,26 +114,36 @@ const useRestfullForm = () => {
     setShowVariables(!showVariables);
   };
 
+  const isJson = (text: string) => {
+    try {
+      JSON.parse(text);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const replaceVariablesInBody = (body: string) => {
+    let updatedBody = body;
+    variables.forEach((variable) => {
+      const regex = new RegExp(`{{${variable.key}}}`, 'g');
+      updatedBody = updatedBody.replace(regex, variable.value);
+    });
+    return updatedBody;
+  };
+
   const prepareRequestBody = () => {
     let requestBody = body;
-    if (showVariables) {
-      const variablesObject = variables.reduce<Record<string, string>>(
-        (acc, variable) => {
-          if (variable.key) {
-            acc[variable.key] = variable.value;
-          }
-          return acc;
-        },
-        {}
-      );
-      requestBody = JSON.stringify({ ...JSON.parse(body), ...variablesObject });
+    requestBody = replaceVariablesInBody(requestBody);
+    if (isJson(requestBody)) {
+      return JSON.stringify(JSON.parse(requestBody));
+    } else {
+      return requestBody;
     }
-    return requestBody;
   };
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-
     const requestHeaders = headers.reduce<Record<string, string>>(
       (acc, header) => {
         if (header.key) {
@@ -175,11 +202,6 @@ const useRestfullForm = () => {
     }
   };
 
-  const handleRemoveHeader = (index: number) => {
-    const newHeaders = headers.filter((_, i) => i !== index);
-    setHeaders(newHeaders);
-  };
-
   return {
     method,
     endpoint,
@@ -203,6 +225,7 @@ const useRestfullForm = () => {
     handleAddVariable,
     toggleVariablesSection,
     setVariables,
+    handleRemoveVariable,
   };
 };
 
