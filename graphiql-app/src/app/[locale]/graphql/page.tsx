@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import {
   Container,
@@ -27,19 +26,38 @@ function GraphQLPage() {
     name    
   }
 }`);
-  const [varriables, setVariables] = useState(` const variables: {"id": "1"}`);
+  const [variables, setVariables] = useState(`{"id": "1"}`);
+  const [headers, setHeaders] = useState([{ key: '', value: '' }]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
   const handleCodeChange = (value: string) => {
-    console.log(value);
     setCode(value);
   };
+
   const handleVariablesChange = (value: string) => {
-    console.log(value);
     setVariables(value);
+  };
+
+  const handleHeaderChange = (index: number, field: string, value: string) => {
+    const newHeaders = [...headers];
+    newHeaders[index] = {
+      ...newHeaders[index],
+      [field]: value,
+    };
+    setHeaders(newHeaders);
+    console.log(newHeaders);
+  };
+
+  const handleAddHeader = () => {
+    setHeaders([...headers, { key: '', value: '' }]);
+  };
+
+  const handleDeleteHeader = (index: number) => {
+    const newHeaders = headers.filter((_, i) => i !== index);
+    setHeaders(newHeaders);
   };
 
   return (
@@ -68,6 +86,7 @@ function GraphQLPage() {
               color="primary"
               sx={{ width: '15%', height: '100%' }}
               endIcon={<SendIcon />}
+              type="submit"
             >
               Send
             </Button>
@@ -112,36 +131,50 @@ function GraphQLPage() {
                     ml: 'auto',
                     mb: 1,
                   }}
+                  onClick={handleAddHeader}
                 >
                   Add Header
                 </Button>
 
-                <Grid
-                  item
-                  xs={12}
-                  display={'flex'}
-                  alignItems={'center'}
-                  justifyContent={'center'}
-                  gap={1}
-                >
-                  <IconButton
-                    aria-label="delete"
-                    size="small"
-                    sx={{ width: '4%' }}
+                {headers.map((header, index) => (
+                  <Grid
+                    item
+                    xs={12}
+                    display={'flex'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    gap={1}
+                    key={index}
+                    sx={{ mt: 1 }}
                   >
-                    <DeleteIcon />
-                  </IconButton>
-                  <TextField
-                    id="key-header"
-                    label="Key:"
-                    sx={{ width: '48%' }}
-                  />
-                  <TextField
-                    id="value-header"
-                    label="Value:"
-                    sx={{ width: '48%' }}
-                  />
-                </Grid>
+                    <IconButton
+                      aria-label="delete"
+                      size="small"
+                      sx={{ width: '4%' }}
+                      onClick={() => handleDeleteHeader(index)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    <TextField
+                      id={`key-header-${index}`}
+                      label="Key:"
+                      sx={{ width: '48%' }}
+                      value={header.key}
+                      onChange={(e) =>
+                        handleHeaderChange(index, 'key', e.target.value)
+                      }
+                    />
+                    <TextField
+                      id={`value-header-${index}`}
+                      label="Value:"
+                      sx={{ width: '48%' }}
+                      value={header.value}
+                      onChange={(e) =>
+                        handleHeaderChange(index, 'value', e.target.value)
+                      }
+                    />
+                  </Grid>
+                ))}
               </TabPanel>
               <TabPanel value="2">
                 <CodeMirror
@@ -154,10 +187,10 @@ function GraphQLPage() {
               </TabPanel>
               <TabPanel value="3">
                 <CodeMirror
-                  value={varriables}
+                  value={variables}
                   height="200px"
                   theme={darcula}
-                  extensions={[graphql()]}
+                  extensions={[json()]}
                   onChange={handleVariablesChange}
                 />
               </TabPanel>
@@ -203,6 +236,7 @@ function GraphQLPage() {
 }
 
 export default GraphQLPage;
+
 const response = {
   data: {
     photo: {
