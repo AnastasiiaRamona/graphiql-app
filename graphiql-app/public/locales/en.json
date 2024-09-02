@@ -17,5 +17,10 @@
   "chooseOne": "Choose One",
   "error": "Error",
   "pageNotFound": "Page not found",
-  "goHome": "Go Home"
+  "goHome": "Go Home",
+  "tryAgain": "Try again",
+  "errorTitle": "Error",
+  "errorDescription": "Whoops, something went wrong",
+  "errorToast": "An unexpected error occurred",
+  "refreshText": "Refresh"
 }

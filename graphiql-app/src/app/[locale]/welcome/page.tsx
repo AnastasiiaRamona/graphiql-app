@@ -4,10 +4,11 @@ import AuthorizationButtons from '@/components/AuthorizationButtons/Authorizatio
 import MenuButtons from '@/components/MenuButtons/MenuButtons';
 import { auth } from '@/firebase/firebase';
 import useAuthStore from '@/store/store';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import Loader from '@/components/Loader/Loader';
 
 const WelcomePage = () => {
   const { setAuthenticated, isAuthenticated } = useAuthStore();
@@ -28,18 +29,7 @@ const WelcomePage = () => {
   }, []);
 
   if (loading) {
-    return (
-      <main>
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="100vh"
-        >
-          <CircularProgress />
-        </Box>
-      </main>
-    );
+    return <Loader />;
   }
 
   return (

@@ -9,8 +9,10 @@ export default function NotFound() {
   useEffect(() => {
     const locale = localStorage.getItem('language') || 'en';
     const pathname = window.location.pathname;
-    router.push(`/${locale}/${pathname}`);
-  }, [router]);
+    if (!pathname.startsWith(`/${locale}`)) {
+      router.push(`/${locale}${pathname}`);
+    }
+  }, []);
 
   return null;
 }

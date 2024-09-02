@@ -17,5 +17,10 @@
   "chooseOne": "Выбери",
   "error": "Ошибка",
   "pageNotFound": "Страница не найдена",
-  "goHome": "На Главную"
+  "goHome": "На Главную",
+  "tryAgain": "Попробуйте ещё раз",
+  "errorTitle": "Ошибка",
+  "errorDescription": "Упс, что-то пошло не так",
+  "errorToast": "Неожиданная ошибка",
+  "refreshText": "Перезагрузить"
 }
