@@ -64,6 +64,7 @@ function NotFound() {
             src={notFoundImageSrc}
             alt="Astronaut"
             style={{ width: 'auto', height: '40%' }}
+            priority={true}
           />
         </div>
         {stars.map((star, index) => (

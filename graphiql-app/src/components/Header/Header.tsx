@@ -111,6 +111,7 @@ export default function Header(props: Props) {
                   width={50}
                   height={50}
                   style={{ marginRight: '10px' }}
+                  priority={true}
                 />
               </Link>
               <Typography

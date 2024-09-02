@@ -1,16 +1,26 @@
+import type { Metadata } from 'next';
+import './globals.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import ThemeWrapper from '@/components/ThemeWrapper/ThemeWrapper';
 
-export default async function LocaleLayout({
+export const metadata: Metadata = {
+  title: 'QueryHub',
+};
+
+export default async function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
-}) {
+}>) {
   const messages = await getMessages();
   return (
-    <NextIntlClientProvider messages={messages}>
-      {children}
-    </NextIntlClientProvider>
+    <html lang={'en'}>
+      <body>
+        <NextIntlClientProvider messages={messages}>
+          <ThemeWrapper>{children}</ThemeWrapper>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }
