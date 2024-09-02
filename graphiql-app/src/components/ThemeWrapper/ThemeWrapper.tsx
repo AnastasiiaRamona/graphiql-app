@@ -5,7 +5,6 @@ import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { useEffect, useState, useTransition } from 'react';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
-import ErrorButton from '../ErrorButton/ErrorButton';
 import { ToastContainer } from 'react-toastify';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import { useTranslations } from 'next-intl';
