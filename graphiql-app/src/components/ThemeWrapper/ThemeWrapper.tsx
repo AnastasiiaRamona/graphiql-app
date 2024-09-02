@@ -2,9 +2,13 @@
 
 import { lightTheme, darkTheme } from '@/theme/theme';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
+import ErrorButton from '../ErrorButton/ErrorButton';
+import { ToastContainer } from 'react-toastify';
+import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+import { useTranslations } from 'next-intl';
 
 export default function ThemeWrapper({
   children,
@@ -12,6 +16,7 @@ export default function ThemeWrapper({
   children: React.ReactNode;
 }>) {
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
+  const locale = useTranslations();
 
   useEffect(() => {
     const savedMode = localStorage.getItem('isDarkMode');
@@ -38,6 +43,7 @@ export default function ThemeWrapper({
 
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <ToastContainer />
       <CssBaseline />
       <Box
         sx={{
@@ -49,7 +55,13 @@ export default function ThemeWrapper({
         }}
       >
         <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
-        {children}
+        <ErrorBoundary
+          errorDescription={locale('errorDescription')}
+          errorToast={locale('errorToast')}
+          refreshText={locale('refreshText')}
+        >
+          {children}
+        </ErrorBoundary>
         <Footer />
       </Box>
     </ThemeProvider>

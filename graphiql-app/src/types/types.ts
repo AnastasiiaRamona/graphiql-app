@@ -1,5 +1,6 @@
-interface LangParams {
-  lang: string;
-}
+type ErrorProps = {
+  error: Error;
+  reset(): void;
+};
 
-export default LangParams;
+export default ErrorProps;

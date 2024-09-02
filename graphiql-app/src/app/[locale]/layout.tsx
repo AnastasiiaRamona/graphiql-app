@@ -3,6 +3,7 @@ import './globals.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import ThemeWrapper from '@/components/ThemeWrapper/ThemeWrapper';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 
 export const metadata: Metadata = {
   title: 'QueryHub',
@@ -17,9 +18,11 @@ export default async function RootLayout({
   return (
     <html lang={'en'}>
       <body>
-        <NextIntlClientProvider messages={messages}>
-          <ThemeWrapper>{children}</ThemeWrapper>
-        </NextIntlClientProvider>
+        <AppRouterCacheProvider>
+          <NextIntlClientProvider messages={messages}>
+            <ThemeWrapper>{children}</ThemeWrapper>
+          </NextIntlClientProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
