@@ -56,6 +56,8 @@ function RestfullForm() {
     handleRemoveVariable,
   } = useRestfullForm();
 
+  const isEndpointEmpty = !endpoint.trim();
+
   return (
     <Container maxWidth="sm" component="main" sx={containerStyles}>
       <Box sx={boxStyles}>
@@ -294,7 +296,12 @@ function RestfullForm() {
 
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
               <Tooltip title="Submit Request" arrow>
-                <Button variant="contained" color="primary" type="submit">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  disabled={isEndpointEmpty}
+                >
                   Send Request
                 </Button>
               </Tooltip>

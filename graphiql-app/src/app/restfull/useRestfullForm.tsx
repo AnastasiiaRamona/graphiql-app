@@ -1,7 +1,7 @@
 import React from 'react';
 
 const useRestfullForm = () => {
-  const [method, setMethod] = React.useState('');
+  const [method, setMethod] = React.useState('GET');
   const [endpoint, setEndpoint] = React.useState('');
   const [headers, setHeaders] = React.useState([{ key: '', value: '' }]);
   const [body, setBody] = React.useState('');
@@ -154,6 +154,23 @@ const useRestfullForm = () => {
       {}
     );
 
+    const requestBody = ['GET', 'HEAD', 'OPTIONS'].includes(method)
+      ? null
+      : prepareRequestBody();
+
+    const request = new Request(endpoint, {
+      method,
+      headers: requestHeaders,
+      body: requestBody,
+    });
+
+    console.log('Request Info:', {
+      method: request.method,
+      url: request.url,
+      headers: request.headers,
+      body: requestBody,
+    });
+
     try {
       const response = await fetch(endpoint, {
         method,
@@ -162,7 +179,6 @@ const useRestfullForm = () => {
           ? null
           : prepareRequestBody(),
       });
-
       setResponseStatus(response.status.toString());
       const responseBody = await response.text();
       try {
