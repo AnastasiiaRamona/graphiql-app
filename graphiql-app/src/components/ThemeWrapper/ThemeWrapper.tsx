@@ -46,7 +46,7 @@ export default function ThemeWrapper({
       <CssBaseline />
       <Box
         sx={{
-          height: '100vh',
+          minHeight: '100vh',
           background: (theme) => theme.palette.background.default,
           display: 'flex',
           flexDirection: 'column',

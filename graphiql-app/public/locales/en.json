@@ -6,6 +6,8 @@
   "signOut": "Sign out",
   "home": "Home",
   "wish": "Happy querying!",
+  "queryHubHeading": "QueryHub: Your All-in-One API Assistant",
+  "aboutQueryHub": "Create queries, work with data fast and easily, and keep them all in one location.",
   "questionAboutAuth": "Not signed in/on yet?",
   "loginError": "Failed to sign in. Please check your credentials.",
   "registerError": "Failed to sign up. Please try again.",
