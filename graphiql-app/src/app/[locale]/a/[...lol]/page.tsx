@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import {
   Container,
   Typography,
@@ -16,60 +15,103 @@ import { darcula } from '@uiw/codemirror-theme-darcula';
 import { graphql } from 'cm6-graphql';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { json } from '@codemirror/lang-json';
+import SchemaDoc from '@/components/SchemaDoc/SchemaDoc';
+import GraphQlResponse from '@/components/GraphQlResponse/GraphQlResponse';
+import { useEffect } from 'react';
+import fetchGraphQL from '@/apiGraphQl/getDataGraphQl';
+import useControlGraphQlPage from '@/hooks/useControlGraphQlPage';
+import base64 from 'base-64';
+import utf8 from 'utf8';
 
-function GraphQLPage() {
-  const [value, setValue] = useState('1');
-  const [code, setCode] = useState(`query Query($id: ID!) {
- user(id: $id) {
-    username
-    name    
-  }
-}`);
-  const [variables, setVariables] = useState(`{"id": "1"}`);
-  const [headers, setHeaders] = useState([{ key: '', value: '' }]);
+function GraphQLPage({ params, searchParams }: any) {
+  const {
+    value,
+    status,
+    setStatus,
+    data,
+    setData,
+    sdl,
+    code,
+    variables,
+    headers,
+    handleHeaderChange,
+    handleAddHeader,
+    handleDeleteHeader,
+    handleChange,
+    handleCodeChange,
+    onClickSdl,
+    handleVariablesChange,
+    handleSubmit,
+    register,
+    router,
+  } = useControlGraphQlPage();
+  const [url = '', codeUrl = '', variablesUrl = ''] = params.lol.map(
+    (item: string) => decodeURIComponent(item)
+  );
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+  useEffect(() => {
+    try {
+      const urlDecoded = utf8.decode(base64.decode(url || ''));
+      const codeUrlDecoded = utf8.decode(base64.decode(codeUrl));
+      const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl));
+      const fetchData = async () => {
+        try {
+          const response = await fetchGraphQL({
+            endpoint: urlDecoded,
+            headers: searchParams,
+            variables: variablesUrlDecoded,
+            code: codeUrlDecoded,
+          });
 
-  const handleCodeChange = (value: string) => {
-    setCode(value);
-  };
+          if (response) {
+            setStatus(response.status.toString());
+          }
 
-  const handleVariablesChange = (value: string) => {
-    setVariables(value);
-  };
+          const json = await response?.json();
+          setData(json);
+        } catch (error) {
+          if (error instanceof Error) {
+            setStatus(error.message);
+            setData(error.message);
+          }
+        }
+      };
+      fetchData();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }, [params, searchParams]);
 
-  const handleHeaderChange = (index: number, field: string, value: string) => {
-    const newHeaders = [...headers];
-    newHeaders[index] = {
-      ...newHeaders[index],
-      [field]: value,
-    };
-    setHeaders(newHeaders);
-    console.log(newHeaders);
-  };
+  const onSubmit = async (data: any) => {
+    const urlBase64 = base64.encode(data.endpoint);
+    const codeBase64 = base64.encode(code);
+    const variablesBase64 = base64.encode(variables);
 
-  const handleAddHeader = () => {
-    setHeaders([...headers, { key: '', value: '' }]);
-  };
+    const headersObject = Object.fromEntries(
+      headers
+        .filter(({ key, value }) => key && value)
+        .map(({ key, value }) => [key, value])
+    );
 
-  const handleDeleteHeader = (index: number) => {
-    const newHeaders = headers.filter((_, i) => i !== index);
-    setHeaders(newHeaders);
+    const codedHeaders = new URLSearchParams(headersObject).toString();
+
+    router.push(
+      `/${params.locale}/a/${urlBase64}/${codeBase64}/${variablesBase64}?${codedHeaders}`
+    );
   };
 
   return (
     <Container
       maxWidth="md"
       component="main"
-      sx={{ width: '100%', mt: 12, height: '100%' }}
+      sx={{ width: '100%', mt: 12, mb: 3, height: '100%' }}
     >
       <Typography variant="h4" component="h1" gutterBottom textAlign="center">
         GraphQL
       </Typography>
+
       <form
+        onSubmit={handleSubmit(onSubmit)}
         autoComplete="off"
         noValidate
         style={{ width: '100%', padding: 7, border: '1px solid #bbdefb' }}
@@ -79,7 +121,9 @@ function GraphQLPage() {
             <TextField
               id="endpoint-url"
               label="Endpoint URL:"
+              defaultValue="https://graphqlzero.almansi.me/api"
               sx={{ width: '85%' }}
+              {...register('endpoint')}
             />
             <Button
               variant="contained"
@@ -92,9 +136,15 @@ function GraphQLPage() {
             </Button>
           </Grid>
           <Grid item xs={12} gap={0.2} display={'flex'}>
-            <TextField id="sdl-url" label="SDL URL:" sx={{ width: '85%' }} />
+            <TextField
+              id="sdl-url"
+              label="SDL URL:"
+              sx={{ width: '85%' }}
+              {...register('sdl')}
+            />
             <Button
               variant="contained"
+              onClick={handleSubmit(onClickSdl)}
               color="primary"
               sx={{ width: '15%', height: '100%' }}
               endIcon={<SendIcon />}
@@ -159,7 +209,7 @@ function GraphQLPage() {
                       id={`key-header-${index}`}
                       label="Key:"
                       sx={{ width: '48%' }}
-                      value={header.key}
+                      value={header.key.trim()}
                       onChange={(e) =>
                         handleHeaderChange(index, 'key', e.target.value)
                       }
@@ -168,7 +218,7 @@ function GraphQLPage() {
                       id={`value-header-${index}`}
                       label="Value:"
                       sx={{ width: '48%' }}
-                      value={header.value}
+                      value={header.value.trim()}
                       onChange={(e) =>
                         handleHeaderChange(index, 'value', e.target.value)
                       }
@@ -187,10 +237,10 @@ function GraphQLPage() {
               </TabPanel>
               <TabPanel value="3">
                 <CodeMirror
-                  value={variables}
                   height="200px"
+                  value={variables}
                   theme={darcula}
-                  extensions={[json()]}
+                  extensions={[graphql()]}
                   onChange={handleVariablesChange}
                 />
               </TabPanel>
@@ -198,52 +248,10 @@ function GraphQLPage() {
           </TabContext>
         </Grid>
       </form>
-      <Grid container spacing={2} sx={{ mt: 4 }}>
-        <Grid item xs={12}>
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            textAlign="center"
-          >
-            Response
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6" component="h1" gutterBottom>
-            Status:
-            <Typography
-              variant="h6"
-              component="h1"
-              gutterBottom
-              display={'inline'}
-              sx={{ color: '#5be715', ml: 1 }}
-            >
-              200 OK
-            </Typography>
-          </Typography>
-          <CodeMirror
-            value={`${JSON.stringify(response, null, ' ')}`}
-            height="400px"
-            theme={darcula}
-            readOnly
-            extensions={[json()]}
-          />
-        </Grid>
-      </Grid>
+      <SchemaDoc url={sdl || utf8.decode(base64.decode(url))} />
+      <GraphQlResponse data={data} status={status} />
     </Container>
   );
 }
 
 export default GraphQLPage;
-
-const response = {
-  data: {
-    photo: {
-      id: '4',
-      title: 'culpa odio esse rerum omnis laboriosam voluptate repudiandae',
-      url: 'https://via.placeholder.com/600/d32776',
-      thumbnailUrl: 'https://via.placeholder.com/150/d32776',
-    },
-  },
-};
