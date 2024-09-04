@@ -1,4 +1,10 @@
-const fetchGraphQL = async (data: any) => {
+interface GraphQLData {
+  headers: { [key: string]: string };
+  variables: string;
+  endpoint: string;
+  code: string;
+}
+const fetchGraphQL = async (data: GraphQLData) => {
   const headersObj: { [key: string]: string } = {};
   Object.entries(data.headers).forEach(([key, value]) => {
     headersObj[key] = value as string;

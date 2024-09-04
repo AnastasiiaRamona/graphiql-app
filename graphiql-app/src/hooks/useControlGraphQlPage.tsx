@@ -2,6 +2,10 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+interface FormData {
+  endpoint: string;
+  sdl: string;
+}
 
 export default function useControlGraphQlPage() {
   const [value, setValue] = useState('1');
@@ -9,15 +13,10 @@ export default function useControlGraphQlPage() {
   const [data, setData] = useState({});
   const [sdl, setSdl] = useState('');
 
-  const [code, setCode] = useState(`query Query($id: ID!) {
-   user(id: $id) {
-      username
-      name
-    }
-  }`);
-  const [variables, setVariables] = useState('{ "id": "1" }');
+  const [code, setCode] = useState(``);
+  const [variables, setVariables] = useState('');
   const [headers, setHeaders] = useState([{ key: '', value: '' }]);
-  const { handleSubmit, register, watch } = useForm();
+  const { handleSubmit, register, watch } = useForm<FormData>();
   const sdlValue: string = watch('sdl');
   const router = useRouter();
 
@@ -45,6 +44,15 @@ export default function useControlGraphQlPage() {
 
   const handleCodeChange = (value: string) => {
     setCode(value);
+  };
+
+  const updateHeaders = (data: { [key: string]: string }) => {
+    const newHeaders = Object.entries(data).map(([key, value]) => ({
+      key: key.trim(),
+      value: value.trim(),
+    }));
+
+    setHeaders(newHeaders);
   };
 
   const onClickSdl = () => {
@@ -81,5 +89,6 @@ export default function useControlGraphQlPage() {
     register,
     router,
     sdlValue,
+    updateHeaders,
   };
 }

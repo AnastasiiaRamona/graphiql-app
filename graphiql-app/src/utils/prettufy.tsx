@@ -6,7 +6,7 @@ import parserGraphql from 'prettier/parser-graphql';
 export const handlePrettier = async (
   value: string,
   isGraphQl: boolean,
-  onChange
+  onChange = (value: string) => {}
 ) => {
   let formatted = value;
 

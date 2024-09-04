@@ -23,8 +23,17 @@ import useControlGraphQlPage from '@/hooks/useControlGraphQlPage';
 import base64 from 'base-64';
 import utf8 from 'utf8';
 import { handlePrettier } from '@/utils/prettufy';
+interface GraphQLPageParams {
+  locale: string;
+  slug: string[];
+}
 
-function GraphQLPage({ params, searchParams }: any) {
+interface GraphQLPageProps {
+  params: GraphQLPageParams;
+  searchParams: Record<string, string>;
+}
+
+function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
   const {
     value,
     status,
@@ -45,15 +54,24 @@ function GraphQLPage({ params, searchParams }: any) {
     handleSubmit,
     register,
     router,
+    setCode,
+    setVariables,
+    updateHeaders,
   } = useControlGraphQlPage();
   const [url = '', codeUrl = '', variablesUrl = ''] = params.slug.map(
     (item: string) => decodeURIComponent(item)
   );
+  console.log(params);
+
   useEffect(() => {
     try {
       const urlDecoded = utf8.decode(base64.decode(url || ''));
       const codeUrlDecoded = utf8.decode(base64.decode(codeUrl));
       const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl));
+      setCode(codeUrlDecoded);
+      setVariables(variablesUrlDecoded);
+      updateHeaders(searchParams);
+
       const fetchData = async () => {
         try {
           const response = await fetchGraphQL({
@@ -83,7 +101,7 @@ function GraphQLPage({ params, searchParams }: any) {
     }
   }, [params, searchParams]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { endpoint: string; sdl?: string }) => {
     const urlBase64 = base64.encode(utf8.encode(data.endpoint));
     const codeBase64 = base64.encode(utf8.encode(code));
     const variablesBase64 = base64.encode(utf8.encode(variables));
@@ -122,7 +140,8 @@ function GraphQLPage({ params, searchParams }: any) {
             <TextField
               id="endpoint-url"
               label="Endpoint URL:"
-              defaultValue="https://graphqlzero.almansi.me/api"
+              // defaultValue="https://graphqlzero.almansi.me/api"
+              defaultValue={`${utf8.decode(base64.decode(url))}`}
               sx={{ width: '85%' }}
               {...register('endpoint')}
             />

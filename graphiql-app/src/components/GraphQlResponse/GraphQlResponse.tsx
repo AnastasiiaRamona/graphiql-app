@@ -3,7 +3,15 @@ import { json } from '@codemirror/lang-json';
 import CodeMirror from '@uiw/react-codemirror';
 import { darcula } from '@uiw/codemirror-theme-darcula';
 
-export default function GraphQlResponse({ status, data }: any) {
+interface GraphQlResponseProps {
+  status: string;
+  data: object;
+}
+
+export default function GraphQlResponse({
+  status,
+  data,
+}: GraphQlResponseProps) {
   return (
     <Grid container spacing={2} sx={{ mt: 2 }}>
       <Grid item xs={12}>

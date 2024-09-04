@@ -8,8 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     const locale = localStorage.getItem('language') || 'en';
-    // router.push(`/${locale}welcome/`);
-    router.push(`/${locale}/`);
+    router.push(`/${locale}welcome/`);
   }, [router]);
 
   return null;
