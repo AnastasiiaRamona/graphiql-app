@@ -2,7 +2,7 @@
 
 import { lightTheme, darkTheme } from '@/theme/theme';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import { ToastContainer } from 'react-toastify';

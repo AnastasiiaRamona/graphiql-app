@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 import Loader from '@/components/Loader/Loader';
 import ImportantDevicesTwoToneIcon from '@mui/icons-material/ImportantDevicesTwoTone';
 import QuiltedImageList from '@/components/ImageList/ImageList';
+import ApplicationTools from '@/components/ApplicationTools/ApplicationTools';
+import AboutTeamBox from '@/components/AboutTeam/AboutTeam';
 
 const WelcomePage = () => {
   const { setAuthenticated, isAuthenticated } = useAuthStore();
@@ -106,9 +108,57 @@ const WelcomePage = () => {
         </Typography>
       </Container>
       <Container
-        sx={{ height: '100vh', display: 'flex', alignItems: 'center' }}
+        sx={{
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'row',
+          gap: '5vh',
+          '@media (max-width: 1004px)': {
+            flexDirection: 'column',
+            justifyContent: 'center',
+          },
+        }}
       >
         <QuiltedImageList />
+        <Typography
+          variant="h2"
+          component="h2"
+          textAlign={'center'}
+          width={'30%'}
+          sx={{
+            fontSize: 'clamp(1rem, 4vw, 2rem)',
+            fontWeight: 400,
+            '@media (max-width: 1004px)': {
+              width: '100%',
+            },
+          }}
+        >
+          {locale('queryHubDescription')}
+        </Typography>
+      </Container>
+      <Container
+        sx={{
+          minHeight: '100vh',
+          display: 'grid',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '5vh',
+          marginBottom: '2rem',
+        }}
+      >
+        <ApplicationTools />
+      </Container>
+      <Container
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '2rem',
+        }}
+      >
+        <AboutTeamBox />
       </Container>
     </>
   );

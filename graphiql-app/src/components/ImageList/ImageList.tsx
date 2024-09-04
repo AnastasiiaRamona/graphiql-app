@@ -15,7 +15,13 @@ function srcset(image: string, size: number, rows = 1, cols = 1) {
 export default function QuiltedImageList() {
   return (
     <ImageList
-      sx={{ width: '70%', height: 'auto' }}
+      sx={{
+        width: '70%',
+        height: 'auto',
+        '@media (max-width: 1004px)': {
+          width: '99%',
+        },
+      }}
       variant="quilted"
       cols={4}
       rowHeight={121}
@@ -30,8 +36,9 @@ export default function QuiltedImageList() {
             {...srcset(item.img.src, 121, item.rows, item.cols)}
             alt={item.title}
             loading="lazy"
-            objectFit="cover"
-            layout="fill"
+            fill
+            style={{ objectFit: 'cover' }}
+            sizes="height: auto"
           />
         </ImageListItem>
       ))}
