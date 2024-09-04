@@ -27,7 +27,6 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { FormControlLabel } from '@mui/material';
 import useScrollPosition from '@/hooks/useScrollPosition';
-import { darkTheme } from '@/theme/theme';
 
 const drawerWidth = 240;
 
