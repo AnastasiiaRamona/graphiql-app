@@ -296,14 +296,16 @@ function RestfullForm() {
 
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
               <Tooltip title="Submit Request" arrow>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  disabled={isEndpointEmpty}
-                >
-                  Send Request
-                </Button>
+                <span>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    disabled={isEndpointEmpty}
+                  >
+                    Send Request
+                  </Button>
+                </span>
               </Tooltip>
             </Grid>
           </Grid>
