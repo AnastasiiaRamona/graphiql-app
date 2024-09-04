@@ -84,9 +84,9 @@ function GraphQLPage({ params, searchParams }: any) {
   }, [params, searchParams]);
 
   const onSubmit = async (data: any) => {
-    const urlBase64 = base64.encode(data.endpoint);
-    const codeBase64 = base64.encode(code);
-    const variablesBase64 = base64.encode(variables);
+    const urlBase64 = base64.encode(utf8.encode(data.endpoint));
+    const codeBase64 = base64.encode(utf8.encode(code));
+    const variablesBase64 = base64.encode(utf8.encode(variables));
 
     const headersObject = Object.fromEntries(
       headers
