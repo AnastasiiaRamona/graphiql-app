@@ -22,6 +22,7 @@ import fetchGraphQL from '@/apiGraphQl/getDataGraphQl';
 import useControlGraphQlPage from '@/hooks/useControlGraphQlPage';
 import base64 from 'base-64';
 import utf8 from 'utf8';
+import { handlePrettier } from '@/utils/prettufy';
 
 function GraphQLPage({ params, searchParams }: any) {
   const {
@@ -48,7 +49,6 @@ function GraphQLPage({ params, searchParams }: any) {
   const [url = '', codeUrl = '', variablesUrl = ''] = params.slug.map(
     (item: string) => decodeURIComponent(item)
   );
-
   useEffect(() => {
     try {
       const urlDecoded = utf8.decode(base64.decode(url || ''));
@@ -79,7 +79,7 @@ function GraphQLPage({ params, searchParams }: any) {
       fetchData();
     } catch (error) {
       console.error('Error:', error);
-      router.push(`/${params.locale}/welcome`);
+      console.log(error);
     }
   }, [params, searchParams]);
 
@@ -228,6 +228,13 @@ function GraphQLPage({ params, searchParams }: any) {
                 ))}
               </TabPanel>
               <TabPanel value="2">
+                <Button
+                  variant="contained"
+                  sx={{ width: '50px', ml: 'auto', mb: 1 }}
+                  onClick={() => handlePrettier(code, true, handleCodeChange)}
+                >
+                  Pretty
+                </Button>
                 <CodeMirror
                   value={code}
                   height="200px"
@@ -237,6 +244,16 @@ function GraphQLPage({ params, searchParams }: any) {
                 />
               </TabPanel>
               <TabPanel value="3">
+                <Button
+                  variant="contained"
+                  sx={{ width: '50px', ml: 'auto', mb: 1 }}
+                  onClick={() =>
+                    handlePrettier(variables, false, handleVariablesChange)
+                  }
+                >
+                  Pretty
+                </Button>
+
                 <CodeMirror
                   height="200px"
                   value={variables}
@@ -254,5 +271,5 @@ function GraphQLPage({ params, searchParams }: any) {
     </Container>
   );
 }
-
+// http://localhost:3000/ru/graphql/aHR0cHM6Ly9ncmFwaHFsemVyby5hbG1hbnNpLm1lL2FwaQ==/cXVlcnkgUXVlcnkoJGlkOiBJRCEpIHsKICAgdXNlcihpZDogJGlkKSB7CiAgICAgIHVzZXJuYW1lCiAgICAgIG5hbWUKICAgIH0KICB9/eyAiaWQiOiAiMSIgfQ==?ввв=вввв&іввв=вівівів&іві=вівівіві
 export default GraphQLPage;
