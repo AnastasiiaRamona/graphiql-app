@@ -164,13 +164,6 @@ const useRestfullForm = () => {
       body: requestBody,
     });
 
-    console.log('Request Info:', {
-      method: request.method,
-      url: request.url,
-      headers: request.headers,
-      body: requestBody,
-    });
-
     try {
       const response = await fetch(endpoint, {
         method,
