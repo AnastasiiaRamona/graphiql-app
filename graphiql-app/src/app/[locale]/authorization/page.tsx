@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import schema, { User } from '@/validation/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { auth, loginUser, registerUser } from '@/firebase/firebase';
-import { redirect, useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import useAuthStore from '@/store/store';
 import { useTranslations } from 'next-intl';
