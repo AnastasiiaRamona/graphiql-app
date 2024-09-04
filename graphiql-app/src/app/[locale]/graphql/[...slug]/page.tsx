@@ -45,7 +45,7 @@ function GraphQLPage({ params, searchParams }: any) {
     register,
     router,
   } = useControlGraphQlPage();
-  const [url = '', codeUrl = '', variablesUrl = ''] = params.lol.map(
+  const [url = '', codeUrl = '', variablesUrl = ''] = params.slug.map(
     (item: string) => decodeURIComponent(item)
   );
 
@@ -79,6 +79,7 @@ function GraphQLPage({ params, searchParams }: any) {
       fetchData();
     } catch (error) {
       console.error('Error:', error);
+      router.push(`/${params.locale}/welcome`);
     }
   }, [params, searchParams]);
 
@@ -96,7 +97,7 @@ function GraphQLPage({ params, searchParams }: any) {
     const codedHeaders = new URLSearchParams(headersObject).toString();
 
     router.push(
-      `/${params.locale}/a/${urlBase64}/${codeBase64}/${variablesBase64}?${codedHeaders}`
+      `/${params.locale}/graphql/${urlBase64}/${codeBase64}/${variablesBase64}?${codedHeaders}`
     );
   };
 
