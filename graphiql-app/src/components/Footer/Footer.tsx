@@ -39,6 +39,7 @@ const Footer = () => {
               width={30}
               height={30}
               priority={true}
+              style={{ marginRight: '10px' }}
             />
           </IconButton>
         </Box>

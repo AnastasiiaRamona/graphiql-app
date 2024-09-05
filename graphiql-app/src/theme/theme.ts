@@ -25,6 +25,15 @@ const lightTheme = createTheme({
   typography: {
     fontFamily: 'var(--primary-font-family)',
   },
+  components: {
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: 'rgb(30, 54, 105)',
+        },
+      },
+    },
+  },
 });
 
 const darkTheme = createTheme({
@@ -48,6 +57,15 @@ const darkTheme = createTheme({
   },
   typography: {
     fontFamily: 'var(--primary-font-family)',
+  },
+  components: {
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: blue[50],
+        },
+      },
+    },
   },
 });
 

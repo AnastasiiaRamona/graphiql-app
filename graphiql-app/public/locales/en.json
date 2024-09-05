@@ -39,5 +39,21 @@
   "locationAnastasiia": "Serbia, Belgrade",
   "locationAleks": "Ukraine, Kyiv",
   "locationMarti": "Russia, Novosibirsk",
-  "restfullClientHeader": "REST Client"
+  "restfullClientHeader": "REST Client",
+  "method": "Method",
+  "header": "Header",
+  "addHeader": "Add Header",
+  "headerKey": "Header Key",
+  "headerValue": "Header Value",
+  "requestBody": "Request Body",
+  "showVariables": "Show Variables",
+  "hideVariables": "Hide Variables",
+  "variables": "Variables",
+  "addVariable": "Add Variable",
+  "variableKey": "Variable Key",
+  "variableValue": "Variable Value",
+  "sendRequest": "Send Request",
+  "response": "Response",
+  "status": "Status",
+  "body": "Body"
 }

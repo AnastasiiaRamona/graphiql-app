@@ -1,36 +1,30 @@
 import { SxProps, Theme } from '@mui/system';
 
-export const containerStyles: SxProps<Theme> = {
-  mt: 8,
-  marginLeft: '50vw',
-  transform: 'translateX(-50%)',
-  '@media (max-width: 600px)': {
-    mt: 4,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    transform: 'none',
-    width: '100%',
-    paddingLeft: '16px',
-    paddingRight: '16px',
+export const boxStyles: SxProps<Theme> = {
+  border: '1px solid rgb(30, 54, 105)',
+  padding: '16px',
+  width: '45vw',
+  borderRadius: '8px',
+  boxShadow: '0 5px 8px 0 rgba(0, 0, 0, 0.2)',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
+  '@media (max-width: 975px)': {
+    width: '70vw',
   },
-  '@media (max-width: 350px)': {
-    mt: 2,
-    paddingLeft: '8px',
-    paddingRight: '8px',
+  '@media (max-width: 600px)': {
+    padding: '8px',
+    width: '95vw',
   },
 };
 
-export const boxStyles: SxProps<Theme> = {
-  border: '2px solid #ccc',
-  padding: '16px',
-  borderRadius: '8px',
-  mb: 4,
-  '@media (max-width: 600px)': {
-    padding: '8px',
-  },
-  '@media (max-width: 350px)': {
-    padding: '4px',
-  },
+export const variablesBoxStyles: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'row',
+  gap: '1vw',
+  justifyContent: 'flex-end',
+  paddingLeft: '16px',
+  width: '100%',
 };
 
 export const gridItemHeaderStyles: SxProps<Theme> = {
@@ -97,6 +91,7 @@ export const deleteIconStyles: SxProps<Theme> = {
 };
 
 export const gridItemStyles: SxProps<Theme> = {
+  mb: '16px',
   [`@media (max-width: 600px)`]: {
     gridColumn: 'span 12',
     maxWidth: '100%',
