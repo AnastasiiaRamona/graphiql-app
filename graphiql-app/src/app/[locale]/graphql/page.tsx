@@ -13,7 +13,7 @@ export default function GraphQLPage() {
 
       <Link
         className="Link"
-        href="graphql/aHR0cHM6Ly9ncmFwaHFsemVyby5hbG1hbnNpLm1lL2FwaQ==/cXVlcnkgUXVlcnkoJGlkOiBJRCEpIHsKICAgdXNlcihpZDogJGlkKSB7CiAgICAgIHVzZXJuYW1lCiAgICAgIG5hbWUKICAgIH0KICB9/eyAiaWQiOiAiMSIgfQ=="
+        href="graphql/aHR0cHM6Ly9ncmFwaHFsemVyby5hbG1hbnNpLm1lL2FwaQ==/cXVlcnkgQWxidW0oJGlkOiBJRCEpIHsKICBhbGJ1bShpZDogJGlkKSB7CiAgICBpZAogICAgdGl0bGUKICB9Cn0K%7CewogICJpZCI6ICIxIgp9"
       >
         GO TO
       </Link>

@@ -20,19 +20,6 @@ export default function useControlGraphQlPage() {
   const sdlValue: string = watch('sdl');
   const router = useRouter();
 
-  const handleHeaderChange = (index: number, field: string, value: string) => {
-    const newHeaders = [...headers];
-    newHeaders[index] = {
-      ...newHeaders[index],
-      [field]: value,
-    };
-    setHeaders(newHeaders);
-  };
-
-  const handleAddHeader = () => {
-    setHeaders([...headers, { key: '', value: '' }]);
-  };
-
   const handleDeleteHeader = (index: number) => {
     const newHeaders = headers.filter((_, i) => i !== index);
     setHeaders(newHeaders);
@@ -62,6 +49,17 @@ export default function useControlGraphQlPage() {
   const handleVariablesChange = (value: string) => {
     setVariables(value);
   };
+  function transformHeaders(headers: { key: string; value: string }[]) {
+    const headersObject = Object.fromEntries(
+      headers
+        .filter(({ key, value }) => key && value)
+        .map(({ key, value }) => [key, value])
+    );
+
+    const codedHeaders = new URLSearchParams(headersObject).toString();
+
+    return codedHeaders;
+  }
 
   return {
     value,
@@ -78,8 +76,6 @@ export default function useControlGraphQlPage() {
     setVariables,
     headers,
     setHeaders,
-    handleHeaderChange,
-    handleAddHeader,
     handleDeleteHeader,
     handleChange,
     handleCodeChange,
@@ -90,5 +86,6 @@ export default function useControlGraphQlPage() {
     router,
     sdlValue,
     updateHeaders,
+    transformHeaders,
   };
 }

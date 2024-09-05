@@ -44,8 +44,6 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
     code,
     variables,
     headers,
-    handleHeaderChange,
-    handleAddHeader,
     handleDeleteHeader,
     handleChange,
     handleCodeChange,
@@ -57,17 +55,19 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
     setCode,
     setVariables,
     updateHeaders,
+    transformHeaders,
+    setHeaders,
   } = useControlGraphQlPage();
-  const [url = '', codeUrl = '', variablesUrl = ''] = params.slug.map(
-    (item: string) => decodeURIComponent(item)
+  const [url = '', bodyBase64 = ''] = params.slug.map((item: string) =>
+    decodeURIComponent(item)
   );
-  console.log(params);
+  const [codeUrl, variablesUrl] = bodyBase64.split('|');
+  const urlDecoded = utf8.decode(base64.decode(url || ''));
+  const codeUrlDecoded = utf8.decode(base64.decode(codeUrl));
+  const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl));
 
   useEffect(() => {
     try {
-      const urlDecoded = utf8.decode(base64.decode(url || ''));
-      const codeUrlDecoded = utf8.decode(base64.decode(codeUrl));
-      const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl));
       setCode(codeUrlDecoded);
       setVariables(variablesUrlDecoded);
       updateHeaders(searchParams);
@@ -100,22 +100,49 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
       console.log(error);
     }
   }, [params, searchParams]);
+  const handleChangeUrl = (code: string, variables: string) => {
+    const codeBase64 = base64.encode(utf8.encode(code));
+    const variablesBase64 = base64.encode(utf8.encode(variables));
+    const bodyBase64 = `${codeBase64}|${variablesBase64}`;
+    const codedHeaders = transformHeaders(headers);
+
+    router.push(
+      `/${params.locale}/graphql/${url}/${bodyBase64}?${codedHeaders}`
+    );
+  };
+  const handleAddHeader = () => {
+    setHeaders([...headers, { key: '', value: '' }]);
+    const codedHeaders = transformHeaders(headers);
+    window.history.replaceState(
+      null,
+      '',
+      `/${params.locale}/graphql/${url}/${bodyBase64}?${codedHeaders}`
+    );
+  };
+  const handleHeaderChange = (index: number, field: string, value: string) => {
+    const newHeaders = [...headers];
+    newHeaders[index] = {
+      ...newHeaders[index],
+      [field]: value,
+    };
+    setHeaders(newHeaders);
+    const codedHeaders = transformHeaders(headers);
+    window.history.replaceState(
+      null,
+      '',
+      `/${params.locale}/graphql/${url}/${bodyBase64}?${codedHeaders}`
+    );
+  };
 
   const onSubmit = async (data: { endpoint: string; sdl?: string }) => {
     const urlBase64 = base64.encode(utf8.encode(data.endpoint));
     const codeBase64 = base64.encode(utf8.encode(code));
     const variablesBase64 = base64.encode(utf8.encode(variables));
-
-    const headersObject = Object.fromEntries(
-      headers
-        .filter(({ key, value }) => key && value)
-        .map(({ key, value }) => [key, value])
-    );
-
-    const codedHeaders = new URLSearchParams(headersObject).toString();
+    const bodyBase64 = `${codeBase64}|${variablesBase64}`;
+    const codedHeaders = transformHeaders(headers);
 
     router.push(
-      `/${params.locale}/graphql/${urlBase64}/${codeBase64}/${variablesBase64}?${codedHeaders}`
+      `/${params.locale}/graphql/${urlBase64}/${bodyBase64}?${codedHeaders}`
     );
   };
 
@@ -139,7 +166,6 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
             <TextField
               id="endpoint-url"
               label="Endpoint URL:"
-              // defaultValue="https://graphqlzero.almansi.me/api"
               defaultValue={`${utf8.decode(base64.decode(url))}`}
               sx={{ width: '85%' }}
               {...register('endpoint')}
@@ -258,6 +284,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
                   height="200px"
                   theme={darcula}
                   extensions={[graphql()]}
+                  onBlur={() => handleChangeUrl(code, variables)}
                   onChange={handleCodeChange}
                 />
               </TabPanel>
@@ -277,6 +304,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
                   value={variables}
                   theme={darcula}
                   extensions={[graphql()]}
+                  onBlur={() => handleChangeUrl(code, variables)}
                   onChange={handleVariablesChange}
                 />
               </TabPanel>
@@ -284,10 +312,9 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
           </TabContext>
         </Grid>
       </form>
-      <SchemaDoc url={sdl || utf8.decode(base64.decode(url))} />
+      <SchemaDoc url={sdl || urlDecoded} />
       <GraphQlResponse data={data} status={status} />
     </Container>
   );
 }
-// http://localhost:3000/ru/graphql/aHR0cHM6Ly9ncmFwaHFsemVyby5hbG1hbnNpLm1lL2FwaQ==/cXVlcnkgUXVlcnkoJGlkOiBJRCEpIHsKICAgdXNlcihpZDogJGlkKSB7CiAgICAgIHVzZXJuYW1lCiAgICAgIG5hbWUKICAgIH0KICB9/eyAiaWQiOiAiMSIgfQ==?ввв=вввв&іввв=вівівів&іві=вівівіві
 export default GraphQLPage;
