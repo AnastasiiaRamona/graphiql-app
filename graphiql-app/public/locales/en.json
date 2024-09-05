@@ -38,5 +38,6 @@
   "nameMarti": "Yuri Porokhin",
   "locationAnastasiia": "Serbia, Belgrade",
   "locationAleks": "Ukraine, Kyiv",
-  "locationMarti": "Russia, Novosibirsk"
+  "locationMarti": "Russia, Novosibirsk",
+  "restfullClientHeader": "REST Client"
 }

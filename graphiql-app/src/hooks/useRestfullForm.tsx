@@ -1,34 +1,37 @@
-import React from 'react';
+import { useParams } from 'next/navigation';
+import { SetStateAction, useEffect, useState } from 'react';
 
 const useRestfullForm = () => {
-  const [method, setMethod] = React.useState('GET');
-  const [endpoint, setEndpoint] = React.useState('');
-  const [headers, setHeaders] = React.useState([{ key: '', value: '' }]);
-  const [body, setBody] = React.useState('');
-  const [responseStatus, setResponseStatus] = React.useState('');
-  const [responseBody, setResponseBody] = React.useState('');
-  const [variables, setVariables] = React.useState([{ key: '', value: '' }]);
-  const [showVariables, setShowVariables] = React.useState(false);
+  const [method, setMethod] = useState('GET');
+  const [endpoint, setEndpoint] = useState('');
+  const [headers, setHeaders] = useState([{ key: '', value: '' }]);
+  const [body, setBody] = useState('');
+  const [responseStatus, setResponseStatus] = useState('');
+  const [responseBody, setResponseBody] = useState('');
+  const [variables, setVariables] = useState([{ key: '', value: '' }]);
+  const [showVariables, setShowVariables] = useState(false);
+  const params = useParams();
+  const localeUrl = params.locale || 'en';
 
-  React.useEffect(() => {
+  useEffect(() => {
     updateUrl(method);
   }, [headers, variables]);
 
   const handleMethodChange = (event: {
-    target: { value: React.SetStateAction<string> };
+    target: { value: SetStateAction<string> };
   }) => {
     const newMethod = event.target.value;
     setMethod(newMethod);
   };
 
   const handleEndpointChange = (event: {
-    target: { value: React.SetStateAction<string> };
+    target: { value: SetStateAction<string> };
   }) => {
     setEndpoint(event.target.value);
   };
 
   const handleBodyChange = (event: {
-    target: { value: React.SetStateAction<string> };
+    target: { value: SetStateAction<string> };
   }) => {
     setBody(event.target.value);
   };
@@ -80,7 +83,7 @@ const useRestfullForm = () => {
       }
     });
 
-    let fullUrl = `${baseUrl}/restfull/${methodToUse}/${encodedEndpoint}`;
+    let fullUrl = `${baseUrl}/${localeUrl}/RESTfull/${methodToUse}/${encodedEndpoint}`;
     if (encodedBody) {
       fullUrl += `/${encodedBody}`;
     }
@@ -153,16 +156,6 @@ const useRestfullForm = () => {
       },
       {}
     );
-
-    const requestBody = ['GET', 'HEAD', 'OPTIONS'].includes(method)
-      ? null
-      : prepareRequestBody();
-
-    const request = new Request(endpoint, {
-      method,
-      headers: requestHeaders,
-      body: requestBody,
-    });
 
     try {
       const response = await fetch(endpoint, {

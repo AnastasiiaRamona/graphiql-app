@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+
 import {
   TextField,
   Select,
@@ -16,7 +16,7 @@ import {
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import useRestfullForm from './useRestfullForm';
+import useRestfullForm from '../../../hooks/useRestfullForm';
 import {
   containerStyles,
   boxStyles,
@@ -29,6 +29,7 @@ import {
   gridItemStyles,
   gridContainerStyles,
 } from './restfullFormStyles';
+import { useTranslations } from 'next-intl';
 
 function RestfullForm() {
   const {
@@ -54,7 +55,7 @@ function RestfullForm() {
     toggleVariablesSection,
     handleRemoveVariable,
   } = useRestfullForm();
-
+  const locale = useTranslations();
   const isEndpointEmpty = !endpoint.trim();
 
   return (
@@ -66,7 +67,7 @@ function RestfullForm() {
           gutterBottom
           textAlign={'center'}
         >
-          REST Client
+          {locale('restfullClientHeader')}
         </Typography>
 
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
