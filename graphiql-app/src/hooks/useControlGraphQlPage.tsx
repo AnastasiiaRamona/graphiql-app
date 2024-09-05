@@ -20,11 +20,6 @@ export default function useControlGraphQlPage() {
   const sdlValue: string = watch('sdl');
   const router = useRouter();
 
-  const handleDeleteHeader = (index: number) => {
-    const newHeaders = headers.filter((_, i) => i !== index);
-    setHeaders(newHeaders);
-  };
-
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -76,7 +71,6 @@ export default function useControlGraphQlPage() {
     setVariables,
     headers,
     setHeaders,
-    handleDeleteHeader,
     handleChange,
     handleCodeChange,
     onClickSdl,

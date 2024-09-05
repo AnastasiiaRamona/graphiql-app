@@ -44,7 +44,6 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
     code,
     variables,
     headers,
-    handleDeleteHeader,
     handleChange,
     handleCodeChange,
     onClickSdl,
@@ -100,6 +99,18 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
       console.log(error);
     }
   }, [params, searchParams]);
+
+  const handleDeleteHeader = (index: number) => {
+    const newHeaders = headers.filter((_, i) => i !== index);
+    setHeaders(newHeaders);
+    const codedHeaders = transformHeaders(headers);
+    window.history.replaceState(
+      null,
+      '',
+      `/${params.locale}/graphql/${url}/${bodyBase64}?${codedHeaders}`
+    );
+  };
+
   const handleChangeUrl = (code: string, variables: string) => {
     const codeBase64 = base64.encode(utf8.encode(code));
     const variablesBase64 = base64.encode(utf8.encode(variables));
