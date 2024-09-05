@@ -4,7 +4,7 @@ import { Container, Typography } from '@mui/material';
 export default function GraphQLPage() {
   return (
     <Container sx={{ textAlign: 'center' }} maxWidth="md" component="main">
-      <Typography component="h1" variant="h1" gutterBottom>
+      <Typography component="h1" variant="h3" gutterBottom>
         GraphQL
       </Typography>
       <Typography component="p" variant="h6" gutterBottom sx={{ mb: 2 }}>
