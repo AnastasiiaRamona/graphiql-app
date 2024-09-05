@@ -38,5 +38,22 @@
   "nameMarti": "Юрий Порохин",
   "locationAnastasiia": "Сербия, Белград",
   "locationAleks": "Украина, Киев",
-  "locationMarti": "Россия, Новосибирск"
+  "locationMarti": "Россия, Новосибирск",
+  "restfullClientHeader": "REST Клиент",
+  "method": "Метод",
+  "header": "Заголовок",
+  "addHeader": "Добавить заголовок",
+  "headerKey": "Ключ заголовка",
+  "headerValue": "Значение заголовка",
+  "requestBody": "Тело запроса",
+  "showVariables": "Показать переменные",
+  "hideVariables": "Скрыть переменные",
+  "variables": "Переменные",
+  "addVariable": "Добавить",
+  "variableKey": "Ключ переменной",
+  "variableValue": "Значение переменной",
+  "sendRequest": "Отправить запрос",
+  "response": "Ответ",
+  "status": "Статус",
+  "body": "Тело запроса"
 }
