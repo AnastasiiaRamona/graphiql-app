@@ -128,7 +128,6 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
       <Typography variant="h4" component="h1" gutterBottom textAlign="center">
         GraphQL
       </Typography>
-
       <form
         onSubmit={handleSubmit(onSubmit)}
         autoComplete="off"

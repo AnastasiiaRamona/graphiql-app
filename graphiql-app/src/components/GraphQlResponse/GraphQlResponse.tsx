@@ -13,7 +13,7 @@ export default function GraphQlResponse({
   data,
 }: GraphQlResponseProps) {
   return (
-    <Grid container spacing={2} sx={{ mt: 2 }}>
+    <Grid container spacing={2} sx={{ mt: 2 }} className="response-graphqQl">
       <Grid item xs={12}>
         <Typography variant="h4" component="h1" gutterBottom textAlign="center">
           Response
