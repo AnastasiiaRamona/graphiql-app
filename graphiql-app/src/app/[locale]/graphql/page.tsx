@@ -6,7 +6,16 @@ export default function GraphQLPage() {
   const locale = useTranslations();
 
   return (
-    <Container sx={{ textAlign: 'center' }} maxWidth="md" component="main">
+    <Container
+      sx={{
+        textAlign: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4vh',
+      }}
+      maxWidth="md"
+      component="main"
+    >
       <Box
         sx={{
           display: 'flex',

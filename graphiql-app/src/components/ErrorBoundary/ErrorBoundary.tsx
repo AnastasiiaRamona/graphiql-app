@@ -31,9 +31,8 @@ export class ErrorBoundary extends Component<
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+  componentDidCatch(error: Error): void {
     toast.error(`${this.props.errorToast}: ${error}`);
-    console.error(error, errorInfo);
   }
 
   render() {

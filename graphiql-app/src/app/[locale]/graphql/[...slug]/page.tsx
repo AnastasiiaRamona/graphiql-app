@@ -26,6 +26,7 @@ import { handlePrettier } from '@/utils/prettufy';
 import { GraphQLPageProps } from './types';
 import { useTranslations } from 'next-intl';
 import TouchAppSharpIcon from '@mui/icons-material/TouchAppSharp';
+import { toast } from 'react-toastify';
 
 function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
   const {
@@ -90,7 +91,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
       };
       fetchData();
     } catch (error) {
-      console.error('Error:', error);
+      toast.error(`${locale('errorToast')}: ${error}` || locale('error'));
     }
   }, [params, searchParams]);
 
