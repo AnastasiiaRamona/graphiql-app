@@ -25,7 +25,7 @@ const MenuButtons = () => {
       <Link href={`/${localeUrl}/RESTfull`}>
         <Button variant="contained">{locale('restfullClient')}</Button>
       </Link>
-      <Link href={`/${localeUrl}/GrathQL`}>
+      <Link href={`/${localeUrl}/graphql`}>
         <Button variant="contained">{locale('graphiqlClient')}</Button>
       </Link>
       <Link href={`/${localeUrl}/history`}>

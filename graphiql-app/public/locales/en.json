@@ -55,5 +55,12 @@
   "sendRequest": "Send Request",
   "response": "Response",
   "status": "Status",
-  "body": "Body"
+  "body": "Body",
+  "graphqlYourFirstRequest": "Make your first request with GraphQL",
+  "getStarted": "Get Started",
+  "send": "Send",
+  "headers": "Headers",
+  "query": "Query",
+  "pretty": "Pretty",
+  "openScheme": "Open Scheme"
 }
