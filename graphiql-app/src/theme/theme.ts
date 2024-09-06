@@ -33,6 +33,13 @@ const lightTheme = createTheme({
         },
       },
     },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: 'rgb(30, 54, 105)',
+        },
+      },
+    },
   },
 });
 
@@ -60,6 +67,13 @@ const darkTheme = createTheme({
   },
   components: {
     MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: blue[50],
+        },
+      },
+    },
+    MuiTab: {
       styleOverrides: {
         root: {
           color: blue[50],

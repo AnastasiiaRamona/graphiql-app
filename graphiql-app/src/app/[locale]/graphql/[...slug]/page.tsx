@@ -170,7 +170,13 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
         onSubmit={handleSubmit(onSubmit)}
         autoComplete="off"
         noValidate
-        style={{ width: '100%', padding: 7, border: '1px solid #bbdefb' }}
+        style={{
+          width: '100%',
+          padding: 16,
+          border: '1px solid rgb(30, 54, 105)',
+          boxShadow: '0 5px 8px 0 rgba(0, 0, 0, 0.2)',
+          borderRadius: '8px',
+        }}
       >
         <Grid container spacing={2} sx={{ mt: 4 }}>
           <Grid item xs={12} gap={0.2} display={'flex'}>

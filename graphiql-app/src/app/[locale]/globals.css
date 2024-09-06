@@ -71,15 +71,24 @@ p {
   margin: 0;
 }
 
-/* .Link {
-  cursor: pointer;
-  border: 1px solid #0c234b;
-  padding: 10px 20px;
-  color: #cf7821;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #a8b1b8;
   border-radius: 5px;
-  background-color: #0c234b;
-  transition: background-color 0.2s ease-out;
-} */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1e5c9ebe;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #33589e;
+}
 
 .response-graphqQl {
   opacity: 0;

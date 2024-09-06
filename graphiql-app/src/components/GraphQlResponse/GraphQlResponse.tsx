@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, useTheme } from '@mui/material';
 import { json } from '@codemirror/lang-json';
 import CodeMirror from '@uiw/react-codemirror';
 import { darcula } from '@uiw/codemirror-theme-darcula';
@@ -14,6 +14,7 @@ export default function GraphQlResponse({
   data,
 }: GraphQlResponseProps) {
   const locale = useTranslations();
+  const theme = useTheme();
 
   return (
     <Grid container spacing={2} sx={{ mt: 2 }} className="response-graphqQl">
@@ -31,7 +32,10 @@ export default function GraphQlResponse({
             gutterBottom
             display={'inline'}
             sx={{
-              color: status === '200' ? '#5be715' : 'red',
+              color:
+                status === '200'
+                  ? theme.palette.success.main
+                  : theme.palette.error.main,
               ml: 1,
             }}
           >
