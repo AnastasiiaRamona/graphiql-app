@@ -1,6 +1,7 @@
 import { logoutUser } from '@/firebase/firebase';
 import useAuthStore from '@/store/store';
 import { useParams, useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 const useHeaderNavigation = () => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const useHeaderNavigation = () => {
           setAuthenticated(false);
           router.replace(`/${localeUrl}/welcome`);
         } catch (error) {
-          console.error(error);
+          toast.error(`${error}`);
         }
         break;
       case 'Home':

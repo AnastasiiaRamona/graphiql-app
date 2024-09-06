@@ -2,6 +2,7 @@ import prettier from 'prettier';
 import parserBabel from 'prettier/parser-babel';
 import parserEstree from 'prettier/plugins/estree';
 import parserGraphql from 'prettier/parser-graphql';
+import { toast } from 'react-toastify';
 
 export const handlePrettier = async (
   value: string,
@@ -16,7 +17,7 @@ export const handlePrettier = async (
       plugins: isGraphQl ? [parserGraphql] : [parserBabel, parserEstree],
     });
   } catch (error) {
-    console.error('Error formatting code:', error);
+    toast.error('Error formatting code');
   }
 
   return onChange(formatted);

@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 interface GraphQLData {
   headers: { [key: string]: string };
   variables: string;
@@ -14,6 +16,7 @@ const fetchGraphQL = async (data: GraphQLData) => {
   try {
     variables = JSON.parse(data.variables);
   } catch (error) {
+    toast.error(`${error}`);
     if (data.variables.trim()) {
       variables = data.variables;
     } else {
@@ -36,7 +39,7 @@ const fetchGraphQL = async (data: GraphQLData) => {
     return response;
   } catch (error) {
     if (error instanceof Error) {
-      error;
+      toast.error(`${error}`);
     }
   }
 };
