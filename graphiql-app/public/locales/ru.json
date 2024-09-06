@@ -55,5 +55,12 @@
   "sendRequest": "Отправить запрос",
   "response": "Ответ",
   "status": "Статус",
-  "body": "Тело запроса"
+  "body": "Тело запроса",
+  "graphqlYourFirstRequest": "Сделай свой первый запрос с помощью GraphQL",
+  "getStarted": "Погнали",
+  "send": "Отправить",
+  "headers": "Заголовки",
+  "query": "Запрос",
+  "pretty": "Облагородить",
+  "openScheme": "Открыть схему"
 }

@@ -2,6 +2,7 @@ import { Grid, Typography } from '@mui/material';
 import { json } from '@codemirror/lang-json';
 import CodeMirror from '@uiw/react-codemirror';
 import { darcula } from '@uiw/codemirror-theme-darcula';
+import { useTranslations } from 'next-intl';
 
 interface GraphQlResponseProps {
   status: string;
@@ -12,16 +13,18 @@ export default function GraphQlResponse({
   status,
   data,
 }: GraphQlResponseProps) {
+  const locale = useTranslations();
+
   return (
     <Grid container spacing={2} sx={{ mt: 2 }} className="response-graphqQl">
       <Grid item xs={12}>
         <Typography variant="h4" component="h1" gutterBottom textAlign="center">
-          Response
+          {locale('response')}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="h6" component="h2" gutterBottom>
-          Status:
+          {locale('status')}:
           <Typography
             variant="h6"
             component="span"

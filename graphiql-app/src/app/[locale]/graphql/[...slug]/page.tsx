@@ -15,7 +15,7 @@ import { darcula } from '@uiw/codemirror-theme-darcula';
 import { graphql } from 'cm6-graphql';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import SchemaDoc from '@/components/SchemaDoc/SchemaDoc';
+import SchemeDoc from '@/components/SchemeDoc/SchemeDoc';
 import GraphQlResponse from '@/components/GraphQlResponse/GraphQlResponse';
 import { useEffect } from 'react';
 import fetchGraphQL from '@/apiGraphQl/getDataGraphQl';
@@ -23,15 +23,9 @@ import useControlGraphQlPage from '@/hooks/useControlGraphQlPage';
 import base64 from 'base-64';
 import utf8 from 'utf8';
 import { handlePrettier } from '@/utils/prettufy';
-interface GraphQLPageParams {
-  locale: string;
-  slug: string[];
-}
-
-interface GraphQLPageProps {
-  params: GraphQLPageParams;
-  searchParams: Record<string, string>;
-}
+import { GraphQLPageProps } from './types';
+import { useTranslations } from 'next-intl';
+import TouchAppSharpIcon from '@mui/icons-material/TouchAppSharp';
 
 function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
   const {
@@ -64,6 +58,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
   const urlDecoded = utf8.decode(base64.decode(url || ''));
   const codeUrlDecoded = utf8.decode(base64.decode(codeUrl));
   const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl));
+  const locale = useTranslations();
 
   useEffect(() => {
     try {
@@ -96,7 +91,6 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
       fetchData();
     } catch (error) {
       console.error('Error:', error);
-      console.log(error);
     }
   }, [params, searchParams]);
 
@@ -163,7 +157,13 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
       component="main"
       sx={{ width: '100%', mt: 12, mb: 3, height: '100%' }}
     >
-      <Typography variant="h4" component="h1" gutterBottom textAlign="center">
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        textAlign="center"
+        sx={{ fontWeight: 600 }}
+      >
         GraphQL
       </Typography>
       <form
@@ -188,7 +188,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
               endIcon={<SendIcon />}
               type="submit"
             >
-              Send
+              {locale('send')}
             </Button>
           </Grid>
           <Grid item xs={12} gap={0.2} display={'flex'}>
@@ -205,7 +205,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
               sx={{ width: '15%', height: '100%' }}
               endIcon={<SendIcon />}
             >
-              Send
+              {locale('send')}
             </Button>
           </Grid>
           <TabContext value={value}>
@@ -220,9 +220,9 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
                   width: '100%',
                 }}
               >
-                <Tab label="Headers " value="1" />
-                <Tab label="Query" value="2" />
-                <Tab label="Variables" value="3" />
+                <Tab label={locale('headers')} value="1" />
+                <Tab label={locale('query')} value="2" />
+                <Tab label={locale('variables')} value="3" />
               </TabList>
             </Grid>
             <Grid item xs={12}>
@@ -239,7 +239,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
                   }}
                   onClick={handleAddHeader}
                 >
-                  Add Header
+                  {locale('addHeader')}
                 </Button>
 
                 {headers.map((header, index) => (
@@ -263,7 +263,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
                     </IconButton>
                     <TextField
                       id={`key-header-${index}`}
-                      label="Key:"
+                      label={locale('headerKey')}
                       sx={{ width: '48%' }}
                       value={header.key.trim()}
                       onChange={(e) =>
@@ -272,7 +272,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
                     />
                     <TextField
                       id={`value-header-${index}`}
-                      label="Value:"
+                      label={locale('headerValue')}
                       sx={{ width: '48%' }}
                       value={header.value.trim()}
                       onChange={(e) =>
@@ -285,10 +285,11 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
               <TabPanel value="2">
                 <Button
                   variant="contained"
-                  sx={{ width: '50px', ml: 'auto', mb: 1 }}
+                  sx={{ ml: 'auto', mb: 1 }}
                   onClick={() => handlePrettier(code, true, handleCodeChange)}
                 >
-                  Pretty
+                  {locale('pretty')}
+                  <TouchAppSharpIcon />
                 </Button>
                 <CodeMirror
                   value={code}
@@ -302,12 +303,13 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
               <TabPanel value="3">
                 <Button
                   variant="contained"
-                  sx={{ width: '50px', ml: 'auto', mb: 1 }}
+                  sx={{ ml: 'auto', mb: 1 }}
                   onClick={() =>
                     handlePrettier(variables, false, handleVariablesChange)
                   }
                 >
-                  Pretty
+                  {locale('pretty')}
+                  <TouchAppSharpIcon />
                 </Button>
 
                 <CodeMirror
@@ -323,7 +325,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
           </TabContext>
         </Grid>
       </form>
-      <SchemaDoc url={sdl || urlDecoded} />
+      <SchemeDoc url={sdl || urlDecoded} />
       <GraphQlResponse data={data} status={status} />
     </Container>
   );

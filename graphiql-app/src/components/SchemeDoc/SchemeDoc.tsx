@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { GraphiQLProvider, DocExplorer } from '@graphiql/react';
 import { createGraphiQLFetcher } from '@graphiql/toolkit';
 import { Grid, Button, Box, Drawer } from '@mui/material';
+import { useTranslations } from 'next-intl';
 
-export default function SchemaDoc({ url }: { url: string }) {
+export default function SchemeDoc({ url }: { url: string }) {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -18,6 +19,9 @@ export default function SchemaDoc({ url }: { url: string }) {
       </Box>
     </GraphiQLProvider>
   );
+
+  const locale = useTranslations();
+
   return (
     <Grid container>
       <Grid item xs={12} textAlign={'center'} sx={{ mt: 2 }}>
@@ -26,7 +30,7 @@ export default function SchemaDoc({ url }: { url: string }) {
           variant="contained"
           color="primary"
         >
-          Open Schema
+          {locale('openScheme')}
         </Button>
       </Grid>
       <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
