@@ -1,5 +1,3 @@
-'use client';
-
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,20 +12,21 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import MaterialUISwitch from '../SwitchTheme/MaterialUiSwitch';
+import SwitchLanguage from '../SwitchLanguage/SwitchLanguage';
 import Props from './types';
 import iconSrc from '../../app/icon.ico';
-import Image from 'next/image';
-import { FormControlLabel } from '@mui/material';
-import MaterialUISwitch from '../SwitchTheme/MaterialUiSwitch';
-import { useEffect, useState } from 'react';
 import useHeaderNavigation from '@/hooks/useHeaderNavigation';
 import useAuthStore from '@/store/store';
-import Link from 'next/link';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import SwitchLanguage from '../SwitchLanguage/SwitchLanguage';
+import { FormControlLabel } from '@mui/material';
+import useScrollPosition from '@/hooks/useScrollPosition';
 
 const drawerWidth = 240;
 
@@ -40,6 +39,7 @@ export default function Header(props: Props) {
   const locale = useTranslations();
   const params = useParams();
   const localeUrl = params.locale || 'en';
+  const scrolled = useScrollPosition();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -60,7 +60,7 @@ export default function Header(props: Props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        Graphiql App
+        QueryHub
       </Typography>
       <Divider />
       <List>
@@ -85,7 +85,18 @@ export default function Header(props: Props) {
     <header>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar component="nav">
+        <AppBar
+          component="nav"
+          sx={{
+            transition: 'all 0.3s ease',
+            ...(scrolled && {
+              height: '60px',
+              backgroundColor: isDarkMode
+                ? 'rgba(0, 0, 0, 0.8)'
+                : 'rgba(16, 87, 169, 0.687)',
+            }),
+          }}
+        >
           <Toolbar sx={{ paddingRight: 0 }}>
             <IconButton
               color="inherit"
@@ -108,15 +119,24 @@ export default function Header(props: Props) {
                 <Image
                   src={iconSrc}
                   alt="icon"
-                  width={50}
-                  height={50}
-                  style={{ marginRight: '10px' }}
+                  width={scrolled ? 40 : 50}
+                  height={scrolled ? 40 : 50}
+                  style={{
+                    marginRight: '10px',
+                    transition: 'width 0.3s ease, height 0.3s ease',
+                  }}
+                  priority={true}
                 />
               </Link>
               <Typography
                 variant="h6"
                 component="div"
-                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                sx={{
+                  flexGrow: 1,
+                  display: { xs: 'none', sm: 'block' },
+                  fontSize: scrolled ? '1.25rem' : '1.5rem',
+                  transition: 'font-size 0.3s ease',
+                }}
               >
                 QueryHub
               </Typography>

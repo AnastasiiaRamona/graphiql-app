@@ -33,7 +33,14 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image src={rssLogo} alt="RSS logo" width={30} height={30} />
+            <Image
+              src={rssLogo}
+              alt="RSS logo"
+              width={30}
+              height={30}
+              priority={true}
+              style={{ marginRight: '10px' }}
+            />
           </IconButton>
         </Box>
       </Box>

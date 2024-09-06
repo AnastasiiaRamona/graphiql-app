@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   TextField,
   Button,
@@ -17,19 +17,23 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import schema, { User } from '@/validation/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { loginUser, registerUser } from '@/firebase/firebase';
+import { auth, loginUser, registerUser } from '@/firebase/firebase';
 import { useParams, useRouter } from 'next/navigation';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import useAuthStore from '@/store/store';
 import { useTranslations } from 'next-intl';
+import { onAuthStateChanged } from 'firebase/auth';
+import Loader from '@/components/Loader/Loader';
 
 function AuthorizationForm() {
   const [showPassword, setShowPassword] = useState(false);
   const { isLoginForm, toggleForm } = useAuthStore();
   const [error, setError] = useState<string | null>(null);
   const locale = useTranslations();
+  const { setAuthenticated } = useAuthStore();
   const params = useParams();
   const localeUrl = params.locale || 'en';
+  const [loading, setLoading] = useState(true);
   const {
     handleSubmit,
     register,
@@ -39,6 +43,23 @@ function AuthorizationForm() {
     mode: 'all',
   });
   const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthenticated(true);
+        router.replace(`/${localeUrl}/welcome`);
+      } else {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [localeUrl, router, setAuthenticated]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   const onSubmit = async (data: User) => {
     try {
