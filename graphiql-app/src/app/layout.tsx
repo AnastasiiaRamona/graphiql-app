@@ -1,19 +1,9 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import 'graphiql/graphiql.css';
+import { ReactNode } from 'react';
 
-export const metadata: Metadata = {
-  title: 'QueryHub',
+type Props = {
+  children: ReactNode;
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang={'en'}>
-      <body>{children}</body>
-    </html>
-  );
+export default function RootLayout({ children }: Props) {
+  return children;
 }

@@ -21,9 +21,6 @@ body {
   height: 100vh;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
 }
 
 main {
@@ -97,6 +94,7 @@ p {
     opacity: 0;
     height: 0;
   }
+
   100% {
     opacity: 1;
     height: 500px;
