@@ -190,7 +190,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
             <Button
               variant="contained"
               color="primary"
-              sx={{ width: '15%', height: '100%' }}
+              sx={{ minWidth: '13%', height: '100%', fontSize: '0.7rem' }}
               endIcon={<SendIcon />}
               type="submit"
             >
@@ -208,7 +208,7 @@ function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
               variant="contained"
               onClick={handleSubmit(onClickSdl)}
               color="primary"
-              sx={{ width: '15%', height: '100%' }}
+              sx={{ minWidth: '13%', height: '100%', fontSize: '0.7rem' }}
               endIcon={<SendIcon />}
             >
               {locale('send')}

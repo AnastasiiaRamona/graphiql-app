@@ -31,6 +31,7 @@
     "base-64": "^1.0.0",
     "cm6-graphql": "^0.0.7",
     "firebase": "^10.13.0",
+    "graphiql": "^3.7.1",
     "graphql": "^16.9.0",
     "husky": "^9.1.4",
     "latest": "^0.2.0",
