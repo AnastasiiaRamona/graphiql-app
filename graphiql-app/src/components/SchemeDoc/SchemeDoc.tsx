@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { GraphiQLProvider, DocExplorer } from '@graphiql/react';
 import { createGraphiQLFetcher } from '@graphiql/toolkit';

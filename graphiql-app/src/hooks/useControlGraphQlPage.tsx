@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-interface FormData {
+export interface FormData {
   endpoint: string;
   sdl: string;
 }
