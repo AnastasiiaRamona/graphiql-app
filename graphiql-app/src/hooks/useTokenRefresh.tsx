@@ -26,7 +26,7 @@ const useTokenRefresh = () => {
   useEffect(() => {
     const unsubscribe = onIdTokenChanged(auth, async (user) => {
       if (user) {
-        const token = await user.getIdToken();
+        await user.getIdToken();
       }
     });
 
