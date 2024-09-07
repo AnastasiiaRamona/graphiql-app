@@ -47,6 +47,7 @@ export default function ThemeWrapper({
       <Box
         sx={{
           minHeight: '100vh',
+          width: '100vw',
           background: (theme) => theme.palette.background.default,
           display: 'flex',
           flexDirection: 'column',

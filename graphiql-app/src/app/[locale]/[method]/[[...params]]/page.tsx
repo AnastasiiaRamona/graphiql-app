@@ -17,8 +17,8 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useRestfullForm from '../../../../hooks/useRestfullForm';
+import { useTheme } from '@mui/material/styles';
 import {
-  containerStyles,
   boxStyles,
   gridItemHeaderStyles,
   buttonStyles,
@@ -28,10 +28,12 @@ import {
   deleteIconStyles,
   gridItemStyles,
   gridContainerStyles,
+  variablesBoxStyles,
 } from './restfullFormStyles';
 import { useTranslations } from 'next-intl';
 
 function RestfullForm() {
+  const theme = useTheme();
   const {
     method,
     endpoint,
@@ -45,7 +47,6 @@ function RestfullForm() {
     handleHeaderChange,
     handleAddHeader,
     handleSubmit,
-    getColor,
     updateUrl,
     handleRemoveHeader,
     variables,
@@ -58,8 +59,33 @@ function RestfullForm() {
   const locale = useTranslations();
   const isEndpointEmpty = !endpoint.trim();
 
+  const methodColors = {
+    GET: theme.palette.info.main,
+    POST: theme.palette.success.main,
+    PUT: theme.palette.warning.main,
+    PATCH: theme.palette.primary.main,
+    DELETE: theme.palette.error.main,
+    HEAD: theme.palette.text.primary,
+    OPTIONS: theme.palette.success.dark,
+  };
+
   return (
-    <Container maxWidth="sm" component="main" sx={containerStyles}>
+    <Container
+      sx={{
+        minHeight: '100vh',
+        width: '100vw',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4vh',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        mt: '10vh',
+        mb: '4vh',
+        '@media (max-width: 450px)': {
+          mt: '15vh',
+        },
+      }}
+    >
       <Box sx={boxStyles}>
         <Typography
           variant="h4"
@@ -74,45 +100,41 @@ function RestfullForm() {
           <Grid container spacing={2} sx={gridContainerStyles}>
             <Grid item xs={4} sx={gridItemStyles}>
               <FormControl fullWidth>
-                <InputLabel id="method-label">Method</InputLabel>
+                <InputLabel id="method-label">{locale('method')}</InputLabel>
                 <Select
                   labelId="method-label"
                   id="method"
                   value={method}
-                  label="Method"
+                  label={locale('method')}
                   onChange={(e) => {
                     handleMethodChange(e);
                     updateUrl(e.target.value);
                   }}
                   variant="outlined"
                   renderValue={(selected) => (
-                    <span style={{ color: getColor(selected) }}>
+                    <span
+                      style={{
+                        color:
+                          methodColors[selected as keyof typeof methodColors],
+                      }}
+                    >
                       {selected}
                     </span>
                   )}
                   sx={{ minWidth: 120 }}
                 >
-                  <MenuItem value="GET" sx={{ color: 'blue' }}>
-                    GET
-                  </MenuItem>
-                  <MenuItem value="POST" sx={{ color: 'green' }}>
-                    POST
-                  </MenuItem>
-                  <MenuItem value="PUT" sx={{ color: 'orange' }}>
-                    PUT
-                  </MenuItem>
-                  <MenuItem value="PATCH" sx={{ color: 'purple' }}>
-                    PATCH
-                  </MenuItem>
-                  <MenuItem value="DELETE" sx={{ color: 'red' }}>
-                    DELETE
-                  </MenuItem>
-                  <MenuItem value="HEAD" sx={{ color: 'brown' }}>
-                    HEAD
-                  </MenuItem>
-                  <MenuItem value="OPTIONS" sx={{ color: 'teal' }}>
-                    OPTIONS
-                  </MenuItem>
+                  {Object.keys(methodColors).map((method) => (
+                    <MenuItem
+                      key={method}
+                      value={method}
+                      sx={{
+                        color:
+                          methodColors[method as keyof typeof methodColors],
+                      }}
+                    >
+                      {method}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -139,7 +161,7 @@ function RestfullForm() {
                 gutterBottom
                 textAlign={'center'}
               >
-                Header:
+                {locale('header')}:
               </Typography>
             </Grid>
             <Grid item xs={9} sx={buttonStyles}>
@@ -149,18 +171,18 @@ function RestfullForm() {
                   color="primary"
                   onClick={handleAddHeader}
                 >
-                  Add Header
+                  {locale('addHeader')}
                 </Button>
               </Tooltip>
             </Grid>
 
             {headers.map((header, index) => (
               <Grid container spacing={0} key={index}>
-                <Grid item xs={6} sx={{ paddingLeft: '16px' }}>
+                <Grid item xs={6} sx={{ paddingLeft: '16px', mb: '8px' }}>
                   <TextField
                     fullWidth
                     id={`header_key_${index}`}
-                    label="Header Key"
+                    label={locale('headerKey')}
                     variant="outlined"
                     value={header.key}
                     onChange={(e) =>
@@ -180,7 +202,7 @@ function RestfullForm() {
                   <TextField
                     fullWidth
                     id={`header_value_${index}`}
-                    label="Header Value"
+                    label={locale('headerValue')}
                     variant="outlined"
                     value={header.value}
                     onChange={(e) =>
@@ -213,7 +235,7 @@ function RestfullForm() {
               <TextField
                 fullWidth
                 id="body"
-                label="Request Body"
+                label={locale('requestBody')}
                 variant="outlined"
                 multiline
                 rows={4}
@@ -229,25 +251,29 @@ function RestfullForm() {
                 color="secondary"
                 onClick={toggleVariablesSection}
               >
-                {showVariables ? 'Hide Variables' : 'Show Variables'}
+                {showVariables
+                  ? `${locale('hideVariables')}`
+                  : `${locale('showVariables')}`}
               </Button>
             </Grid>
 
             {showVariables && (
               <>
-                <Grid item xs={7}>
-                  <Typography variant="h5">Variables:</Typography>
-                </Grid>
+                <Box sx={variablesBoxStyles}>
+                  <Grid item>
+                    <Typography variant="h5">{locale('variables')}:</Typography>
+                  </Grid>
 
-                <Grid item xs={4} sx={buttonStyles}>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleAddVariable}
-                  >
-                    Add Variable
-                  </Button>
-                </Grid>
+                  <Grid item sx={buttonStyles}>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleAddVariable}
+                    >
+                      {locale('addVariable')}
+                    </Button>
+                  </Grid>
+                </Box>
 
                 {variables.map((variable, index) => (
                   <Grid
@@ -260,7 +286,7 @@ function RestfullForm() {
                       <TextField
                         fullWidth
                         id={`variable_key_${index}`}
-                        label="Variable Key"
+                        label={locale('variableKey')}
                         variant="outlined"
                         value={variable.key}
                         onChange={(e) =>
@@ -273,7 +299,7 @@ function RestfullForm() {
                       <TextField
                         fullWidth
                         id={`variable_value_${index}`}
-                        label="Variable Value"
+                        label={locale('variableValue')}
                         variant="outlined"
                         value={variable.value}
                         onChange={(e) =>
@@ -306,7 +332,7 @@ function RestfullForm() {
                     type="submit"
                     disabled={isEndpointEmpty}
                   >
-                    Send Request
+                    {locale('sendRequest')}
                   </Button>
                 </span>
               </Tooltip>
@@ -322,10 +348,12 @@ function RestfullForm() {
           gutterBottom
           textAlign={'center'}
         >
-          Response
+          {locale('response')}
         </Typography>
-        <Typography variant="h6">Status: {responseStatus}</Typography>
-        <Typography variant="h6">Body:</Typography>
+        <Typography variant="h6">
+          {locale('status')}: {responseStatus}
+        </Typography>
+        <Typography variant="h6">{locale('body')}:</Typography>
         <Box component="pre" sx={preBoxStyles}>
           {responseBody}
         </Box>

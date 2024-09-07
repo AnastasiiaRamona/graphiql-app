@@ -150,7 +150,6 @@ const useRestfullForm = () => {
     endpointOverride?: string
   ) => {
     const requestBody = prepareRequestBody();
-    console.log(requestBody);
     const baseUrl = window.location.origin;
     const encodedEndpoint = encodeToBase64(endpointOverride || endpoint);
     const encodedBody = requestBody ? encodeToBase64(requestBody) : null;
