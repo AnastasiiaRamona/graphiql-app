@@ -16,12 +16,14 @@ import {
 } from './GraphQlTextInput/GraphQlTextInput';
 
 import { GraphQLPageClientProps } from '@/app/[locale]/graphql/[...slug]/types';
+import useCheckingOfAuthorization from '@/hooks/useCheckingOfAuthorization';
 function GraphQLPageСlient({
   params,
   searchParams,
   url,
   bodyBase64,
 }: GraphQLPageClientProps) {
+  useCheckingOfAuthorization();
   const {
     value,
     status,
