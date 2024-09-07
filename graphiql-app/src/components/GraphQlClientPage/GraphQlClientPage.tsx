@@ -16,7 +16,6 @@ import {
 } from './GraphQlTextInput/GraphQlTextInput';
 
 import { GraphQLPageClientProps } from '@/app/[locale]/graphql/[...slug]/types';
-import { handlePrettier } from '@/utils/prettify';
 function GraphQLPageСlient({
   params,
   searchParams,
@@ -198,7 +197,6 @@ function GraphQLPageСlient({
               handleAddHeader={handleAddHeader}
               handleDeleteHeader={handleDeleteHeader}
               handleHeaderChange={handleHeaderChange}
-              handlePrettier={handlePrettier}
               handleChangeUrl={handleChangeUrl}
             />
           </Grid>

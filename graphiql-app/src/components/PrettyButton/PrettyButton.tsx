@@ -2,11 +2,11 @@ import { Button } from '@mui/material';
 import TouchAppSharpIcon from '@mui/icons-material/TouchAppSharp';
 import { useTranslations } from 'next-intl';
 import PrettyButtonProps from './types';
+import { handlePrettier } from '@/utils/prettify';
 
 const PrettyButton: React.FC<PrettyButtonProps> = ({
   content,
   isQuery,
-  handlePrettier,
   onChange,
 }) => {
   const locale = useTranslations();

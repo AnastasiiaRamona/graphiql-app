@@ -17,7 +17,6 @@ const GraphQlTabs: React.FC<GraphQLTabsProps> = ({
   handleChange,
   handleCodeChange,
   handleVariablesChange,
-  handlePrettier,
   handleAddHeader,
   handleDeleteHeader,
   handleHeaderChange,
@@ -95,7 +94,6 @@ const GraphQlTabs: React.FC<GraphQLTabsProps> = ({
           <PrettyButton
             content={code}
             isQuery={true}
-            handlePrettier={handlePrettier}
             onChange={handleCodeChange}
           />
           <CodeMirror
@@ -111,7 +109,6 @@ const GraphQlTabs: React.FC<GraphQLTabsProps> = ({
           <PrettyButton
             content={variables}
             isQuery={false}
-            handlePrettier={handlePrettier}
             onChange={handleVariablesChange}
           />
 

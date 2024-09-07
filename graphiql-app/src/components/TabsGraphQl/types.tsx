@@ -6,11 +6,6 @@ export default interface GraphQLTabsProps {
   handleChange: (event: React.SyntheticEvent, newValue: string) => void;
   handleCodeChange: (value: string) => void;
   handleVariablesChange: (value: string) => void;
-  handlePrettier: (
-    code: string,
-    isQuery: boolean,
-    callback: (value: string) => void
-  ) => void;
   handleAddHeader: () => void;
   handleDeleteHeader: (index: number) => void;
   handleHeaderChange: (index: number, field: string, value: string) => void;
