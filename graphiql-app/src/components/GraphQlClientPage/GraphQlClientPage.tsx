@@ -1,12 +1,11 @@
 'use client';
-import { Container, Typography, Grid, TextField, Button } from '@mui/material';
+import { Container, Typography, Grid } from '@mui/material';
 import SchemeDoc from '@/components/SchemeDoc/SchemeDoc';
 import GraphQlResponse from '@/components/GraphQlResponse/GraphQlResponse';
 import { useEffect } from 'react';
 import fetchGraphQL from '@/apiGraphQl/getDataGraphQl';
 import useControlGraphQlPage from '@/hooks/useControlGraphQlPage';
 import GraphQlTabs from '../TabsGraphQl/TabsGraphQl';
-import { handlePrettier } from '@/utils/prettufy';
 import { useTranslations } from 'next-intl';
 import base64 from 'base-64';
 import utf8 from 'utf8';
@@ -14,9 +13,10 @@ import { toast } from 'react-toastify';
 import {
   GraphQlTextInputSdl,
   GraphQlTextInputUrl,
-} from '../pageGraphQlClient/GraphQlTextInput/GraphQlTextInput';
+} from './GraphQlTextInput/GraphQlTextInput';
 
 import { GraphQLPageClientProps } from '@/app/[locale]/graphql/[...slug]/types';
+import { handlePrettier } from '@/utils/prettify';
 function GraphQLPageСlient({
   params,
   searchParams,

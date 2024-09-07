@@ -1,5 +1,5 @@
+import GraphQLPageСlient from '@/components/GraphQlClientPage/GraphQlClientPage';
 import { GraphQLPageProps } from './types';
-import GraphQLPageСlient from '@/components/pageGraphQlClient/pageGraphQlClient';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

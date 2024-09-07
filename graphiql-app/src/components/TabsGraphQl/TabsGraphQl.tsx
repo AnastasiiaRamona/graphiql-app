@@ -5,9 +5,9 @@ import { darcula } from '@uiw/codemirror-theme-darcula';
 import { graphql } from 'cm6-graphql';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import TouchAppSharpIcon from '@mui/icons-material/TouchAppSharp';
 import { useTranslations } from 'next-intl';
 import type GraphQLTabsProps from './types';
+import PrettyButton from '../PrettyButton/PrettyButton';
 
 const GraphQlTabs: React.FC<GraphQLTabsProps> = ({
   value,
@@ -92,14 +92,12 @@ const GraphQlTabs: React.FC<GraphQLTabsProps> = ({
           ))}
         </TabPanel>
         <TabPanel value="2">
-          <Button
-            variant="contained"
-            sx={{ ml: 'auto', mb: 1 }}
-            onClick={() => handlePrettier(code, true, handleCodeChange)}
-          >
-            {locale('pretty')}
-            <TouchAppSharpIcon />
-          </Button>
+          <PrettyButton
+            content={code}
+            isQuery={true}
+            handlePrettier={handlePrettier}
+            onChange={handleCodeChange}
+          />
           <CodeMirror
             value={code}
             height="200px"
@@ -110,16 +108,12 @@ const GraphQlTabs: React.FC<GraphQLTabsProps> = ({
           />
         </TabPanel>
         <TabPanel value="3">
-          <Button
-            variant="contained"
-            sx={{ ml: 'auto', mb: 1 }}
-            onClick={() =>
-              handlePrettier(variables, false, handleVariablesChange)
-            }
-          >
-            {locale('pretty')}
-            <TouchAppSharpIcon />
-          </Button>
+          <PrettyButton
+            content={variables}
+            isQuery={false}
+            handlePrettier={handlePrettier}
+            onChange={handleVariablesChange}
+          />
 
           <CodeMirror
             height="200px"
