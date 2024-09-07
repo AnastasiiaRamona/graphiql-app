@@ -1,5 +1,13 @@
 import { GraphQLPageProps } from './types';
 import GraphQLPageСlient from '@/components/pageGraphQlClient/pageGraphQlClient';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'GraphQL',
+  description: 'GraphQL Playground',
+  authors: [{ name: 'Oleksandr', url: 'https://github.com/aleks6699' }],
+  keywords: ['GraphQL', 'Playground', 'API', 'QueryHub', 'Next.js'],
+};
 
 function GraphQLPage({ params, searchParams }: GraphQLPageProps) {
   const [url = '', bodyBase64 = ''] = params.slug.map((item: string) =>
