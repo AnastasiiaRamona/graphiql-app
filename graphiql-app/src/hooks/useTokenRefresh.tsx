@@ -3,7 +3,7 @@ import { getIdToken, onIdTokenChanged } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
 import { toast } from 'react-toastify';
 
-const TOKEN_CHECK_INTERVAL = 55 * 60 * 1000;
+const TOKEN_CHECK_INTERVAL = 60 * 1000;
 
 const useTokenRefresh = () => {
   useEffect(() => {
