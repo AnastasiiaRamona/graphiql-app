@@ -13,9 +13,72 @@ const useRestfullForm = () => {
   const params = useParams();
   const localeUrl = params.locale || 'en';
 
+  const decodeFromBase64 = (string: string) => {
+    try {
+      return decodeURIComponent(
+        Array.prototype.map
+          .call(atob(string), (char) => {
+            return '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join('')
+      );
+    } catch (error) {
+      return '';
+    }
+  };
+
   useEffect(() => {
-    updateUrl(method);
-  }, [headers, variables]);
+    const currentUrl = window.location.href;
+    const urlParts = currentUrl.split(`/${localeUrl}/`);
+    const methodFromUrl = urlParts[1]?.split('/')[0];
+
+    if (
+      !methodFromUrl ||
+      !['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'].includes(
+        methodFromUrl
+      )
+    ) {
+      setMethod('GET');
+      const defaultUrl = constructUrl('GET');
+      window.history.replaceState({}, '', defaultUrl);
+    } else {
+      setMethod(methodFromUrl);
+      parseUrlAndSetState(currentUrl);
+    }
+  }, []);
+
+  const parseUrlAndSetState = (url: string) => {
+    const urlParts = url.split(`/${localeUrl}/`);
+    if (urlParts.length < 2) return;
+
+    const [methodFromUrl, encodedEndpoint, encodedBodyAndParams] =
+      urlParts[1].split('/');
+    const [encodedBody, queryParams] = encodedBodyAndParams
+      ? encodedBodyAndParams.split('?')
+      : [null, null];
+
+    if (methodFromUrl) {
+      setMethod(methodFromUrl);
+    }
+
+    if (encodedEndpoint) {
+      const decodedEndpoint = decodeFromBase64(encodedEndpoint);
+      setEndpoint(decodedEndpoint);
+    }
+
+    if (encodedBody) {
+      const decodedBody = decodeFromBase64(encodedBody);
+      setBody(decodedBody);
+    }
+
+    if (queryParams) {
+      const params = new URLSearchParams(queryParams);
+      const headersFromUrl = Array.from(params.entries()).map(
+        ([key, value]) => ({ key, value })
+      );
+      setHeaders(headersFromUrl);
+    }
+  };
 
   const handleMethodChange = (event: {
     target: { value: SetStateAction<string> };
@@ -36,45 +99,61 @@ const useRestfullForm = () => {
     setBody(event.target.value);
   };
 
+  const handleAddHeader = () => {
+    setHeaders((prevHeaders) => {
+      const newHeaders = [...prevHeaders, { key: '', value: '' }];
+      return newHeaders;
+    });
+  };
+
   const handleHeaderChange = (
     index: number,
     field: 'key' | 'value',
     value: string
   ) => {
-    const newHeaders = [...headers];
-    newHeaders[index][field] = value;
-    setHeaders(newHeaders);
-  };
-
-  const handleAddHeader = () => {
-    setHeaders([...headers, { key: '', value: '' }]);
-  };
-
-  const encodeToBase64 = (string: string) => {
-    return btoa(
-      encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (_, p1) =>
-        String.fromCharCode(parseInt(p1, 16))
-      )
-    );
+    setHeaders((prevHeaders) => {
+      const newHeaders = [...prevHeaders];
+      newHeaders[index][field] = value;
+      return newHeaders;
+    });
+    updateUrl(method);
   };
 
   const handleRemoveHeader = (index: number) => {
-    const newHeaders = headers.filter((_, i) => i !== index);
-    setHeaders(newHeaders);
+    setHeaders((prevHeaders) => {
+      const newHeaders = prevHeaders.filter((_, i) => i !== index);
+      return newHeaders;
+    });
+    updateUrl(method);
   };
 
   const handleRemoveVariable = (index: number) => {
     const newVariables = variables.filter((_, i) => i !== index);
     setVariables(newVariables);
+    updateUrl(method);
   };
 
-  const constructUrl = (methodOverride: string | undefined) => {
+  const encodeToBase64 = (string: string) => {
+    try {
+      return btoa(
+        encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (_, p1) =>
+          String.fromCharCode(parseInt(p1, 16))
+        )
+      );
+    } catch (error) {
+      return '';
+    }
+  };
+
+  const constructUrl = (
+    methodOverride: string | undefined,
+    endpointOverride?: string
+  ) => {
     const requestBody = prepareRequestBody();
+    console.log(requestBody);
     const baseUrl = window.location.origin;
-    const encodedEndpoint = encodeToBase64(endpoint);
-    const encodedBody = requestBody
-      ? encodeToBase64(JSON.stringify(requestBody))
-      : null;
+    const encodedEndpoint = encodeToBase64(endpointOverride || endpoint);
+    const encodedBody = requestBody ? encodeToBase64(requestBody) : null;
     const methodToUse = methodOverride || method;
     let queryParams = '';
     headers.forEach((header) => {
@@ -83,7 +162,7 @@ const useRestfullForm = () => {
       }
     });
 
-    let fullUrl = `${baseUrl}/${localeUrl}/RESTfull/${methodToUse}/${encodedEndpoint}`;
+    let fullUrl = `${baseUrl}/${localeUrl}/${methodToUse}/${encodedEndpoint}`;
     if (encodedBody) {
       fullUrl += `/${encodedBody}`;
     }
@@ -94,8 +173,11 @@ const useRestfullForm = () => {
     return fullUrl;
   };
 
-  const updateUrl = (methodOverride: string | undefined) => {
-    const requestUrl = constructUrl(methodOverride);
+  const updateUrl = (
+    methodOverride: string | undefined,
+    endpointOverride?: string
+  ) => {
+    const requestUrl = constructUrl(methodOverride, endpointOverride);
     window.history.pushState({}, '', requestUrl);
   };
 
@@ -119,8 +201,8 @@ const useRestfullForm = () => {
 
   const isJson = (text: string) => {
     try {
-      JSON.parse(text);
-      return true;
+      const parsed = JSON.parse(text);
+      return typeof parsed === 'object' && parsed !== null;
     } catch (error) {
       return false;
     }
@@ -136,8 +218,7 @@ const useRestfullForm = () => {
   };
 
   const prepareRequestBody = () => {
-    let requestBody = body;
-    requestBody = replaceVariablesInBody(requestBody);
+    const requestBody = replaceVariablesInBody(body);
     if (isJson(requestBody)) {
       return JSON.stringify(JSON.parse(requestBody));
     } else {
@@ -228,6 +309,7 @@ const useRestfullForm = () => {
     toggleVariablesSection,
     setVariables,
     handleRemoveVariable,
+    parseUrlAndSetState,
   };
 };
 

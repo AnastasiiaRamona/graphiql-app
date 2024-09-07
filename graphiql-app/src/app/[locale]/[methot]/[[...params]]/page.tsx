@@ -16,7 +16,7 @@ import {
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import useRestfullForm from '../../../hooks/useRestfullForm';
+import useRestfullForm from '../../../../hooks/useRestfullForm';
 import {
   containerStyles,
   boxStyles,
@@ -80,8 +80,10 @@ function RestfullForm() {
                   id="method"
                   value={method}
                   label="Method"
-                  onChange={handleMethodChange}
-                  onBlur={() => updateUrl(method)}
+                  onChange={(e) => {
+                    handleMethodChange(e);
+                    updateUrl(e.target.value);
+                  }}
                   variant="outlined"
                   renderValue={(selected) => (
                     <span style={{ color: getColor(selected) }}>
@@ -122,8 +124,11 @@ function RestfullForm() {
                 label="Endpoint URL"
                 variant="outlined"
                 value={endpoint}
-                onChange={handleEndpointChange}
-                onBlur={() => updateUrl(method)}
+                onChange={(e) => {
+                  const newEndpoint = e.target.value;
+                  handleEndpointChange(e);
+                  updateUrl(method, newEndpoint);
+                }}
               />
             </Grid>
 
@@ -161,7 +166,6 @@ function RestfullForm() {
                     onChange={(e) =>
                       handleHeaderChange(index, 'key', e.target.value)
                     }
-                    onBlur={() => updateUrl(method)}
                     sx={textFieldHeaderKeyStyles}
                     InputProps={{
                       sx: {
@@ -182,7 +186,6 @@ function RestfullForm() {
                     onChange={(e) =>
                       handleHeaderChange(index, 'value', e.target.value)
                     }
-                    onBlur={() => updateUrl(method)}
                     sx={textFieldHeaderValueStyles}
                     InputProps={{
                       sx: {
