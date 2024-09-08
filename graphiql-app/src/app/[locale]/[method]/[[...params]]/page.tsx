@@ -71,6 +71,18 @@ function RestfullForm() {
     OPTIONS: theme.palette.success.dark,
   };
 
+  const theme = useTheme();
+
+  const methodColors = {
+    GET: theme.palette.info.main,
+    POST: theme.palette.success.main,
+    PUT: theme.palette.warning.main,
+    PATCH: theme.palette.primary.main,
+    DELETE: theme.palette.error.main,
+    HEAD: theme.palette.text.primary,
+    OPTIONS: theme.palette.success.dark,
+  };
+
   return (
     <Container
       sx={{
