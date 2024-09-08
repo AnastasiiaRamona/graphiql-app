@@ -108,7 +108,13 @@ const useRestfullForm = () => {
   };
 
   const handleEndpointChange = (event: { target: { value: string } }) => {
-    let newEndpoint = event.target.value.trim();
+    const newEndpoint = event.target.value.trim();
+    setEndpoint(newEndpoint);
+    updateUrl(method, newEndpoint);
+  };
+
+  const handleEndpointBlur = () => {
+    let newEndpoint = endpoint.trim();
     if (
       newEndpoint &&
       !newEndpoint.startsWith('http://') &&
@@ -347,6 +353,7 @@ const useRestfullForm = () => {
     setVariables,
     handleRemoveVariable,
     parseUrlAndSetState,
+    handleEndpointBlur,
   };
 };
 

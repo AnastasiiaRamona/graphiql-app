@@ -54,6 +54,7 @@ function RestfullForm() {
     handleAddVariable,
     toggleVariablesSection,
     handleRemoveVariable,
+    handleEndpointBlur,
   } = useRestfullForm();
   const locale = useTranslations();
   const isEndpointValid =
@@ -127,6 +128,7 @@ function RestfullForm() {
                 label="Endpoint URL"
                 variant="outlined"
                 value={endpoint}
+                onBlur={() => handleEndpointBlur()}
                 onChange={(e) => {
                   const newEndpoint = e.target.value;
                   handleEndpointChange(e);
