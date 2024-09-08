@@ -57,8 +57,9 @@ function RestfullForm() {
   } = useRestfullForm();
   const locale = useTranslations();
   const isEndpointValid =
-    endpoint.trim().startsWith('http://') ||
-    endpoint.trim().startsWith('https://');
+    endpoint.trim() === '' ||
+    endpoint.trim() === 'http://' ||
+    endpoint.trim() === 'https://';
 
   return (
     <Container maxWidth="sm" component="main" sx={containerStyles}>
@@ -306,7 +307,7 @@ function RestfullForm() {
                     variant="contained"
                     color="primary"
                     type="submit"
-                    disabled={!isEndpointValid}
+                    disabled={isEndpointValid}
                   >
                     Send Request
                   </Button>

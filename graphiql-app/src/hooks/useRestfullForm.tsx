@@ -32,6 +32,7 @@ const useRestfullForm = () => {
     const currentUrl = window.location.href;
     const urlParts = currentUrl.split(`/${localeUrl}/`);
     const methodFromUrl = urlParts[1]?.split('/')[0];
+    const encodedEndpoint = urlParts[1]?.split('/')[1];
 
     if (
       !methodFromUrl ||
@@ -44,7 +45,12 @@ const useRestfullForm = () => {
       window.history.replaceState({}, '', defaultUrl);
     } else {
       setMethod(methodFromUrl);
-      parseUrlAndSetState(currentUrl);
+      if (!encodedEndpoint) {
+        setAutoSubmitted(true);
+      } else {
+        setAutoSubmitted(false);
+        parseUrlAndSetState(currentUrl);
+      }
     }
   }, []);
 
@@ -101,10 +107,27 @@ const useRestfullForm = () => {
     setMethod(newMethod);
   };
 
-  const handleEndpointChange = (event: {
-    target: { value: SetStateAction<string> };
-  }) => {
-    setEndpoint(event.target.value);
+  const handleEndpointChange = (event: { target: { value: string } }) => {
+    let newEndpoint = event.target.value.trim();
+    if (
+      newEndpoint &&
+      !newEndpoint.startsWith('http://') &&
+      !newEndpoint.startsWith('https://')
+    ) {
+      if (
+        newEndpoint.startsWith('http:/') ||
+        newEndpoint.startsWith('https:/')
+      ) {
+        newEndpoint = newEndpoint.replace(
+          /http:\/|https:\//,
+          (match) => match + '/'
+        );
+      } else {
+        newEndpoint = `http://${newEndpoint}`;
+      }
+    }
+    setEndpoint(newEndpoint);
+    updateUrl(method, newEndpoint);
   };
 
   const handleBodyChange = (event: {
