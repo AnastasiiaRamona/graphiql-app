@@ -56,7 +56,9 @@ function RestfullForm() {
     handleRemoveVariable,
   } = useRestfullForm();
   const locale = useTranslations();
-  const isEndpointEmpty = !endpoint.trim();
+  const isEndpointValid =
+    endpoint.trim().startsWith('http://') ||
+    endpoint.trim().startsWith('https://');
 
   return (
     <Container maxWidth="sm" component="main" sx={containerStyles}>
@@ -304,7 +306,7 @@ function RestfullForm() {
                     variant="contained"
                     color="primary"
                     type="submit"
-                    disabled={isEndpointEmpty}
+                    disabled={!isEndpointValid}
                   >
                     Send Request
                   </Button>

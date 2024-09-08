@@ -12,6 +12,7 @@ const useRestfullForm = () => {
   const [showVariables, setShowVariables] = useState(false);
   const params = useParams();
   const localeUrl = params.locale || 'en';
+  const [autoSubmitted, setAutoSubmitted] = useState(false);
 
   const decodeFromBase64 = (string: string) => {
     try {
@@ -46,6 +47,19 @@ const useRestfullForm = () => {
       parseUrlAndSetState(currentUrl);
     }
   }, []);
+
+  useEffect(() => {
+    const endpointPresent = endpoint.trim() !== '';
+    const methodPresent = method.trim() !== '';
+    const isEndpointValid =
+      endpoint.trim().startsWith('http://') ||
+      endpoint.trim().startsWith('https://');
+
+    if (methodPresent && endpointPresent && isEndpointValid && !autoSubmitted) {
+      handleSubmit({ preventDefault: () => {} });
+      setAutoSubmitted(true);
+    }
+  }, [method, endpoint, headers, body, autoSubmitted]);
 
   const parseUrlAndSetState = (url: string) => {
     const urlParts = url.split(`/${localeUrl}/`);
