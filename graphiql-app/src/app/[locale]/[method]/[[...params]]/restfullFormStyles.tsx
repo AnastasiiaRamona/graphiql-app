@@ -51,9 +51,9 @@ export const textFieldHeaderKeyStyles: SxProps<Theme> = {
   borderBottom: '1px solid #ccc',
   borderRadius: 0,
   borderBottomLeftRadius: '5px',
+  marginBottom: '2vh',
   '@media (max-width: 600px)': {
     width: '100%',
-    marginBottom: '8px',
   },
 };
 

@@ -25,7 +25,6 @@ const useRestfullForm = () => {
           .join('')
       );
     } catch (error) {
-      toast.error(`${error}`);
       return '';
     }
   };
@@ -168,7 +167,6 @@ const useRestfullForm = () => {
     endpointOverride?: string
   ) => {
     const requestBody = prepareRequestBody();
-    console.log(requestBody);
     const baseUrl = window.location.origin;
     const encodedEndpoint = encodeToBase64(endpointOverride || endpoint);
     const encodedBody = requestBody ? encodeToBase64(requestBody) : null;
@@ -282,10 +280,12 @@ const useRestfullForm = () => {
         );
         setResponseBody(formattedJson);
       } catch (error) {
+        toast.error(`${error}`);
         setResponseBody(responseBody);
       }
     } catch (error) {
       setResponseStatus('Error');
+      toast.error(`${error}`);
       setResponseBody((error as Error).toString());
     }
   };
