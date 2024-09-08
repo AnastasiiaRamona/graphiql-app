@@ -57,11 +57,8 @@ const useRestfullForm = () => {
   useEffect(() => {
     const endpointPresent = endpoint.trim() !== '';
     const methodPresent = method.trim() !== '';
-    const isEndpointValid =
-      endpoint.trim().startsWith('http://') ||
-      endpoint.trim().startsWith('https://');
 
-    if (methodPresent && endpointPresent && isEndpointValid && !autoSubmitted) {
+    if (methodPresent && endpointPresent && !autoSubmitted) {
       handleSubmit({ preventDefault: () => {} });
       setAutoSubmitted(true);
     }
@@ -73,6 +70,7 @@ const useRestfullForm = () => {
 
     const [methodFromUrl, encodedEndpoint, encodedBodyAndParams] =
       urlParts[1].split('/');
+
     const [encodedBody, queryParams] = encodedBodyAndParams
       ? encodedBodyAndParams.split('?')
       : [null, null];
@@ -109,29 +107,6 @@ const useRestfullForm = () => {
 
   const handleEndpointChange = (event: { target: { value: string } }) => {
     const newEndpoint = event.target.value.trim();
-    setEndpoint(newEndpoint);
-    updateUrl(method, newEndpoint);
-  };
-
-  const handleEndpointBlur = () => {
-    let newEndpoint = endpoint.trim();
-    if (
-      newEndpoint &&
-      !newEndpoint.startsWith('http://') &&
-      !newEndpoint.startsWith('https://')
-    ) {
-      if (
-        newEndpoint.startsWith('http:/') ||
-        newEndpoint.startsWith('https:/')
-      ) {
-        newEndpoint = newEndpoint.replace(
-          /http:\/|https:\//,
-          (match) => match + '/'
-        );
-      } else {
-        newEndpoint = `http://${newEndpoint}`;
-      }
-    }
     setEndpoint(newEndpoint);
     updateUrl(method, newEndpoint);
   };
@@ -271,6 +246,14 @@ const useRestfullForm = () => {
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
+    let requestEndpoint = endpoint.trim();
+    if (
+      !requestEndpoint.startsWith('http://') &&
+      !requestEndpoint.startsWith('https://')
+    ) {
+      requestEndpoint = `http://${requestEndpoint}`;
+    }
     const requestHeaders = headers.reduce<Record<string, string>>(
       (acc, header) => {
         if (header.key) {
@@ -282,7 +265,7 @@ const useRestfullForm = () => {
     );
 
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(requestEndpoint, {
         method,
         headers: requestHeaders,
         body: ['GET', 'HEAD', 'OPTIONS'].includes(method)
@@ -353,7 +336,6 @@ const useRestfullForm = () => {
     setVariables,
     handleRemoveVariable,
     parseUrlAndSetState,
-    handleEndpointBlur,
   };
 };
 

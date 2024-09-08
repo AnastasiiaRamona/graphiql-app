@@ -46,7 +46,6 @@ function RestfullForm() {
     handleHeaderChange,
     handleAddHeader,
     handleSubmit,
-    getColor,
     updateUrl,
     handleRemoveHeader,
     variables,
@@ -58,10 +57,7 @@ function RestfullForm() {
     handleEndpointBlur,
   } = useRestfullForm();
   const locale = useTranslations();
-  const isEndpointValid =
-    endpoint.trim() === '' ||
-    endpoint.trim() === 'http://' ||
-    endpoint.trim() === 'https://';
+  const isEndpointValid = endpoint.trim() === '';
 
   const theme = useTheme();
 
@@ -152,7 +148,6 @@ function RestfullForm() {
                 label="Endpoint URL"
                 variant="outlined"
                 value={endpoint}
-                onBlur={() => handleEndpointBlur()}
                 onChange={(e) => {
                   const newEndpoint = e.target.value;
                   handleEndpointChange(e);
