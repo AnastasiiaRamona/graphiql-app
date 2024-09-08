@@ -22,7 +22,7 @@ const MenuButtons = () => {
       }}
     >
       <p>{locale('chooseOne')}</p>
-      <Link href={`/${localeUrl}/RESTfull`}>
+      <Link href={`/${localeUrl}/GET`}>
         <Button variant="contained">{locale('restfullClient')}</Button>
       </Link>
       <Link href={`/${localeUrl}/GrathQL`}>

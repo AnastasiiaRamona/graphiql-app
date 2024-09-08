@@ -1,5 +1,6 @@
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { SetStateAction, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const useRestfullForm = () => {
   const [method, setMethod] = useState('GET');
@@ -24,6 +25,7 @@ const useRestfullForm = () => {
           .join('')
       );
     } catch (error) {
+      toast.error(`${error}`);
       return '';
     }
   };
@@ -40,9 +42,7 @@ const useRestfullForm = () => {
         methodFromUrl
       )
     ) {
-      setMethod('GET');
-      const defaultUrl = constructUrl('GET');
-      window.history.replaceState({}, '', defaultUrl);
+      notFound();
     } else {
       setMethod(methodFromUrl);
       if (!encodedEndpoint) {
