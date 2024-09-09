@@ -71,7 +71,11 @@ const WelcomePage = () => {
             {locale('wish')}
           </Typography>
         </Box>
-        {isAuthenticated ? <MenuButtons /> : <AuthorizationButtons />}
+        {isAuthenticated ? (
+          <MenuButtons isHistory={false} />
+        ) : (
+          <AuthorizationButtons />
+        )}
       </Container>
       <Container
         sx={{

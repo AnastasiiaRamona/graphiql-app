@@ -4,10 +4,20 @@ import { Box, Button, Container, Link, Typography } from '@mui/material';
 import { useTranslations } from 'next-intl';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import useCheckingOfAuthorization from '@/hooks/useCheckingOfAuthorization';
+import Loader from '../Loader/Loader';
 
 const WelcomeGraphQLPage = () => {
-  useCheckingOfAuthorization();
   const locale = useTranslations();
+
+  const { loading, isAuthenticated } = useCheckingOfAuthorization();
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <Container

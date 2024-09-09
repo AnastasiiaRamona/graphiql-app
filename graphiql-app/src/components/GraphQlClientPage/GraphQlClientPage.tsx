@@ -16,14 +16,16 @@ import {
 } from './GraphQlTextInput/GraphQlTextInput';
 
 import { GraphQLPageClientProps } from '@/app/[locale]/graphql/[...slug]/types';
+import useHistoryStore from '@/store/historyStore';
+import { usePathname } from 'next/navigation';
 import useCheckingOfAuthorization from '@/hooks/useCheckingOfAuthorization';
+import Loader from '../Loader/Loader';
 function GraphQLPageСlient({
   params,
   searchParams,
   url,
   bodyBase64,
 }: GraphQLPageClientProps) {
-  useCheckingOfAuthorization();
   const {
     value,
     status,
@@ -52,6 +54,8 @@ function GraphQLPageСlient({
   const codeUrlDecoded = utf8.decode(base64.decode(codeUrl));
   const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl));
   const urlDecoded = utf8.decode(base64.decode(url || ''));
+  const { addRequest } = useHistoryStore();
+  const pathname = usePathname();
 
   useEffect(() => {
     try {
@@ -74,6 +78,7 @@ function GraphQLPageСlient({
 
           const json = await response?.json();
           setData(json);
+          addRequest(pathname, urlDecoded);
         } catch (error) {
           if (error instanceof Error) {
             setStatus(error.message);
@@ -87,6 +92,16 @@ function GraphQLPageСlient({
       toast.error(`${locale('errorToast')}: ${error}` || locale('error'));
     }
   }, [params, searchParams]);
+
+  const { loading, isAuthenticated } = useCheckingOfAuthorization();
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const handleDeleteHeader = (index: number) => {
     const newHeaders = headers.filter((_, i) => i !== index);
