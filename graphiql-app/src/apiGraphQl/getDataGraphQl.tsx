@@ -13,16 +13,17 @@ const fetchGraphQL = async (data: GraphQLData) => {
   });
 
   let variables;
+
   try {
     variables = JSON.parse(data.variables);
   } catch (error) {
-    toast.error(`${error}`);
     if (data.variables.trim()) {
       variables = data.variables;
     } else {
       variables = {};
     }
   }
+
   const response = await fetch(data.endpoint, {
     method: 'POST',
     headers: {

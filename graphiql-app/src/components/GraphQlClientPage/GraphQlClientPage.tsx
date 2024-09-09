@@ -48,7 +48,7 @@ function GraphQLPageСlient({
   const locale = useTranslations();
   const [codeUrl, variablesUrl] = bodyBase64.split('|');
   const codeUrlDecoded = utf8.decode(base64.decode(codeUrl));
-  const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl));
+  const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl || ''));
   const urlDecoded = utf8.decode(base64.decode(url || ''));
 
   useEffect(() => {
