@@ -30,6 +30,7 @@
     "@uiw/react-codemirror": "^4.23.0",
     "base-64": "^1.0.0",
     "cm6-graphql": "^0.0.7",
+    "date-fns": "^3.6.0",
     "firebase": "^10.13.0",
     "graphiql": "^3.7.1",
     "graphql": "^16.9.0",

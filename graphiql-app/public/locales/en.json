@@ -62,5 +62,6 @@
   "headers": "Headers",
   "query": "Query",
   "pretty": "Pretty",
-  "openScheme": "Open Scheme"
+  "openScheme": "Open Scheme",
+  "historyMessage": "You haven't executed any requests yet"
 }
