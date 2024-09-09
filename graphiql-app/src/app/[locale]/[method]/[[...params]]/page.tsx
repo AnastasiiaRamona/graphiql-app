@@ -148,9 +148,7 @@ function RestfullForm() {
                 variant="outlined"
                 value={endpoint}
                 onChange={(e) => {
-                  const newEndpoint = e.target.value;
                   handleEndpointChange(e);
-                  updateUrl(method, newEndpoint);
                 }}
               />
             </Grid>

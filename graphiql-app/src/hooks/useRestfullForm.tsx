@@ -63,16 +63,24 @@ const useRestfullForm = () => {
     }
   }, [method, endpoint, headers, body, autoSubmitted]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      updateUrl(method, endpoint);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [endpoint, method, headers]);
+
   const parseUrlAndSetState = (url: string) => {
     const urlParts = url.split(`/${localeUrl}/`);
     if (urlParts.length < 2) return;
 
-    const [methodFromUrl, encodedEndpoint, encodedBodyAndParams] =
-      urlParts[1].split('/');
+    const [methodFromUrl, ...restOfUrl] = urlParts[1].split('/');
 
-    const [encodedBody, queryParams] = encodedBodyAndParams
-      ? encodedBodyAndParams.split('?')
-      : [null, null];
+    const restOfUrlJoined = restOfUrl.join('/');
+
+    const [urlWithoutParams, params] = restOfUrlJoined.split('?');
+
+    const [encodedEndpoint, encodedBody] = urlWithoutParams.split('/');
 
     if (methodFromUrl) {
       setMethod(methodFromUrl);
@@ -86,14 +94,18 @@ const useRestfullForm = () => {
     if (encodedBody) {
       const decodedBody = decodeFromBase64(encodedBody);
       setBody(decodedBody);
+    } else {
+      setBody('');
     }
 
-    if (queryParams) {
-      const params = new URLSearchParams(queryParams);
-      const headersFromUrl = Array.from(params.entries()).map(
+    if (params) {
+      const paramsObj = new URLSearchParams(params);
+      const headersFromUrl = Array.from(paramsObj.entries()).map(
         ([key, value]) => ({ key, value })
       );
       setHeaders(headersFromUrl);
+    } else {
+      setHeaders([{ key: '', value: '' }]);
     }
   };
 
@@ -164,26 +176,29 @@ const useRestfullForm = () => {
 
   const constructUrl = (
     methodOverride: string | undefined,
-    endpointOverride?: string
+    endpointOverride: string
   ) => {
     const requestBody = prepareRequestBody();
     const baseUrl = window.location.origin;
-    const encodedEndpoint = encodeToBase64(endpointOverride || endpoint);
+    const encodedEndpoint = encodeToBase64(endpointOverride);
     const encodedBody = requestBody ? encodeToBase64(requestBody) : null;
     const methodToUse = methodOverride || method;
-    let queryParams = '';
-    headers.forEach((header) => {
-      if (header.key && header.value) {
-        queryParams += `${encodeURIComponent(header.key)}=${encodeURIComponent(header.value)}&`;
-      }
-    });
+
+    const queryParams = headers
+      .filter((header) => header.key && header.value)
+      .map(
+        (header) =>
+          `${encodeURIComponent(header.key)}=${encodeURIComponent(header.value)}`
+      )
+      .join('&');
 
     let fullUrl = `${baseUrl}/${localeUrl}/${methodToUse}/${encodedEndpoint}`;
+
     if (encodedBody) {
       fullUrl += `/${encodedBody}`;
     }
     if (queryParams) {
-      fullUrl += `?${queryParams.slice(0, -1)}`;
+      fullUrl += `?${queryParams}`;
     }
 
     return fullUrl;
@@ -193,7 +208,10 @@ const useRestfullForm = () => {
     methodOverride: string | undefined,
     endpointOverride?: string
   ) => {
-    const requestUrl = constructUrl(methodOverride, endpointOverride);
+    const requestUrl = constructUrl(
+      methodOverride,
+      endpointOverride || endpoint
+    );
     window.history.pushState({}, '', requestUrl);
   };
 
