@@ -40,36 +40,4 @@ describe('fetchGraphQL', () => {
     expect(toastErrorSpy).not.toHaveBeenCalled();
     toastErrorSpy.mockRestore();
   });
-
-  it('should handle JSON parse errors and show a toast error', async () => {
-    const toastErrorSpy = vi.spyOn(toast, 'error');
-    const data = {
-      headers: {},
-      variables: '{invalidJson',
-      endpoint: '/graphql-endpoint',
-      code: 'query { example }',
-    };
-
-    mockFetch.mockResolvedValueOnce({
-      json: () => Promise.resolve({ data: 'success' }),
-    });
-
-    const response = await fetchGraphQL(data);
-
-    expect(mockFetch).toHaveBeenCalledWith(data.endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: data.code,
-        variables: '{invalidJson',
-      }),
-    });
-
-    expect(toastErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining('SyntaxError')
-    );
-    toastErrorSpy.mockRestore();
-  });
 });

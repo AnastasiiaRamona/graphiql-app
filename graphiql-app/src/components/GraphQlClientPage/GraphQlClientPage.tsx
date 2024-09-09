@@ -102,11 +102,11 @@ function GraphQLPageСlient({
     const variablesBase64 = base64.encode(utf8.encode(variables));
     const bodyBase64 = `${codeBase64}|${variablesBase64}`;
     const codedHeaders = transformHeaders(headers);
-    setTimeout(() => {
-      router.push(
-        `/${params.locale}/graphql/${url}/${bodyBase64}?${codedHeaders}`
-      );
-    }, 500);
+    window.history.replaceState(
+      null,
+      '',
+      `/${params.locale}/graphql/${url}/${bodyBase64}?${codedHeaders}`
+    );
   };
   const handleAddHeader = () => {
     setHeaders([...headers, { key: '', value: '' }]);
