@@ -24,6 +24,7 @@ export default function ApplicationTools() {
           m: 1,
           width: '28vh',
           height: '28vh',
+          minHeight: '280px',
         },
       }}
     >
