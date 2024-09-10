@@ -31,7 +31,9 @@ export default function HistoryStorage({ requests }: HistoryStorageProps) {
                 {request.method === 'graphql' ? (
                   <Avatar alt="graphql" src={graphqlSrc.src} />
                 ) : (
-                  <Avatar>{request.method}</Avatar>
+                  <Avatar sx={{ fontSize: '0.8rem', fontWeight: '500' }}>
+                    {request.method}
+                  </Avatar>
                 )}
               </ListItemAvatar>
               <ListItemText

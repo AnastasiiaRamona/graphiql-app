@@ -1,4 +1,5 @@
-import { notFound, useParams } from 'next/navigation';
+import useHistoryStore from '@/store/historyStore';
+import { notFound, useParams, usePathname } from 'next/navigation';
 import { SetStateAction, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -14,6 +15,8 @@ const useRestfullForm = () => {
   const params = useParams();
   const localeUrl = params.locale || 'en';
   const [autoSubmitted, setAutoSubmitted] = useState(false);
+  const { addRequest } = useHistoryStore();
+  const pathname = usePathname();
 
   const decodeFromBase64 = (string: string) => {
     try {
@@ -297,6 +300,7 @@ const useRestfullForm = () => {
           10
         );
         setResponseBody(formattedJson);
+        addRequest(pathname, requestEndpoint);
       } catch (error) {
         toast.error(`${error}`);
         setResponseBody(responseBody);
