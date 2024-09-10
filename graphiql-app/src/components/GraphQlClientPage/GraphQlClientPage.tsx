@@ -52,7 +52,7 @@ function GraphQLPageСlient({
   const locale = useTranslations();
   const [codeUrl, variablesUrl] = bodyBase64.split('|');
   const codeUrlDecoded = utf8.decode(base64.decode(codeUrl));
-  const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl));
+  const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl || ''));
   const urlDecoded = utf8.decode(base64.decode(url || ''));
   const { addRequest } = useHistoryStore();
   const pathname = usePathname();
@@ -119,11 +119,11 @@ function GraphQLPageСlient({
     const variablesBase64 = base64.encode(utf8.encode(variables));
     const bodyBase64 = `${codeBase64}|${variablesBase64}`;
     const codedHeaders = transformHeaders(headers);
-    setTimeout(() => {
-      router.push(
-        `/${params.locale}/graphql/${url}/${bodyBase64}?${codedHeaders}`
-      );
-    }, 500);
+    window.history.replaceState(
+      null,
+      '',
+      `/${params.locale}/graphql/${url}/${bodyBase64}?${codedHeaders}`
+    );
   };
   const handleAddHeader = () => {
     setHeaders([...headers, { key: '', value: '' }]);
