@@ -86,6 +86,13 @@ vi.mock('./GraphQlTextInput/GraphQlTextInput', () => ({
 describe('GraphQLPageСlient', () => {
   const messages = {
     errorToast: 'Error occurred',
+    response: 'Some response message',
+    send: 'Send',
+    headers: 'Headers',
+    query: 'Query',
+    variables: 'Variables',
+    addHeader: 'Add Header',
+    status: 'Some status message',
   };
 
   it('displays error message when fetch fails', async () => {
@@ -103,7 +110,6 @@ describe('GraphQLPageСlient', () => {
         </ThemeProvider>
       </IntlProvider>
     );
-
     await waitFor(() => {
       expect(toastErrorMock).toHaveBeenCalledWith(
         'Error occurred: Error: Fetch error'

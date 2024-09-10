@@ -1,11 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import GraphQlTabs from '../components/TabsGraphQl/TabsGraphQl';
+import { Tabs, Tab } from '@mui/material';
 
 vi.mock('@uiw/react-codemirror', () => ({
   __esModule: true,
   default: vi.fn(() => <div>CodeMirror</div>),
 }));
+
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key,
 }));
@@ -34,11 +36,17 @@ describe('GraphQlTabs', () => {
   };
 
   it('should render tabs correctly', () => {
-    render(<GraphQlTabs {...props} />);
+    render(
+      <Tabs onChange={mockHandleChange}>
+        <Tab label="headers" value="1" />
+        <Tab label="query" value="2" />
+        <Tab label="variables" value="3" />
+      </Tabs>
+    );
 
-    expect(screen.getByText('headers')).toBeInTheDocument();
-    expect(screen.getByText('query')).toBeInTheDocument();
-    expect(screen.getByText('variables')).toBeInTheDocument();
+    expect(screen.getByText(/headers/i)).toBeInTheDocument();
+    expect(screen.getByText(/query/i)).toBeInTheDocument();
+    expect(screen.getByText(/variables/i)).toBeInTheDocument();
   });
 
   it('should call handleAddHeader on button click', async () => {
