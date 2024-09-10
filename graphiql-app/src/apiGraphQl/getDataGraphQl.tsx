@@ -12,11 +12,17 @@ const fetchGraphQL = async (data: GraphQLData) => {
     headersObj[key] = value as string;
   });
   let variables;
-  if (!data.variables.trim()) {
-    variables = {};
-  } else {
+
+  try {
     variables = JSON.parse(data.variables);
+  } catch (error) {
+    if (data.variables.trim()) {
+      variables = data.variables;
+    } else {
+      variables = {};
+    }
   }
+
   const response = await fetch(data.endpoint, {
     method: 'POST',
     headers: {
