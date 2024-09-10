@@ -14,10 +14,10 @@ import {
   Box,
   InputAdornment,
   IconButton,
+  useTheme,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import useRestfullForm from '../../../hooks/useRestfullForm';
-import { useTheme } from '@mui/material/styles';
+import useRestfullForm from '../../../../hooks/useRestfullForm';
 import {
   boxStyles,
   gridItemHeaderStyles,
@@ -33,7 +33,6 @@ import {
 import { useTranslations } from 'next-intl';
 
 function RestfullForm() {
-  const theme = useTheme();
   const {
     method,
     endpoint,
@@ -57,7 +56,9 @@ function RestfullForm() {
     handleRemoveVariable,
   } = useRestfullForm();
   const locale = useTranslations();
-  const isEndpointEmpty = !endpoint.trim();
+  const isEndpointValid = endpoint.trim() === '';
+
+  const theme = useTheme();
 
   const methodColors = {
     GET: theme.palette.info.main,
@@ -106,8 +107,10 @@ function RestfullForm() {
                   id="method"
                   value={method}
                   label={locale('method')}
-                  onChange={handleMethodChange}
-                  onBlur={() => updateUrl(method)}
+                  onChange={(e) => {
+                    handleMethodChange(e);
+                    updateUrl(e.target.value);
+                  }}
                   variant="outlined"
                   renderValue={(selected) => (
                     <span
@@ -144,8 +147,9 @@ function RestfullForm() {
                 label="Endpoint URL"
                 variant="outlined"
                 value={endpoint}
-                onChange={handleEndpointChange}
-                onBlur={() => updateUrl(method)}
+                onChange={(e) => {
+                  handleEndpointChange(e);
+                }}
               />
             </Grid>
 
@@ -173,7 +177,7 @@ function RestfullForm() {
 
             {headers.map((header, index) => (
               <Grid container spacing={0} key={index}>
-                <Grid item xs={6} sx={{ paddingLeft: '16px', mb: '8px' }}>
+                <Grid item xs={6} sx={{ paddingLeft: '16px' }}>
                   <TextField
                     fullWidth
                     id={`header_key_${index}`}
@@ -183,7 +187,6 @@ function RestfullForm() {
                     onChange={(e) =>
                       handleHeaderChange(index, 'key', e.target.value)
                     }
-                    onBlur={() => updateUrl(method)}
                     sx={textFieldHeaderKeyStyles}
                     InputProps={{
                       sx: {
@@ -204,7 +207,6 @@ function RestfullForm() {
                     onChange={(e) =>
                       handleHeaderChange(index, 'value', e.target.value)
                     }
-                    onBlur={() => updateUrl(method)}
                     sx={textFieldHeaderValueStyles}
                     InputProps={{
                       sx: {
@@ -327,7 +329,7 @@ function RestfullForm() {
                     variant="contained"
                     color="primary"
                     type="submit"
-                    disabled={isEndpointEmpty}
+                    disabled={isEndpointValid}
                   >
                     {locale('sendRequest')}
                   </Button>

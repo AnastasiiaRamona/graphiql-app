@@ -11,7 +11,6 @@ const fetchGraphQL = async (data: GraphQLData) => {
   Object.entries(data.headers).forEach(([key, value]) => {
     headersObj[key] = value as string;
   });
-
   let variables;
 
   try {
