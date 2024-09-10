@@ -10,7 +10,8 @@
     "format:fix": "prettier --write .",
     "format": "prettier --check .",
     "prepare": "cd .. && husky graphiql-app/.husky",
-    "test": "vitest run --coverage",
+    "coverage": "vitest run --coverage",
+    "test": "vitest",
     "dev": "next dev --turbo"
   },
   "dependencies": {

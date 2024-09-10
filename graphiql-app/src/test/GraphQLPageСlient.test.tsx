@@ -2,7 +2,7 @@ import { render, waitFor } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { IntlProvider } from 'next-intl';
 import GraphQLPageСlient from '@/components/GraphQlClientPage/GraphQlClientPage';
-import { vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import { toast } from 'react-toastify';
 
@@ -10,10 +10,31 @@ vi.mock('@/apiGraphQl/getDataGraphQl', () => ({
   __esModule: true,
   default: vi.fn().mockRejectedValue(new Error('Fetch error')),
 }));
+
+vi.mock('firebase/auth', () => ({
+  getAuth: vi.fn(),
+  onAuthStateChanged: vi.fn((auth, callback) => {
+    callback({ uid: '123', email: 'test@example.com' });
+    return () => {};
+  }),
+}));
+
+vi.mock('next/navigation', async () => {
+  const original = await vi.importActual<unknown>('next/navigation');
+  return {
+    ...(original as Record<string, unknown>),
+    useRouter: () => ({
+      push: vi.fn(),
+    }),
+    usePathname: vi.fn(() => '/mocked-pathname'),
+  };
+});
+
 vi.mock('@uiw/react-codemirror', () => ({
   __esModule: true,
   default: () => <div>CodeMirror Mock</div>,
 }));
+
 vi.mock('@/hooks/useControlGraphQlPage', () => ({
   __esModule: true,
   default: () => ({

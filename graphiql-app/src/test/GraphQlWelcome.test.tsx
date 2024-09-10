@@ -1,11 +1,24 @@
-// src/test/GraphQLPage.test.tsx
 import { render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import GraphQLPage from '../app/[locale]/graphql/page';
 import '@testing-library/jest-dom';
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key,
+}));
+
+vi.mock('firebase/auth', () => ({
+  getAuth: vi.fn(),
+  onAuthStateChanged: vi.fn((auth, callback) => {
+    callback({ uid: '123', email: 'test@example.com' });
+    return () => {};
+  }),
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
 }));
 
 const MockIntlProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -23,7 +36,6 @@ describe('GraphQLPage Component', () => {
     );
 
     expect(screen.getByText('GraphQL')).toBeInTheDocument();
-
     expect(screen.getByText('graphqlYourFirstRequest')).toBeInTheDocument();
 
     const button = screen.getByRole('link', { name: /getStarted/i });

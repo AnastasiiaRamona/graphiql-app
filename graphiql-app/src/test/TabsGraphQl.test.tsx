@@ -1,7 +1,6 @@
-// src/test/GraphQlTabs.test.tsx
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import GraphQlTabs from '../components/TabsGraphQl/TabsGraphQl'; // Укажите правильный путь к вашему файлу
+import GraphQlTabs from '../components/TabsGraphQl/TabsGraphQl';
 
 vi.mock('@uiw/react-codemirror', () => ({
   __esModule: true,

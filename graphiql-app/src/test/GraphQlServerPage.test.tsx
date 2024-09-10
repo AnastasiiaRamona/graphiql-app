@@ -1,7 +1,6 @@
-// src/test/GraphQLPage.test.tsx
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import GraphQLPage from '../app/[locale]/graphql/[...slug]/page'; // Укажите правильный путь к вашему файлу
+import GraphQLPage from '../app/[locale]/graphql/[...slug]/page';
 import GraphQLPageСlient from '../components/GraphQlClientPage/GraphQlClientPage';
 
 vi.mock('@/components/GraphQlClientPage/GraphQlClientPage', () => ({
