@@ -27,16 +27,34 @@ export default function HistoryStorage({ requests }: HistoryStorageProps) {
         {reverseRequests.map((request, index) => (
           <Fragment key={index}>
             <ListItem alignItems="flex-start">
-              <ListItemAvatar>
+              <ListItemAvatar
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 {request.method === 'graphql' ? (
-                  <Avatar alt="graphql" src={graphqlSrc.src} />
+                  <Avatar
+                    alt="graphql"
+                    src={graphqlSrc.src}
+                    sx={{ height: '3.5rem', width: '3.5rem' }}
+                  />
                 ) : (
-                  <Avatar sx={{ fontSize: '0.8rem', fontWeight: '500' }}>
+                  <Avatar
+                    sx={{
+                      fontSize: '0.6rem',
+                      fontWeight: '500',
+                      height: '3rem',
+                      width: '3rem',
+                    }}
+                  >
                     {request.method}
                   </Avatar>
                 )}
               </ListItemAvatar>
               <ListItemText
+                sx={{ ml: '1rem' }}
                 primary={formatDate(request.dateTime)}
                 secondary={
                   <Fragment>
