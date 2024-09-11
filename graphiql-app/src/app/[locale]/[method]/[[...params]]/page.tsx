@@ -31,13 +31,14 @@ import {
   variablesBoxStyles,
 } from './restfullFormStyles';
 import { useTranslations } from 'next-intl';
-
+import PrettyButton from '../../../../components/PrettyButton/PrettyButton';
 function RestfullForm() {
   const {
     method,
     endpoint,
     headers,
     body,
+    setBody,
     responseStatus,
     responseBody,
     handleMethodChange,
@@ -54,6 +55,7 @@ function RestfullForm() {
     handleAddVariable,
     toggleVariablesSection,
     handleRemoveVariable,
+    handlePrettierWithVariables,
   } = useRestfullForm();
   const locale = useTranslations();
   const isEndpointValid = endpoint.trim() === '';
@@ -148,7 +150,9 @@ function RestfullForm() {
                 variant="outlined"
                 value={endpoint}
                 onChange={(e) => {
+                  const newEndpoint = e.target.value;
                   handleEndpointChange(e);
+                  updateUrl(method, newEndpoint);
                 }}
               />
             </Grid>
@@ -241,6 +245,13 @@ function RestfullForm() {
                 value={body}
                 onChange={handleBodyChange}
                 onBlur={() => updateUrl(method)}
+              />
+              <PrettyButton
+                content={body}
+                isQuery={false}
+                onChange={(formatted) =>
+                  handlePrettierWithVariables(body, false, setBody)
+                }
               />
             </Grid>
 
@@ -360,5 +371,4 @@ function RestfullForm() {
     </Container>
   );
 }
-
 export default RestfullForm;

@@ -1,3 +1,4 @@
+import { handlePrettier } from '@/utils/prettify';
 import { notFound, useParams } from 'next/navigation';
 import { SetStateAction, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -27,6 +28,51 @@ const useRestfullForm = () => {
     } catch (error) {
       return '';
     }
+  };
+
+  const replaceVariables = (
+    value: string
+  ): { replaced: string; variables: Map<string, string> } => {
+    const variablePattern = /{{\s*[\w\d]+\s*}}/g;
+    const variables = new Map<string, string>();
+    let replaced = value;
+
+    let match;
+    let index = 0;
+
+    while ((match = variablePattern.exec(value)) !== null) {
+      const placeholder = `__VAR_PLACEHOLDER_${index++}__`;
+      variables.set(placeholder, match[0]);
+      replaced = replaced.replace(match[0], placeholder);
+    }
+
+    return { replaced, variables };
+  };
+
+  const restoreVariables = (
+    formatted: string,
+    variables: Map<string, string>
+  ): string => {
+    let result = formatted;
+
+    variables.forEach((variable, placeholder) => {
+      result = result.replace(placeholder, variable);
+    });
+
+    return result;
+  };
+
+  const handlePrettierWithVariables = async (
+    value: string,
+    isGraphQl: boolean,
+    onChange: (value: string) => void
+  ) => {
+    const { replaced, variables } = replaceVariables(value);
+
+    await handlePrettier(replaced, isGraphQl, (formatted) => {
+      const finalFormatted = restoreVariables(formatted, variables);
+      onChange(finalFormatted);
+    });
   };
 
   useEffect(() => {
@@ -334,8 +380,10 @@ const useRestfullForm = () => {
     endpoint,
     headers,
     body,
+    setBody,
     responseStatus,
     responseBody,
+    handlePrettierWithVariables,
     handleMethodChange,
     handleEndpointChange,
     handleBodyChange,
