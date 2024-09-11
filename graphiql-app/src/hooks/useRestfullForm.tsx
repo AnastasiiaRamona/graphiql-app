@@ -15,6 +15,7 @@ const useRestfullForm = () => {
   const params = useParams();
   const localeUrl = params.locale || 'en';
   const [autoSubmitted, setAutoSubmitted] = useState(false);
+  const NO_ENDPOINT_PLACEHOLDER = '__NO_ENDPOINT__';
 
   const decodeFromBase64 = (string: string) => {
     try {
@@ -121,18 +122,17 @@ const useRestfullForm = () => {
     if (urlParts.length < 2) return;
 
     const [methodFromUrl, ...restOfUrl] = urlParts[1].split('/');
-
     const restOfUrlJoined = restOfUrl.join('/');
-
     const [urlWithoutParams, params] = restOfUrlJoined.split('?');
-
     const [encodedEndpoint, encodedBody] = urlWithoutParams.split('/');
 
     if (methodFromUrl) {
       setMethod(methodFromUrl);
     }
-
-    if (encodedEndpoint) {
+    console.log(encodedEndpoint);
+    if (decodeFromBase64(encodedEndpoint) === NO_ENDPOINT_PLACEHOLDER) {
+      setEndpoint('');
+    } else if (encodedEndpoint) {
       const decodedEndpoint = decodeFromBase64(encodedEndpoint);
       setEndpoint(decodedEndpoint);
     }
@@ -147,7 +147,10 @@ const useRestfullForm = () => {
     if (params) {
       const paramsObj = new URLSearchParams(params);
       const headersFromUrl = Array.from(paramsObj.entries()).map(
-        ([key, value]) => ({ key, value })
+        ([key, value]) => ({
+          key,
+          value,
+        })
       );
       setHeaders(headersFromUrl);
     } else {
@@ -220,13 +223,12 @@ const useRestfullForm = () => {
     }
   };
 
-  const constructUrl = (
-    methodOverride: string | undefined,
-    endpointOverride: string
-  ) => {
+  const constructUrl = (methodOverride?: string, endpointOverride?: string) => {
     const requestBody = prepareRequestBody();
     const baseUrl = window.location.origin;
-    const encodedEndpoint = encodeToBase64(endpointOverride);
+    const encodedEndpoint = endpointOverride
+      ? encodeToBase64(endpointOverride)
+      : '';
     const encodedBody = requestBody ? encodeToBase64(requestBody) : null;
     const methodToUse = methodOverride || method;
 
@@ -238,7 +240,7 @@ const useRestfullForm = () => {
       )
       .join('&');
 
-    let fullUrl = `${baseUrl}/${localeUrl}/${methodToUse}/${encodedEndpoint}`;
+    let fullUrl = `${baseUrl}/${localeUrl}/${methodToUse}/${encodedEndpoint || ''}`;
 
     if (encodedBody) {
       fullUrl += `/${encodedBody}`;
@@ -250,14 +252,15 @@ const useRestfullForm = () => {
     return fullUrl;
   };
 
-  const updateUrl = (
-    methodOverride: string | undefined,
-    endpointOverride?: string
-  ) => {
-    const requestUrl = constructUrl(
-      methodOverride,
-      endpointOverride || endpoint
-    );
+  const updateUrl = (methodOverride?: string, endpointOverride?: string) => {
+    const shouldInsertPlaceholder =
+      !endpoint &&
+      (body || headers.some((header) => header.key || header.value));
+    const endpointToUse = shouldInsertPlaceholder
+      ? NO_ENDPOINT_PLACEHOLDER
+      : endpointOverride || endpoint || '';
+
+    const requestUrl = constructUrl(methodOverride, endpointToUse);
     window.history.pushState({}, '', requestUrl);
   };
 
