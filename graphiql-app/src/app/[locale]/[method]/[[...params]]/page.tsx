@@ -31,6 +31,9 @@ import {
   variablesBoxStyles,
 } from './restfullFormStyles';
 import { useTranslations } from 'next-intl';
+import useCheckingOfAuthorization from '@/hooks/useCheckingOfAuthorization';
+import Loader from '@/components/Loader/Loader';
+
 import PrettyButton from '../../../../components/PrettyButton/PrettyButton';
 function RestfullForm() {
   const {
@@ -61,6 +64,16 @@ function RestfullForm() {
   const isEndpointValid = endpoint.trim() === '';
 
   const theme = useTheme();
+
+  const { loading, isAuthenticated } = useCheckingOfAuthorization();
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const methodColors = {
     GET: theme.palette.info.main,

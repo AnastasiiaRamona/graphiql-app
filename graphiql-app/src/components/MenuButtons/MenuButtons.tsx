@@ -23,7 +23,7 @@ const MenuButtons = ({ isHistory }: MenuButtonsProps) => {
       }}
     >
       <p>{locale('chooseOne')}</p>
-      <Link href={`/${localeUrl}/GET/`}>
+      <Link href={`/${localeUrl}/GET`}>
         <Button variant="contained">{locale('restfullClient')}</Button>
       </Link>
       <Link href={`/${localeUrl}/graphql`}>

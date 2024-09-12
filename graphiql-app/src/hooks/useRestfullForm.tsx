@@ -1,5 +1,6 @@
+import useHistoryStore from '@/store/historyStore';
+import { notFound, useParams, usePathname } from 'next/navigation';
 import { handlePrettier } from '@/utils/prettify';
-import { notFound, useParams } from 'next/navigation';
 import { SetStateAction, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -15,6 +16,8 @@ const useRestfullForm = () => {
   const params = useParams();
   const localeUrl = params.locale || 'en';
   const [autoSubmitted, setAutoSubmitted] = useState(false);
+  const { addRequest } = useHistoryStore();
+  const pathname = usePathname();
   const NO_ENDPOINT_PLACEHOLDER = '__NO_ENDPOINT__';
 
   const decodeFromBase64 = (string: string) => {
@@ -347,6 +350,7 @@ const useRestfullForm = () => {
           10
         );
         setResponseBody(formattedJson);
+        addRequest(pathname, requestEndpoint);
       } catch (error) {
         toast.error(`${error}`);
         setResponseBody(responseBody);
