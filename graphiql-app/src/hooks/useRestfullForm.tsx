@@ -129,8 +129,7 @@ const useRestfullForm = () => {
     if (methodFromUrl) {
       setMethod(methodFromUrl);
     }
-    console.log(encodedEndpoint);
-    if (decodeFromBase64(encodedEndpoint) === NO_ENDPOINT_PLACEHOLDER) {
+    if (encodedEndpoint === NO_ENDPOINT_PLACEHOLDER) {
       setEndpoint('');
     } else if (encodedEndpoint) {
       const decodedEndpoint = decodeFromBase64(encodedEndpoint);
@@ -226,9 +225,11 @@ const useRestfullForm = () => {
   const constructUrl = (methodOverride?: string, endpointOverride?: string) => {
     const requestBody = prepareRequestBody();
     const baseUrl = window.location.origin;
-    const encodedEndpoint = endpointOverride
-      ? encodeToBase64(endpointOverride)
-      : '';
+    const endpointToUse = endpointOverride || endpoint;
+    const encodedEndpoint =
+      endpointToUse === NO_ENDPOINT_PLACEHOLDER
+        ? NO_ENDPOINT_PLACEHOLDER
+        : encodeToBase64(endpointToUse || '');
     const encodedBody = requestBody ? encodeToBase64(requestBody) : null;
     const methodToUse = methodOverride || method;
 
