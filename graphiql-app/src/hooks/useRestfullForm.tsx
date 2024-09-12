@@ -1,3 +1,4 @@
+import { handlePrettier } from '@/utils/prettify';
 import { notFound, useParams } from 'next/navigation';
 import { SetStateAction, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -14,6 +15,7 @@ const useRestfullForm = () => {
   const params = useParams();
   const localeUrl = params.locale || 'en';
   const [autoSubmitted, setAutoSubmitted] = useState(false);
+  const NO_ENDPOINT_PLACEHOLDER = '__NO_ENDPOINT__';
 
   const decodeFromBase64 = (string: string) => {
     try {
@@ -27,6 +29,51 @@ const useRestfullForm = () => {
     } catch (error) {
       return '';
     }
+  };
+
+  const replaceVariables = (
+    value: string
+  ): { replaced: string; variables: Map<string, string> } => {
+    const variablePattern = /{{\s*[\w\d]+\s*}}/g;
+    const variables = new Map<string, string>();
+    let replaced = value;
+
+    let match;
+    let index = 0;
+
+    while ((match = variablePattern.exec(value)) !== null) {
+      const placeholder = `__VAR_PLACEHOLDER_${index++}__`;
+      variables.set(placeholder, match[0]);
+      replaced = replaced.replace(match[0], placeholder);
+    }
+
+    return { replaced, variables };
+  };
+
+  const restoreVariables = (
+    formatted: string,
+    variables: Map<string, string>
+  ): string => {
+    let result = formatted;
+
+    variables.forEach((variable, placeholder) => {
+      result = result.replace(placeholder, variable);
+    });
+
+    return result;
+  };
+
+  const handlePrettierWithVariables = async (
+    value: string,
+    isGraphQl: boolean,
+    onChange: (value: string) => void
+  ) => {
+    const { replaced, variables } = replaceVariables(value);
+
+    await handlePrettier(replaced, isGraphQl, (formatted) => {
+      const finalFormatted = restoreVariables(formatted, variables);
+      onChange(finalFormatted);
+    });
   };
 
   useEffect(() => {
@@ -66,7 +113,7 @@ const useRestfullForm = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       updateUrl(method, endpoint);
-    }, 50);
+    }, 0);
     return () => clearTimeout(timer);
   }, [endpoint, method, headers]);
 
@@ -75,18 +122,16 @@ const useRestfullForm = () => {
     if (urlParts.length < 2) return;
 
     const [methodFromUrl, ...restOfUrl] = urlParts[1].split('/');
-
     const restOfUrlJoined = restOfUrl.join('/');
-
     const [urlWithoutParams, params] = restOfUrlJoined.split('?');
-
     const [encodedEndpoint, encodedBody] = urlWithoutParams.split('/');
 
     if (methodFromUrl) {
       setMethod(methodFromUrl);
     }
-
-    if (encodedEndpoint) {
+    if (encodedEndpoint === NO_ENDPOINT_PLACEHOLDER) {
+      setEndpoint('');
+    } else if (encodedEndpoint) {
       const decodedEndpoint = decodeFromBase64(encodedEndpoint);
       setEndpoint(decodedEndpoint);
     }
@@ -101,7 +146,10 @@ const useRestfullForm = () => {
     if (params) {
       const paramsObj = new URLSearchParams(params);
       const headersFromUrl = Array.from(paramsObj.entries()).map(
-        ([key, value]) => ({ key, value })
+        ([key, value]) => ({
+          key,
+          value,
+        })
       );
       setHeaders(headersFromUrl);
     } else {
@@ -174,13 +222,14 @@ const useRestfullForm = () => {
     }
   };
 
-  const constructUrl = (
-    methodOverride: string | undefined,
-    endpointOverride: string
-  ) => {
+  const constructUrl = (methodOverride?: string, endpointOverride?: string) => {
     const requestBody = prepareRequestBody();
     const baseUrl = window.location.origin;
-    const encodedEndpoint = encodeToBase64(endpointOverride);
+    const endpointToUse = endpointOverride || endpoint;
+    const encodedEndpoint =
+      endpointToUse === NO_ENDPOINT_PLACEHOLDER
+        ? NO_ENDPOINT_PLACEHOLDER
+        : encodeToBase64(endpointToUse || '');
     const encodedBody = requestBody ? encodeToBase64(requestBody) : null;
     const methodToUse = methodOverride || method;
 
@@ -192,7 +241,7 @@ const useRestfullForm = () => {
       )
       .join('&');
 
-    let fullUrl = `${baseUrl}/${localeUrl}/${methodToUse}/${encodedEndpoint}`;
+    let fullUrl = `${baseUrl}/${localeUrl}/${methodToUse}/${encodedEndpoint || ''}`;
 
     if (encodedBody) {
       fullUrl += `/${encodedBody}`;
@@ -204,14 +253,15 @@ const useRestfullForm = () => {
     return fullUrl;
   };
 
-  const updateUrl = (
-    methodOverride: string | undefined,
-    endpointOverride?: string
-  ) => {
-    const requestUrl = constructUrl(
-      methodOverride,
-      endpointOverride || endpoint
-    );
+  const updateUrl = (methodOverride?: string, endpointOverride?: string) => {
+    const shouldInsertPlaceholder =
+      !endpoint &&
+      (body || headers.some((header) => header.key || header.value));
+    const endpointToUse = shouldInsertPlaceholder
+      ? NO_ENDPOINT_PLACEHOLDER
+      : endpointOverride || endpoint || '';
+
+    const requestUrl = constructUrl(methodOverride, endpointToUse);
     window.history.pushState({}, '', requestUrl);
   };
 
@@ -334,8 +384,10 @@ const useRestfullForm = () => {
     endpoint,
     headers,
     body,
+    setBody,
     responseStatus,
     responseBody,
+    handlePrettierWithVariables,
     handleMethodChange,
     handleEndpointChange,
     handleBodyChange,
