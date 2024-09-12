@@ -235,24 +235,41 @@ function RestfullForm() {
             ))}
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="body"
-                label={locale('requestBody')}
-                variant="outlined"
-                multiline
-                rows={4}
-                value={body}
-                onChange={handleBodyChange}
-                onBlur={() => updateUrl(method)}
-              />
-              <PrettyButton
-                content={body}
-                isQuery={false}
-                onChange={(formatted) =>
-                  handlePrettierWithVariables(body, false, setBody)
-                }
-              />
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  gap: '1px',
+                }}
+              >
+                <TextField
+                  fullWidth
+                  id="body"
+                  label={locale('requestBody')}
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  value={body}
+                  onChange={handleBodyChange}
+                  onBlur={() => updateUrl(method)}
+                />
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                  }}
+                >
+                  <PrettyButton
+                    content={body}
+                    isQuery={false}
+                    onChange={(formatted) =>
+                      handlePrettierWithVariables(body, false, setBody)
+                    }
+                  />
+                </Box>
+              </Box>
             </Grid>
 
             <Grid item xs={12} sx={buttonStyles}>

@@ -113,7 +113,7 @@ const useRestfullForm = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       updateUrl(method, endpoint);
-    }, 50);
+    }, 0);
     return () => clearTimeout(timer);
   }, [endpoint, method, headers]);
 
