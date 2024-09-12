@@ -22,7 +22,7 @@ export const variablesBoxStyles: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'row',
   gap: '1vw',
-  justifyContent: 'flex-end',
+  justifyContent: 'flex-start',
   paddingLeft: '16px',
   width: '100%',
 };

@@ -34,12 +34,14 @@ import { useTranslations } from 'next-intl';
 import useCheckingOfAuthorization from '@/hooks/useCheckingOfAuthorization';
 import Loader from '@/components/Loader/Loader';
 
+import PrettyButton from '../../../../components/PrettyButton/PrettyButton';
 function RestfullForm() {
   const {
     method,
     endpoint,
     headers,
     body,
+    setBody,
     responseStatus,
     responseBody,
     handleMethodChange,
@@ -56,6 +58,7 @@ function RestfullForm() {
     handleAddVariable,
     toggleVariablesSection,
     handleRemoveVariable,
+    handlePrettierWithVariables,
   } = useRestfullForm();
   const locale = useTranslations();
   const isEndpointValid = endpoint.trim() === '';
@@ -160,7 +163,9 @@ function RestfullForm() {
                 variant="outlined"
                 value={endpoint}
                 onChange={(e) => {
+                  const newEndpoint = e.target.value;
                   handleEndpointChange(e);
+                  updateUrl(method, newEndpoint);
                 }}
               />
             </Grid>
@@ -243,17 +248,42 @@ function RestfullForm() {
             ))}
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="body"
-                label={locale('requestBody')}
-                variant="outlined"
-                multiline
-                rows={4}
-                value={body}
-                onChange={handleBodyChange}
-                onBlur={() => updateUrl(method)}
-              />
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  gap: '1px',
+                }}
+              >
+                <TextField
+                  fullWidth
+                  id="body"
+                  label={locale('requestBody')}
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  value={body}
+                  onChange={handleBodyChange}
+                  onBlur={() => updateUrl(method)}
+                />
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    mt: 1,
+                  }}
+                >
+                  <PrettyButton
+                    content={body}
+                    isQuery={false}
+                    onChange={(formatted) =>
+                      handlePrettierWithVariables(body, false, setBody)
+                    }
+                  />
+                </Box>
+              </Box>
             </Grid>
 
             <Grid item xs={12} sx={buttonStyles}>
@@ -372,5 +402,4 @@ function RestfullForm() {
     </Container>
   );
 }
-
 export default RestfullForm;
