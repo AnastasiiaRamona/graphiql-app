@@ -3,6 +3,12 @@ import { notFound, useParams, usePathname } from 'next/navigation';
 import { handlePrettier } from '@/utils/prettify';
 import { SetStateAction, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import isJson from '@/utils/isJson';
+import variablesRestfull from '@/utils/variablesRestfull';
+import { constructUrl, parseUrlAndSetState } from '@/utils/urlRestfull';
+import { NO_ENDPOINT_PLACEHOLDER } from '@/constants/constants';
+
+const { replaceVariables, restoreVariables } = variablesRestfull();
 
 const useRestfullForm = () => {
   const [method, setMethod] = useState('GET');
@@ -13,71 +19,14 @@ const useRestfullForm = () => {
   const [responseBody, setResponseBody] = useState('');
   const [variables, setVariables] = useState([{ key: '', value: '' }]);
   const [showVariables, setShowVariables] = useState(false);
+  const [autoSubmitted, setAutoSubmitted] = useState(false);
+
   const params = useParams();
   const localeUrl = params.locale || 'en';
-  const [autoSubmitted, setAutoSubmitted] = useState(false);
   const { addRequest } = useHistoryStore();
   const pathname = usePathname();
-  const NO_ENDPOINT_PLACEHOLDER = '__NO_ENDPOINT__';
 
-  const decodeFromBase64 = (string: string) => {
-    try {
-      return decodeURIComponent(
-        Array.prototype.map
-          .call(atob(string), (char) => {
-            return '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join('')
-      );
-    } catch (error) {
-      return '';
-    }
-  };
-
-  const replaceVariables = (
-    value: string
-  ): { replaced: string; variables: Map<string, string> } => {
-    const variablePattern = /{{\s*[\w\d]+\s*}}/g;
-    const variables = new Map<string, string>();
-    let replaced = value;
-
-    let match;
-    let index = 0;
-
-    while ((match = variablePattern.exec(value)) !== null) {
-      const placeholder = `__VAR_PLACEHOLDER_${index++}__`;
-      variables.set(placeholder, match[0]);
-      replaced = replaced.replace(match[0], placeholder);
-    }
-
-    return { replaced, variables };
-  };
-
-  const restoreVariables = (
-    formatted: string,
-    variables: Map<string, string>
-  ): string => {
-    let result = formatted;
-
-    variables.forEach((variable, placeholder) => {
-      result = result.replace(placeholder, variable);
-    });
-
-    return result;
-  };
-
-  const handlePrettierWithVariables = async (
-    value: string,
-    isGraphQl: boolean,
-    onChange: (value: string) => void
-  ) => {
-    const { replaced, variables } = replaceVariables(value);
-
-    await handlePrettier(replaced, isGraphQl, (formatted) => {
-      const finalFormatted = restoreVariables(formatted, variables);
-      onChange(finalFormatted);
-    });
-  };
+  const localeUrlString = Array.isArray(localeUrl) ? localeUrl[0] : localeUrl;
 
   useEffect(() => {
     const currentUrl = window.location.href;
@@ -98,7 +47,14 @@ const useRestfullForm = () => {
         setAutoSubmitted(true);
       } else {
         setAutoSubmitted(false);
-        parseUrlAndSetState(currentUrl);
+        parseUrlAndSetState(
+          currentUrl,
+          localeUrlString,
+          setMethod,
+          setEndpoint,
+          setBody,
+          setHeaders
+        );
       }
     }
   }, []);
@@ -120,44 +76,16 @@ const useRestfullForm = () => {
     return () => clearTimeout(timer);
   }, [endpoint, method, headers]);
 
-  const parseUrlAndSetState = (url: string) => {
-    const urlParts = url.split(`/${localeUrl}/`);
-    if (urlParts.length < 2) return;
-
-    const [methodFromUrl, ...restOfUrl] = urlParts[1].split('/');
-    const restOfUrlJoined = restOfUrl.join('/');
-    const [urlWithoutParams, params] = restOfUrlJoined.split('?');
-    const [encodedEndpoint, encodedBody] = urlWithoutParams.split('/');
-
-    if (methodFromUrl) {
-      setMethod(methodFromUrl);
-    }
-    if (encodedEndpoint === NO_ENDPOINT_PLACEHOLDER) {
-      setEndpoint('');
-    } else if (encodedEndpoint) {
-      const decodedEndpoint = decodeFromBase64(encodedEndpoint);
-      setEndpoint(decodedEndpoint);
-    }
-
-    if (encodedBody) {
-      const decodedBody = decodeFromBase64(encodedBody);
-      setBody(decodedBody);
-    } else {
-      setBody('');
-    }
-
-    if (params) {
-      const paramsObj = new URLSearchParams(params);
-      const headersFromUrl = Array.from(paramsObj.entries()).map(
-        ([key, value]) => ({
-          key,
-          value,
-        })
-      );
-      setHeaders(headersFromUrl);
-    } else {
-      setHeaders([{ key: '', value: '' }]);
-    }
+  const handlePrettierWithVariables = async (
+    value: string,
+    isGraphQl: boolean,
+    onChange: (value: string) => void
+  ) => {
+    const { replaced, variables } = replaceVariables(value);
+    await handlePrettier(replaced, isGraphQl, (formatted) => {
+      const finalFormatted = restoreVariables(formatted, variables);
+      onChange(finalFormatted);
+    });
   };
 
   const handleMethodChange = (event: {
@@ -213,61 +141,6 @@ const useRestfullForm = () => {
     updateUrl(method);
   };
 
-  const encodeToBase64 = (string: string) => {
-    try {
-      return btoa(
-        encodeURIComponent(string).replace(/%([0-9A-F]{2})/g, (_, p1) =>
-          String.fromCharCode(parseInt(p1, 16))
-        )
-      );
-    } catch (error) {
-      return '';
-    }
-  };
-
-  const constructUrl = (methodOverride?: string, endpointOverride?: string) => {
-    const requestBody = prepareRequestBody();
-    const baseUrl = window.location.origin;
-    const endpointToUse = endpointOverride || endpoint;
-    const encodedEndpoint =
-      endpointToUse === NO_ENDPOINT_PLACEHOLDER
-        ? NO_ENDPOINT_PLACEHOLDER
-        : encodeToBase64(endpointToUse || '');
-    const encodedBody = requestBody ? encodeToBase64(requestBody) : null;
-    const methodToUse = methodOverride || method;
-
-    const queryParams = headers
-      .filter((header) => header.key && header.value)
-      .map(
-        (header) =>
-          `${encodeURIComponent(header.key)}=${encodeURIComponent(header.value)}`
-      )
-      .join('&');
-
-    let fullUrl = `${baseUrl}/${localeUrl}/${methodToUse}/${encodedEndpoint || ''}`;
-
-    if (encodedBody) {
-      fullUrl += `/${encodedBody}`;
-    }
-    if (queryParams) {
-      fullUrl += `?${queryParams}`;
-    }
-
-    return fullUrl;
-  };
-
-  const updateUrl = (methodOverride?: string, endpointOverride?: string) => {
-    const shouldInsertPlaceholder =
-      !endpoint &&
-      (body || headers.some((header) => header.key || header.value));
-    const endpointToUse = shouldInsertPlaceholder
-      ? NO_ENDPOINT_PLACEHOLDER
-      : endpointOverride || endpoint || '';
-
-    const requestUrl = constructUrl(methodOverride, endpointToUse);
-    window.history.pushState({}, '', requestUrl);
-  };
-
   const handleVariableChange = (
     index: number,
     field: 'key' | 'value',
@@ -282,40 +155,8 @@ const useRestfullForm = () => {
     setVariables([...variables, { key: '', value: '' }]);
   };
 
-  const toggleVariablesSection = () => {
-    setShowVariables(!showVariables);
-  };
-
-  const isJson = (text: string) => {
-    try {
-      const parsed = JSON.parse(text);
-      return typeof parsed === 'object' && parsed !== null;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  const replaceVariablesInBody = (body: string) => {
-    let updatedBody = body;
-    variables.forEach((variable) => {
-      const regex = new RegExp(`{{${variable.key}}}`, 'g');
-      updatedBody = updatedBody.replace(regex, variable.value);
-    });
-    return updatedBody;
-  };
-
-  const prepareRequestBody = () => {
-    const requestBody = replaceVariablesInBody(body);
-    if (isJson(requestBody)) {
-      return JSON.stringify(JSON.parse(requestBody));
-    } else {
-      return requestBody;
-    }
-  };
-
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-
     let requestEndpoint = endpoint.trim();
     if (
       !requestEndpoint.startsWith('http://') &&
@@ -332,7 +173,6 @@ const useRestfullForm = () => {
       },
       {}
     );
-
     try {
       const response = await fetch(requestEndpoint, {
         method,
@@ -362,25 +202,44 @@ const useRestfullForm = () => {
     }
   };
 
-  const getColor = (method: string) => {
-    switch (method) {
-      case 'GET':
-        return 'blue';
-      case 'POST':
-        return 'green';
-      case 'PUT':
-        return 'orange';
-      case 'PATCH':
-        return 'purple';
-      case 'DELETE':
-        return 'red';
-      case 'HEAD':
-        return 'brown';
-      case 'OPTIONS':
-        return 'teal';
-      default:
-        return 'black';
+  const toggleVariablesSection = () => {
+    setShowVariables(!showVariables);
+  };
+
+  const replaceVariablesInBody = (body: string) => {
+    let updatedBody = body;
+    variables.forEach((variable) => {
+      const regex = new RegExp(`{{${variable.key}}}`, 'g');
+      updatedBody = updatedBody.replace(regex, variable.value);
+    });
+    return updatedBody;
+  };
+
+  const prepareRequestBody = () => {
+    const requestBody = replaceVariablesInBody(body);
+    if (isJson(requestBody)) {
+      return JSON.stringify(JSON.parse(requestBody));
+    } else {
+      return requestBody;
     }
+  };
+
+  const updateUrl = (methodOverride?: string, endpointOverride?: string) => {
+    const shouldInsertPlaceholder =
+      !endpoint &&
+      (body || headers.some((header) => header.key || header.value));
+    const endpointToUse = shouldInsertPlaceholder
+      ? NO_ENDPOINT_PLACEHOLDER
+      : endpointOverride || endpoint || '';
+
+    const requestUrl = constructUrl(
+      methodOverride || method,
+      endpointToUse,
+      headers,
+      prepareRequestBody(),
+      localeUrlString
+    );
+    window.history.pushState({}, '', requestUrl);
   };
 
   return {
@@ -389,6 +248,9 @@ const useRestfullForm = () => {
     headers,
     body,
     setBody,
+    setEndpoint,
+    setMethod,
+    setHeaders,
     responseStatus,
     responseBody,
     handlePrettierWithVariables,
@@ -398,10 +260,8 @@ const useRestfullForm = () => {
     handleHeaderChange,
     handleAddHeader,
     handleSubmit,
-    getColor,
-    constructUrl,
-    updateUrl,
     handleRemoveHeader,
+    updateUrl,
     variables,
     showVariables,
     handleVariableChange,
@@ -409,7 +269,7 @@ const useRestfullForm = () => {
     toggleVariablesSection,
     setVariables,
     handleRemoveVariable,
-    parseUrlAndSetState,
+    prepareRequestBody,
   };
 };
 

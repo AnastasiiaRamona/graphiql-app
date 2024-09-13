@@ -1,0 +1,1 @@
+export const NO_ENDPOINT_PLACEHOLDER = '__NO_ENDPOINT__';
