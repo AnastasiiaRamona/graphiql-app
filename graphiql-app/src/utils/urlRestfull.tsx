@@ -1,6 +1,7 @@
 import base64 from '@/utils/base64';
 
 const { decodeFromBase64, encodeToBase64 } = base64();
+import variablesRestfull from '@/utils/variablesRestfull';
 
 import { NO_ENDPOINT_PLACEHOLDER } from '@/constants/constants';
 
@@ -9,10 +10,19 @@ export const constructUrl = (
   endpoint: string,
   headers: { key: string; value: string }[],
   body: string,
-  localeUrl: string
+  localeUrl: string,
+  variables: Record<string, string> = {}
 ) => {
   const baseUrl = window.location.origin;
-  const requestBody = body ? encodeToBase64(body) : null;
+  let requestBody = body;
+  if (body) {
+    Object.entries(variables).forEach(([key, value]) => {
+      const variablePattern = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
+      requestBody = requestBody.replace(variablePattern, value);
+    });
+    requestBody = encodeToBase64(requestBody);
+  }
+
   const encodedEndpoint =
     endpoint === NO_ENDPOINT_PLACEHOLDER
       ? NO_ENDPOINT_PLACEHOLDER

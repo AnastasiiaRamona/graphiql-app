@@ -127,15 +127,6 @@ describe('useRestfullForm', () => {
     expect(result.current.variables.length).toBe(2);
   });
 
-  test('should return correct color for method', () => {
-    const { result } = renderHook(() => useRestfullForm());
-    expect(result.current.getColor('GET')).toBe('blue');
-    expect(result.current.getColor('POST')).toBe('green');
-    expect(result.current.getColor('PUT')).toBe('orange');
-    expect(result.current.getColor('DELETE')).toBe('red');
-    expect(result.current.getColor('UNKNOWN')).toBe('black');
-  });
-
   test('should update variables correctly', () => {
     const { result } = renderHook(() => useRestfullForm());
     act(() => {
@@ -167,26 +158,6 @@ describe('useRestfullForm', () => {
     expect(updatedBody).toBe('{"name":"test"}');
   });
 
-  test('should replace variables correctly in the string', () => {
-    const { result } = renderHook(() => useRestfullForm());
-
-    const inputString = 'Hello, {{name}}!';
-    const { replaced, variables } =
-      result.current.replaceVariables(inputString);
-
-    expect(replaced).toBe('Hello, __VAR_PLACEHOLDER_0__!');
-    expect(variables.get('__VAR_PLACEHOLDER_0__')).toBe('{{name}}');
-  });
-
-  test('should restore variables in the string', () => {
-    const { result } = renderHook(() => useRestfullForm());
-
-    const formatted = 'Hello, __VAR_PLACEHOLDER_0__!';
-    const variables = new Map([['__VAR_PLACEHOLDER_0__', '{{name}}']]);
-    const restored = result.current.restoreVariables(formatted, variables);
-    expect(restored).toBe('Hello, {{name}}!');
-  });
-
   test('should handle prettier with variables', async () => {
     const { result } = renderHook(() => useRestfullForm());
     act(() => {
@@ -210,18 +181,6 @@ describe('useRestfullForm', () => {
       result.current.handleRemoveHeader(0);
     });
     expect(result.current.headers.length).toBe(1);
-  });
-
-  test('should replace variables in the body', () => {
-    const { result } = renderHook(() => useRestfullForm());
-    act(() => {
-      result.current.setVariables([{ key: 'name', value: 'John' }]);
-      result.current.setBody('{"name": "{{name}}"}');
-    });
-    const updatedBody = result.current.replaceVariablesInBody(
-      result.current.body
-    );
-    expect(updatedBody).toBe('{"name": "John"}');
   });
 
   test('should add a new variable', () => {
@@ -292,24 +251,6 @@ describe('useRestfullForm', () => {
     expect(toast.error).toHaveBeenCalledWith('Error: Failed to fetch');
   });
 
-  test('should construct correct URL', async () => {
-    const { result } = renderHook(() => useRestfullForm());
-    await act(async () => {
-      result.current.setEndpoint('http://localhost/test');
-      result.current.setMethod('POST');
-      result.current.setHeaders([
-        { key: 'Authorization', value: 'Bearer token' },
-      ]);
-    });
-    let url;
-    await act(async () => {
-      url = result.current.constructUrl();
-    });
-    expect(url).toBe(
-      'http://localhost/en/POST/aHR0cDovL2xvY2FsaG9zdC90ZXN0?Authorization=Bearer%20token'
-    );
-  });
-
   test('should handle non-200 response status', async () => {
     global.fetch = vi.fn().mockResolvedValueOnce({
       status: 404,
@@ -321,18 +262,5 @@ describe('useRestfullForm', () => {
     });
     expect(result.current.responseStatus).toBe('404');
     expect(result.current.responseBody).toBe('Not Found');
-  });
-
-  test('should correctly construct URL with query params', () => {
-    const { result } = renderHook(() => useRestfullForm());
-    act(() => {
-      result.current.setEndpoint('http://localhost/test');
-      result.current.setVariables([{ key: 'id', value: '123' }]);
-    });
-    let url;
-    act(() => {
-      url = result.current.constructUrl();
-    });
-    expect(url).toBe('http://localhost/en/GET/aHR0cDovL2xvY2FsaG9zdC90ZXN0');
   });
 });

@@ -18,10 +18,11 @@ const variablesRestfull = () => {
   const restoreVariables = (
     formatted: string,
     variables: Map<string, string>
-  ): string => {
+  ) => {
     let result = formatted;
-    variables.forEach((variable, placeholder) => {
-      result = result.replace(placeholder, variable);
+    variables.forEach((original, placeholder) => {
+      const regex = new RegExp(placeholder, 'g');
+      result = result.replace(regex, original);
     });
     return result;
   };

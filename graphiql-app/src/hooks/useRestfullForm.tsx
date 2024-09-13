@@ -149,10 +149,12 @@ const useRestfullForm = () => {
     const newVariables = [...variables];
     newVariables[index][field] = value;
     setVariables(newVariables);
+    updateUrl(method);
   };
 
   const handleAddVariable = () => {
     setVariables([...variables, { key: '', value: '' }]);
+    updateUrl(method);
   };
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
