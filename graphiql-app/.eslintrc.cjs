@@ -7,7 +7,6 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:@next/next/recommended',
     'plugin:prettier/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'next.config.mjs'],
@@ -33,6 +32,7 @@ module.exports = {
     '@typescript-eslint',
     'react-refresh',
     'react-compiler',
+    '@next/eslint-plugin-next',
   ],
   rules: {
     'prettier/prettier': 'error',
