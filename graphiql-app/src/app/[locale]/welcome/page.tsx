@@ -103,7 +103,6 @@ const WelcomePage = () => {
           {locale('aboutQueryHub')}
         </Typography>
       </Container>
-
       <Container
         sx={{
           height: '100vh',
@@ -134,7 +133,6 @@ const WelcomePage = () => {
           {locale('queryHubDescription')}
         </Typography>
       </Container>
-
       <Container
         sx={{
           minHeight: '100vh',
@@ -147,7 +145,6 @@ const WelcomePage = () => {
       >
         <ApplicationTools />
       </Container>
-
       <Container
         sx={{
           minHeight: '100vh',

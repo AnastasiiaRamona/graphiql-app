@@ -162,7 +162,6 @@ function RestfullForm() {
         >
           {locale('response')}
         </Typography>
-
         <Typography variant="h6">
           {locale('status')}: {responseStatus}
         </Typography>
