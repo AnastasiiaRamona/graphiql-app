@@ -1,12 +1,15 @@
 import { logoutUser } from '@/firebase/firebase';
 import useAuthStore from '@/store/store';
+import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 const useHeaderNavigation = () => {
   const router = useRouter();
   const { setForm, setAuthenticated } = useAuthStore();
   const params = useParams();
   const localeUrl = params.locale || 'en';
+  const locale = useTranslations();
 
   const handleNavigation = async (item: string) => {
     switch (item) {
@@ -26,8 +29,9 @@ const useHeaderNavigation = () => {
           await logoutUser();
           setAuthenticated(false);
           router.replace(`/${localeUrl}/welcome`);
+          localStorage.clear();
         } catch (error) {
-          console.error(error);
+          toast.error(`${locale('errorToast')}: ${error}`);
         }
         break;
       case 'Home':

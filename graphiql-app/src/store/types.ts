@@ -1,4 +1,4 @@
-interface AuthState {
+export interface AuthState {
   isAuthenticated: boolean;
   isLoginForm: boolean;
   toggleForm: () => void;
@@ -6,4 +6,14 @@ interface AuthState {
   setAuthenticated: (isAuthenticated: boolean) => void;
 }
 
-export default AuthState;
+export interface RequestEntry {
+  method: string;
+  link: string;
+  dateTime: string;
+  url: string;
+}
+
+export interface HistoryState {
+  request: RequestEntry | null;
+  addRequest: (link: string, url: string) => void;
+}

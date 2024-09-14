@@ -8,6 +8,7 @@ import Footer from '@/components/Footer/Footer';
 import { ToastContainer } from 'react-toastify';
 import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
 import { useTranslations } from 'next-intl';
+import useTokenRefresh from '@/hooks/useTokenRefresh';
 
 export default function ThemeWrapper({
   children,
@@ -16,6 +17,7 @@ export default function ThemeWrapper({
 }>) {
   const [isDarkMode, setIsDarkMode] = useState<boolean | null>(null);
   const locale = useTranslations();
+  useTokenRefresh();
 
   useEffect(() => {
     const savedMode = localStorage.getItem('isDarkMode');
@@ -45,6 +47,7 @@ export default function ThemeWrapper({
       <ToastContainer />
       <CssBaseline />
       <Box
+        data-testid="theme-box"
         sx={{
           minHeight: '100vh',
           width: '100vw',

@@ -1,36 +1,27 @@
 'use client';
-
 import AuthorizationButtons from '@/components/AuthorizationButtons/AuthorizationButtons';
 import MenuButtons from '@/components/MenuButtons/MenuButtons';
-import { auth } from '@/firebase/firebase';
-import useAuthStore from '@/store/store';
 import { Box, Container, Typography } from '@mui/material';
-import { onAuthStateChanged } from 'firebase/auth';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
 import Loader from '@/components/Loader/Loader';
 import ImportantDevicesTwoToneIcon from '@mui/icons-material/ImportantDevicesTwoTone';
 import QuiltedImageList from '@/components/ImageList/ImageList';
 import ApplicationTools from '@/components/ApplicationTools/ApplicationTools';
 import AboutTeamBox from '@/components/AboutTeam/AboutTeam';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { useWelcomePage } from '@/hooks/useWelcomePage';
 
 const WelcomePage = () => {
-  const { setAuthenticated, isAuthenticated } = useAuthStore();
-  const [userName, setUserName] = useState('');
-  const [loading, setLoading] = useState(true);
+  const {
+    userName,
+    loading,
+    isAuthenticated,
+    showScrollUp,
+    showScrollDown,
+    scrollByVH,
+  } = useWelcomePage();
   const locale = useTranslations();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserName(user.displayName || '');
-        setAuthenticated(true);
-      } else {
-        setAuthenticated(false);
-      }
-      setLoading(false);
-    });
-  }, []);
 
   if (loading) {
     return <Loader />;
@@ -71,8 +62,13 @@ const WelcomePage = () => {
             {locale('wish')}
           </Typography>
         </Box>
-        {isAuthenticated ? <MenuButtons /> : <AuthorizationButtons />}
+        {isAuthenticated ? (
+          <MenuButtons isHistory={false} />
+        ) : (
+          <AuthorizationButtons />
+        )}
       </Container>
+
       <Container
         sx={{
           height: '100vh',
@@ -160,6 +156,31 @@ const WelcomePage = () => {
       >
         <AboutTeamBox />
       </Container>
+
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: '60px',
+          right: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '15px',
+          zIndex: 1000,
+        }}
+      >
+        {showScrollUp && (
+          <ArrowUpwardIcon
+            onClick={() => scrollByVH(-1)}
+            sx={{ cursor: 'pointer', fontSize: '2.5rem' }}
+          />
+        )}
+        {showScrollDown && (
+          <ArrowDownwardIcon
+            onClick={() => scrollByVH(1)}
+            sx={{ cursor: 'pointer', fontSize: '2.5rem' }}
+          />
+        )}
+      </Box>
     </>
   );
 };

@@ -28,7 +28,6 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10vh;
   max-width: 100vw;
 }
 
@@ -69,4 +68,43 @@ h6 {
 
 p {
   margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #a8b1b8;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1e5c9ebe;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #33589e;
+}
+
+.response-graphqQl {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease-out;
+  animation: fadeInExpand 0.5s ease-out forwards;
+}
+
+@keyframes fadeInExpand {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    height: 500px;
+  }
 }

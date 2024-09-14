@@ -26,7 +26,7 @@ This application is a comprehensive tool designed for working with APIs. It prov
 
 1. Start Development Server:
 
-- Run `npm run start` to start the development server. This will compile tsx files, bundle assets, and serve the application locally.
+- Run `npm run dev` to start the development server. This will compile tsx files, bundle assets, and serve the application locally.
 
 2. Compile TypeScript:
 
