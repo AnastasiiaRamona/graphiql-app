@@ -18,7 +18,7 @@ import Link from 'next/link';
 import MaterialUISwitch from '../SwitchTheme/MaterialUiSwitch';
 import SwitchLanguage from '../SwitchLanguage/SwitchLanguage';
 import Props from './types';
-import iconSrc from '../../app/icon.ico';
+import iconSrc from '../../assets/mainIcon.ico';
 import useHeaderNavigation from '@/hooks/useHeaderNavigation';
 import useAuthStore from '@/store/store';
 import { onAuthStateChanged } from 'firebase/auth';
