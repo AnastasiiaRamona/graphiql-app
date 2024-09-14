@@ -12,7 +12,8 @@
     "prepare": "cd .. && husky graphiql-app/.husky",
     "coverage": "vitest run --coverage",
     "test": "vitest",
-    "dev": "next dev --turbo"
+    "dev": "next dev --turbo",
+    "start": "next start"
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.1",
@@ -48,7 +49,8 @@
     "sharp": "^0.33.5",
     "utf8": "^3.0.0",
     "yup": "^1.4.0",
-    "zustand": "^4.5.5"
+    "zustand": "^4.5.5",
+    "prettier": "3.3.2"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.2.11",
@@ -78,7 +80,6 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "jsdom": "^24.1.1",
-    "prettier": "3.3.2",
     "typescript": "5.5.4",
     "vite": "^5.4.1",
     "vitest": "^2.0.5"

@@ -1,7 +1,7 @@
 import prettier from 'prettier';
-import parserBabel from 'prettier/parser-babel';
+import parserBabel from 'prettier/plugins/babel';
 import parserEstree from 'prettier/plugins/estree';
-import parserGraphql from 'prettier/parser-graphql';
+import parserGraphql from 'prettier/plugins/graphql';
 import { toast } from 'react-toastify';
 
 export const handlePrettier = async (
