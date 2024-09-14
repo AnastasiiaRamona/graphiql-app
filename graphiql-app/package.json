@@ -12,7 +12,8 @@
     "prepare": "cd .. && husky graphiql-app/.husky",
     "coverage": "vitest run --coverage",
     "test": "vitest",
-    "dev": "next dev --turbo"
+    "dev": "next dev --turbo",
+    "export": "next export"
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.1",
