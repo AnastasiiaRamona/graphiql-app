@@ -45,12 +45,13 @@ const BodySection: React.FC<BodySectionProps> = ({
         <PrettyButton
           content={body}
           isQuery={false}
-          onChange={(formatted) =>
-            handlePrettierWithVariables(body, false, (formatted) =>
+          onChange={
+            (formatted) =>
+              // handlePrettierWithVariables(body, false, (formatted) =>
               handleBodyChange({
                 target: { value: formatted },
               } as ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
-            )
+            // )
           }
         />
       </Box>
