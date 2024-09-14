@@ -23,7 +23,7 @@ describe('MaterialUISwitch', () => {
     expect(switchElement).toBeInTheDocument();
     expect(switchElement).not.toBeChecked();
 
-    fireEvent.click(switchElement); // Simulate user interaction
+    fireEvent.click(switchElement);
     expect(switchElement).toBeChecked();
   });
 });

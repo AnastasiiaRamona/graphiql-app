@@ -47,6 +47,7 @@ export default function ThemeWrapper({
       <ToastContainer />
       <CssBaseline />
       <Box
+        data-testid="theme-box"
         sx={{
           minHeight: '100vh',
           width: '100vw',
