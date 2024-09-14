@@ -5,8 +5,5 @@ const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {};
-module.exports = {
-  target: 'serverless',
-};
 
 export default withNextIntl(nextConfig);
