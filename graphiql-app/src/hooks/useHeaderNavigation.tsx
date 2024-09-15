@@ -29,7 +29,7 @@ const useHeaderNavigation = () => {
           await logoutUser();
           setAuthenticated(false);
           router.replace(`/${localeUrl}/welcome`);
-          localStorage.clear();
+          localStorage.removeItem('queryHubHistory');
         } catch (error) {
           toast.error(`${locale('errorToast')}: ${error}`);
         }

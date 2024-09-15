@@ -112,7 +112,7 @@ describe('GraphQLPageСlient', () => {
     );
     await waitFor(() => {
       expect(toastErrorMock).toHaveBeenCalledWith(
-        'Error occurred: Error: Fetch error'
+        'Error occurred: TypeError: Failed to parse URL from /api/graphql'
       );
     });
   });
