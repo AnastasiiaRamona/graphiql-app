@@ -97,6 +97,19 @@ p {
   animation: fadeInExpand 0.5s ease-out forwards;
 }
 
+iframe {
+  width: 60vw;
+  height: 70vh;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 768px) {
+    width: 90vw;
+    height: 60vh;
+  }
+}
+
 @keyframes fadeInExpand {
   0% {
     opacity: 0;
