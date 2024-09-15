@@ -11,6 +11,7 @@ import AboutTeamBox from '@/components/AboutTeam/AboutTeam';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { useWelcomePage } from '@/hooks/useWelcomePage';
+import YoutubeRSSchoolResource from '@/components/RSSchoolResource/RSSchoolResource';
 
 const WelcomePage = () => {
   const {
@@ -156,7 +157,17 @@ const WelcomePage = () => {
       >
         <AboutTeamBox />
       </Container>
-
+      <Container
+        sx={{
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '2rem',
+        }}
+      >
+        <YoutubeRSSchoolResource />
+      </Container>
       <Box
         sx={{
           position: 'fixed',
