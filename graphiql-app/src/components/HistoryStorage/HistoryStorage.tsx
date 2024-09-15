@@ -70,7 +70,7 @@ export default function HistoryStorage({ requests }: HistoryStorageProps) {
                     </Typography>
                     <br />
                     <Link
-                      href={`/${localeUrl}/${request.link}  `}
+                      href={`/${localeUrl}${request.link}  `}
                       rel="noopener noreferrer"
                       sx={{
                         display: 'inline-block',
