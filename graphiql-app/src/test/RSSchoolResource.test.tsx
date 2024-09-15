@@ -5,7 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { ReactNode } from 'react';
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <NextIntlClientProvider locale="en" messages={{}}>
+  <NextIntlClientProvider locale="en" messages={{ rssDescription: 'RSS' }}>
     {children}
   </NextIntlClientProvider>
 );
