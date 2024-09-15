@@ -183,20 +183,32 @@ const useRestfullForm = () => {
       });
 
       const responseData = await response.json();
-      setResponseStatus(responseData.status.toString());
       addRequest(pathname ?? '', requestEndpoint);
-      try {
-        const formattedJson = JSON.stringify(
-          JSON.parse(responseData.body),
-          null,
-          2
+
+      if (!response.ok) {
+        setResponseStatus(`Error: ${response.status}`);
+        setResponseBody(
+          responseData.error || responseData.details || 'Unknown error'
         );
-        setResponseBody(formattedJson);
-      } catch {
-        setResponseBody(responseData.body);
+        toast.error(`Error: ${responseData.error || 'Unknown error'}`);
+      } else {
+        setResponseStatus(responseData.status.toString());
+        addRequest(pathname ?? '', requestEndpoint);
+
+        try {
+          const formattedJson = JSON.stringify(
+            JSON.parse(responseData.body),
+            null,
+            2
+          );
+          setResponseBody(formattedJson);
+        } catch {
+          setResponseBody(responseData.body);
+        }
       }
     } catch (error) {
       setResponseStatus('Error');
+
       if (error instanceof Error) {
         toast.error(`Error: ${error.message}`);
         setResponseBody(error.message);

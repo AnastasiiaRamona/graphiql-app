@@ -48,7 +48,9 @@ function AuthorizationForm() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthenticated(true);
-        router.replace(`/${localeUrl}/welcome`);
+        if (user.displayName) {
+          router.replace(`/${localeUrl}/welcome`);
+        }
       } else {
         setLoading(false);
       }
