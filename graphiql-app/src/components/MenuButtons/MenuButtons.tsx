@@ -7,7 +7,7 @@ import MenuButtonsProps from './types';
 const MenuButtons = ({ isHistory }: MenuButtonsProps) => {
   const locale = useTranslations();
   const params = useParams();
-  const localeUrl = params.locale || 'en';
+  const localeUrl = params?.locale || 'en';
 
   return (
     <Box

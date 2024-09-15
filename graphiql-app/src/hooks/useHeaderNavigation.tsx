@@ -8,7 +8,7 @@ const useHeaderNavigation = () => {
   const router = useRouter();
   const { setForm, setAuthenticated } = useAuthStore();
   const params = useParams();
-  const localeUrl = params.locale || 'en';
+  const localeUrl = params?.locale || 'en';
   const locale = useTranslations();
 
   const handleNavigation = async (item: string) => {

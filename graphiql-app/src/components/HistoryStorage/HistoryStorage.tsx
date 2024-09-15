@@ -15,7 +15,7 @@ import { useTranslations } from 'next-intl';
 
 export default function HistoryStorage({ requests }: HistoryStorageProps) {
   const params = useParams();
-  const localeUrl = params.locale || 'en';
+  const localeUrl = params?.locale || 'en';
   const reverseRequests = [...requests].reverse();
   const locale = useTranslations();
 
