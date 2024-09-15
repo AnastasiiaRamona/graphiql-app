@@ -65,18 +65,21 @@ function GraphQLPageСlient({
 
       const fetchData = async () => {
         try {
-          const response = await fetchGraphQL({
-            endpoint: urlDecoded,
-            headers: searchParams,
-            variables: variablesUrlDecoded,
-            code: codeUrlDecoded,
+          const response = await fetch('/api/graphql', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              endpoint: urlDecoded,
+              headers: searchParams,
+              variables: variablesUrlDecoded,
+              code: codeUrlDecoded,
+            }),
           });
 
-          if (response) {
-            setStatus(response.status.toString());
-          }
-
-          const json = await response?.json();
+          const json = await response.json();
+          setStatus(response.status.toString());
           setData(json);
           addRequest(pathname, urlDecoded);
         } catch (error) {
@@ -87,6 +90,7 @@ function GraphQLPageСlient({
           }
         }
       };
+
       fetchData();
     } catch (error) {
       toast.error(`${locale('errorToast')}: ${error}` || locale('error'));
