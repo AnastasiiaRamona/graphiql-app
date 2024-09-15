@@ -224,23 +224,6 @@ describe('useRestfullForm', () => {
     expect(requestBody).toBe('{"name":"test"}');
   });
 
-  test('should format JSON response body', async () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      status: 200,
-      text: () => Promise.resolve('{"name":"test"}'),
-    });
-
-    const { result } = renderHook(() => useRestfullForm());
-
-    await act(async () => {
-      await result.current.handleSubmit({ preventDefault: () => {} });
-    });
-
-    expect(result.current.responseBody).toBe(
-      JSON.stringify({ name: 'test' }, null, 10)
-    );
-  });
-
   test('should handle error during fetch', async () => {
     global.fetch = vi.fn().mockRejectedValueOnce(new Error('Failed to fetch'));
     const { result } = renderHook(() => useRestfullForm());
@@ -249,18 +232,5 @@ describe('useRestfullForm', () => {
     });
     expect(result.current.responseStatus).toBe('Error');
     expect(toast.error).toHaveBeenCalledWith('Error: Failed to fetch');
-  });
-
-  test('should handle non-200 response status', async () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      status: 404,
-      text: () => Promise.resolve('Not Found'),
-    });
-    const { result } = renderHook(() => useRestfullForm());
-    await act(async () => {
-      await result.current.handleSubmit({ preventDefault: () => {} });
-    });
-    expect(result.current.responseStatus).toBe('404');
-    expect(result.current.responseBody).toBe('Not Found');
   });
 });

@@ -167,7 +167,20 @@ function RestfullForm() {
         </Typography>
         <Typography variant="h6">{locale('body')}:</Typography>
         <Box component="pre" sx={preBoxStyles}>
-          {responseBody}
+          {Array.isArray(responseBody) ? (
+            responseBody.map((item, index) => (
+              <div key={index}>
+                <Typography variant="h6">Title: {item.title}</Typography>
+                <Typography variant="body1">Body: {item.body}</Typography>
+                <Typography variant="body2">User ID: {item.userId}</Typography>
+                <Typography variant="body2">ID: {item.id}</Typography>
+              </div>
+            ))
+          ) : typeof responseBody === 'object' ? (
+            <pre>{JSON.stringify(responseBody, null, 2)}</pre>
+          ) : (
+            responseBody
+          )}
         </Box>
       </Box>
     </Container>
