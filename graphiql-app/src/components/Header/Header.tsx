@@ -38,7 +38,7 @@ export default function Header(props: Props) {
   const { setAuthenticated } = useAuthStore();
   const locale = useTranslations();
   const params = useParams();
-  const localeUrl = params.locale || 'en';
+  const localeUrl = params?.locale || 'en';
   const scrolled = useScrollPosition();
 
   useEffect(() => {

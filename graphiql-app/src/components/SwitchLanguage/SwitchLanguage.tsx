@@ -33,7 +33,8 @@ const SwitchLanguage = () => {
     const newLanguage = event.target.value as string;
     setLanguage(newLanguage);
 
-    const currentPathname = window.location.pathname;
+    const url = window.location.href;
+    const currentPathname = url.replace(/^.*\/(en|ru)/, '/$1');
     const newPathname = currentPathname.replace(
       /^\/(en|ru)/,
       `/${newLanguage}`.toLowerCase()
