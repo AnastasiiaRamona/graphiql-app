@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
+
+:root {
+  overflow-x: hidden;
+  font-family: 'Red Hat Display', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+
+  --primary-font-family: 'Red Hat Display', sans-serif;
+  --primary-color: #0c234b;
+}
+
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 100vw;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #a8b1b8;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1e5c9ebe;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #33589e;
+}
+
+.response-graphqQl {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease-out;
+  animation: fadeInExpand 0.5s ease-out forwards;
+}
+
+iframe {
+  width: 60vw;
+  height: 70vh;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 768px) {
+    width: 90vw;
+    height: 60vh;
+  }
+}
+
+@keyframes fadeInExpand {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    height: 500px;
+  }
+}

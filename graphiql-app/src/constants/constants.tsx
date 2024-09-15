@@ -1,0 +1,2 @@
+export const NO_ENDPOINT_PLACEHOLDER = '__NO_ENDPOINT__';
+export const TOKEN_CHECK_INTERVAL = 60 * 1000;
