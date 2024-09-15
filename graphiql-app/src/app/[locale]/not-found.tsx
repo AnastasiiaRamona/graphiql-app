@@ -33,7 +33,7 @@ function NotFound() {
   const locale = useTranslations();
   const [stars, setStars] = useState<Array<{ top: number; right: number }>>([]);
   const params = useParams();
-  const localeUrl = params.locale || 'en';
+  const localeUrl = params?.locale || 'en';
 
   useEffect(() => {
     const createStar = () => {
