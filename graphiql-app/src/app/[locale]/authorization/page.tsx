@@ -32,7 +32,7 @@ function AuthorizationForm() {
   const locale = useTranslations();
   const { setAuthenticated } = useAuthStore();
   const params = useParams();
-  const localeUrl = params.locale || 'en';
+  const localeUrl = params?.locale || 'en';
   const [loading, setLoading] = useState(true);
   const {
     handleSubmit,

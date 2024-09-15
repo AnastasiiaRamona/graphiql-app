@@ -22,9 +22,10 @@ const useRestfullForm = () => {
   const [autoSubmitted, setAutoSubmitted] = useState(false);
 
   const params = useParams();
-  const localeUrl = params.locale || 'en';
+  const localeUrl = params?.locale || 'en';
   const { addRequest } = useHistoryStore();
-  const pathname = usePathname();
+  const url = window.location.href;
+  const pathname = url.replace(/^.*\/(en|ru)/, '/$1');
 
   const localeUrlString = Array.isArray(localeUrl) ? localeUrl[0] : localeUrl;
 
@@ -166,41 +167,43 @@ const useRestfullForm = () => {
     ) {
       requestEndpoint = `http://${requestEndpoint}`;
     }
-    const requestHeaders = headers.reduce<Record<string, string>>(
-      (acc, header) => {
-        if (header.key) {
-          acc[header.key] = header.value;
-        }
-        return acc;
-      },
-      {}
-    );
+
     try {
-      const response = await fetch(requestEndpoint, {
-        method,
-        headers: requestHeaders,
-        body: ['GET', 'HEAD', 'OPTIONS'].includes(method)
-          ? null
-          : prepareRequestBody(),
+      const response = await fetch('/api/proxy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          method,
+          url: requestEndpoint,
+          headers,
+          body: prepareRequestBody(),
+        }),
       });
-      setResponseStatus(response.status.toString());
-      const responseBody = await response.text();
+
+      const responseData = await response.json();
+      setResponseStatus(responseData.status.toString());
+      addRequest(pathname ?? '', requestEndpoint);
       try {
         const formattedJson = JSON.stringify(
-          JSON.parse(responseBody),
+          JSON.parse(responseData.body),
           null,
-          10
+          2
         );
         setResponseBody(formattedJson);
-        addRequest(pathname, requestEndpoint);
-      } catch (error) {
-        toast.error(`${error}`);
-        setResponseBody(responseBody);
+      } catch {
+        setResponseBody(responseData.body);
       }
     } catch (error) {
       setResponseStatus('Error');
-      toast.error(`${error}`);
-      setResponseBody((error as Error).toString());
+      if (error instanceof Error) {
+        toast.error(`Error: ${error.message}`);
+        setResponseBody(error.message);
+      } else {
+        toast.error('Unknown error occurred');
+        setResponseBody('Unknown error');
+      }
     }
   };
 

@@ -8,7 +8,7 @@ const AuthorizationButtons = () => {
   const { setForm } = useAuthStore();
   const locale = useTranslations();
   const params = useParams();
-  const localeUrl = params.locale || 'en';
+  const localeUrl = params?.locale || 'en';
 
   return (
     <Box
