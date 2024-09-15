@@ -20,7 +20,6 @@ import VariablesForm from '../../../../components/VariablesSectionRest/Variables
 import { useTranslations } from 'next-intl';
 import {
   boxStyles,
-  buttonStyles,
   gridContainerStyles,
   gridItemStyles,
   preBoxStyles,

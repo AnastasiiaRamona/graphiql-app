@@ -17,7 +17,6 @@ import {
 
 import { GraphQLPageClientProps } from '@/app/[locale]/graphql/[...slug]/types';
 import useHistoryStore from '@/store/historyStore';
-import { usePathname } from 'next/navigation';
 import useCheckingOfAuthorization from '@/hooks/useCheckingOfAuthorization';
 import Loader from '../Loader/Loader';
 function GraphQLPageСlient({
@@ -55,7 +54,8 @@ function GraphQLPageСlient({
   const variablesUrlDecoded = utf8.decode(base64.decode(variablesUrl || ''));
   const urlDecoded = utf8.decode(base64.decode(url || ''));
   const { addRequest } = useHistoryStore();
-  const pathname = usePathname();
+  const windowUrl = window.location.href;
+  const pathname = windowUrl.replace(/^.*\/(en|ru)/, '/$1');
 
   useEffect(() => {
     try {

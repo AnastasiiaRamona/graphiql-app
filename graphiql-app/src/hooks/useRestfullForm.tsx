@@ -24,7 +24,8 @@ const useRestfullForm = () => {
   const params = useParams();
   const localeUrl = params?.locale || 'en';
   const { addRequest } = useHistoryStore();
-  const pathname = usePathname();
+  const url = window.location.href;
+  const pathname = url.replace(/^.*\/(en|ru)/, '/$1');
 
   const localeUrlString = Array.isArray(localeUrl) ? localeUrl[0] : localeUrl;
 
